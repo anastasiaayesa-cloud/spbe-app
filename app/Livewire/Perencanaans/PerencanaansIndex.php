@@ -25,10 +25,10 @@ class PerencanaansIndex extends Component
     {
         $perencanaans = Perencanaan::query()
             ->select('perencanaans.*')
-            // ->when($this->search, function ($query) { //searching di search kolom
-            //     $query->where('items.nama', 'like', '%' . $this->search . '%')
-            //         ->orWhere('item_kategoris.nama', 'like', "%{$this->search}%");
-            // })
+            ->when($this->search, function ($query) { //searching di search kolom
+                $query->where('perencanaans.komponen', 'like', '%' . $this->search . '%')
+                    ->orWhere('perencanaans.sub_komponen', 'like', "%{$this->search}%");
+            })
             ->orderBy('id', 'desc')
             ->paginate(5);
 

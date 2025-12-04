@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\Perencanaans\PerencanaanForm;
 use App\Livewire\Perencanaans\PerencanaansIndex;
 use Illuminate\Support\Facades\Route;
 
@@ -25,7 +26,7 @@ Route::view('profile', 'profile')
     ->name('profile');
 
 Route::get('/perencanaans', PerencanaansIndex::class)->name('perencanaans.index');
-// Route::get('/items/create', ItemForm::class)->name('items.create');
+Route::get('/perencanaans/create', PerencanaanForm::class)->name('perencanaans.create');
 // Route::get('/items/{itemId}/edit', ItemForm::class)->name('items.edit');
 
 require __DIR__ . '/auth.php';

@@ -13,8 +13,8 @@
 
                     {{-- Tombol tambah perencaan (opsional) --}}
                     <div>
-                        {{-- <a href="{{ route('items.create') }}"
-                            class="inline-block px-4 py-2 rounded">Buat Item</a> --}}
+                        <a href="{{ route('perencanaans.create') }}"
+                            class="inline-block px-4 py-2 rounded">Tambah Perencanaan </a>
                     </div>
 
                     {{-- Search bar --}}
@@ -37,6 +37,12 @@
                         <thead>
                             <tr>
                                 <th class="px-4 py-2 border">#</th>
+                                {{-- <th class="px-4 py-2 border cursor-pointer" wire:click="sortBy('komponen')">
+                                    Komponen
+                                    @if($sortField === 'komponen')
+                                        @if($sortDirection === 'asc') ↑ @else ↓ @endif
+                                    @endif
+                                </th> --}}
                                 <th class="px-4 py-2 border">Komponen</th>
                                 <th class="px-4 py-2 border">Sub Komponen</th>
                                 <th class="px-4 py-2 border">Rencana Aktivitas</th>

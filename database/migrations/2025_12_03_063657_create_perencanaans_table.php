@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('perencanaans', function (Blueprint $table) {
             $table->id();
             $table->string('komponen');
-            $table->string('uraian_komponen');
+            $table->string('uraian_komponen')->nullable();
             $table->string('sub_komponen');
-            $table->string('uraian_sub_komponen');
+            $table->string('uraian_sub_komponen')->nullable();
             $table->string('nama_aktivitas');
             $table->string('rencana_mulai')->format('yyyy-mm-dd');
             $table->string('rencana_selesai')->format('yyyy-mm-dd');
