@@ -1,0 +1,34 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Kepegawaian extends Model
+{
+    
+    use HasFactory;
+
+    protected $fillable = [
+        'nama',
+        'nip',
+        'jabatan',
+        'pangkat_id',
+        'tempat_lahir',
+        'tgl_lahir',
+        'jk_id',
+        'agama_id',
+        'nama_instansi',
+        'alamat_instansi',
+        'telp_instansi',
+        'kode_kabupaten',
+        'hp',
+        'email',
+        'npwp',
+        'bank_id',
+        'no_rek',
+        'pendidikan_terakhir_id',
+        'is_bpmp'
+    ];
+}
