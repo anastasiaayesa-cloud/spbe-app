@@ -5,7 +5,6 @@ use App\Livewire\Kepegawaians\KepegawaianForm;
 use App\Livewire\Perencanaans\PerencanaansIndex;
 use App\Livewire\Kepegawaians\KepegawaiansIndex;
 use App\Livewire\Persuratans\PersuratanForm;
-use App\Livewire\Perencanaans\PerencanaansIndex;
 use App\Livewire\Persuratans\PersuratansIndex;
 use Illuminate\Support\Facades\Route;
 
