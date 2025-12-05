@@ -11,10 +11,10 @@
 
                 <div class="flex items-center justify-between mb-4">
 
-                    {{-- Tombol tambah perencaan (opsional) --}}
+                {{-- Tombol tambah kepegawaian (opsional) --}}
                     <div>
-                        {{-- <a href="{{ route('items.create') }}"
-                            class="inline-block px-4 py-2 rounded">Buat Item</a> --}}
+                        <a href="{{ route('kepegawaians.create') }}"
+                            class="inline-block px-4 py-2 rounded">Tambah Kepegawaian </a>
                     </div>
 
                     {{-- Search bar --}}
@@ -51,8 +51,8 @@
                                     <td class="px-4 py-2 border">{{ $kepegawaian->nip }}</td>
                                     <td class="px-4 py-2 border">{{ $kepegawaian->hp }}</td>
                                     <td class="px-4 py-2 border">
-                                        {{-- <a href="{{ route('items.edit', $item->id) }}"
-                                            class="mr-2 text-blue-600">Edit</a> --}}
+                                        <a href="{{ route(name: 'kepegawaians.edit', parameters: $kepegawaian->id) }}"
+                                            class="mr-2 text-blue-600">Edit</a>
                                     </td>
                                 </tr>
                             @empty

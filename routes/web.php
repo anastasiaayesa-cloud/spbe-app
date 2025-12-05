@@ -1,6 +1,7 @@
 <?php
 
 use App\Livewire\Perencanaans\PerencanaanForm;
+use App\Livewire\Kepegawaians\KepegawaianForm;
 use App\Livewire\Perencanaans\PerencanaansIndex;
 use App\Livewire\Kepegawaians\KepegawaiansIndex;
 use Illuminate\Support\Facades\Route;
@@ -28,7 +29,8 @@ Route::view('profile', 'profile')
 
 Route::get('/perencanaans', PerencanaansIndex::class)->name('perencanaans.index');
 Route::get('/perencanaans/create', PerencanaanForm::class)->name('perencanaans.create');
-// Route::get('/items/{itemId}/edit', ItemForm::class)->name('items.edit');
+Route::get('/kepegawaians/{kepegawaian_id}/edit', action: KepegawaianForm::class)->name(name: 'kepegawaians.edit');
 Route::get('/kepegawaians', KepegawaiansIndex::class)->name('kepegawaians.index');
+Route::get('/kepegawaians/create', KepegawaianForm::class)->name('kepegawaians.create');
 
 require __DIR__ . '/auth.php';

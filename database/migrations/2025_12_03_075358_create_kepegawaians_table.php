@@ -19,8 +19,8 @@ return new class extends Migration
             $table->string('pangkat_id')->nullable();
             $table->string('tempat_lahir');
             $table->string('tgl_lahir')->format('yyyy-mm-dd');
-            $table->string('jk_id');
-            $table->integer('agama_id');
+            $table->enum('jenis_kelamin', ['Laki-laki', 'Perempuan']);
+            $table->enum('agama', ['Islam', 'Kristen Katolik', 'Kristen Protestan', 'Hindu', 'Buddha', 'Konghucu']);
             $table->string('nama_instansi');
             $table->string('alamat_instansi')->nullable();
             $table->string('telp_instansi')->nullable();
@@ -31,7 +31,7 @@ return new class extends Migration
             $table->string('bank_id')->nullable();
             $table->string('no_rek')->nullable();
             $table->string('pendidikan_terakhir_id');
-            $table->string('is_bpmp')->nullable();
+            $table->integer('is_bpmp')->default(0);
             $table->timestamps();
         });
     }
