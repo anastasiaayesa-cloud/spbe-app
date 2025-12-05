@@ -1,3 +1,8 @@
+@php
+    use Illuminate\Support\Facades\Storage;
+@endphp
+
+
 <x-slot name="header">
     <h2 class="font-semibold text-xl text-gray-800 leading-tight">
         {{ __('Manajemen Perencanaan') }}
@@ -13,8 +18,8 @@
 
                     {{-- Tombol tambah perencaan (opsional) --}}
                     <div>
-                        {{-- <a href="{{ route('items.create') }}"
-                            class="inline-block px-4 py-2 rounded">Buat Item</a> --}}
+                        <a href="{{ route('persuratans.create') }}"
+                            class="inline-block px-4 py-2 rounded">Buat Surat</a>
                     </div>
 
                     {{-- Search bar --}}
@@ -48,11 +53,19 @@
                                 <tr>
                                     <td class="px-4 py-2 border">{{ $persuratan->id }}</td>
                                     <td class="px-4 py-2 border">{{ $persuratan->nama_surat }}</td>
-                                    <td class="px-4 py-2 border">{{ $persuratan->file_pdf }}</td>
+                                    {{-- <td class="px-4 py-2 border">{{ $persuratan->file_pdf }}</td> --}}
+                                    <td class="px-4 py-2 border"> 
+                                        @if ($persuratan->file_pdf)
+                                            <a href="{{ Storage::url($persuratan->file_pdf) }}" 
+                                            class="text-blue-600 underline" target="_blank">
+                                            Download File
+                                            </a>
+                                        @endif
+                                    </td>
                                     <td class="px-4 py-2 border">{{ $persuratan->tanggal_upload }}</td>
                                     <td class="px-4 py-2 border"> 
-                                          {{-- <a href="{{ route('items.edit', $item->id) }}"
-                                            class="mr-2 text-blue-600">Edit</a>  --}}
+                                          <a href="{{ route('persuratans.edit', $persuratan->id) }}"
+                                            class="mr-2 text-blue-600">Edit</a> 
                                     </td>
                                 </tr>
                             @empty
