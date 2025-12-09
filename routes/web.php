@@ -4,6 +4,9 @@ use App\Livewire\Perencanaans\PerencanaanForm;
 use App\Livewire\Persuratans\PersuratanForm;
 use App\Livewire\Perencanaans\PerencanaansIndex;
 use App\Livewire\Persuratans\PersuratansIndex;
+use App\Livewire\Instansis\InstansiIndex;
+use App\Livewire\Instansis\InstansiForm;
+
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -34,6 +37,11 @@ Route::get('/perencanaans/create', PerencanaanForm::class)->name('perencanaans.c
 Route::get('/persuratans', PersuratansIndex::class)->name('persuratans.index');
 Route::get('/persuratans/create', PersuratanForm::class)->name('persuratans.create');
 Route::get('/persuratans/{persuratan_id}/edit', PersuratanForm::class)->name('persuratans.edit');
+
+Route::get('/instansis', InstansiIndex::class)->name('instansis.index');
+Route::get('/instansis/create', InstansiForm::class)->name('instansis.create');
+
+
 
 
 require __DIR__ . '/auth.php';

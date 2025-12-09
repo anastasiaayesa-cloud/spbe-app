@@ -6,25 +6,31 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use App\Models\Persuratan;
 use Illuminate\Support\Facades\Storage;
+use App\Models\PersuratanKategori;
+
 
 class PersuratanForm extends Component
 {
     use WithFileUploads;
-    public $persuratan_id, $nama_surat, $file_pdf, $existing_pdf, $tanggal_upload;
+    public $persuratan_id, $nama_surat, $file_pdf, $existing_pdf, $tanggal_upload, $persuratanKategoriList=[], $persuratan_kategori_id;
 
     public function mount($persuratan_id = null)
     {
+        $this->persuratanKategoriList = PersuratanKategori::orderBy('nama_kategori')->get();
         // kalau parameter ada (edit mode)
         if ($persuratan_id) {
             $this->persuratan_id = $persuratan_id;
+            
 
             $persuratan = Persuratan::findOrFail($persuratan_id);
 
+            
             $existing_pdf = $persuratan->file_pdf;
             $this->nama_surat = $persuratan->nama_surat;
             $this->file_pdf = $persuratan->file_pdf; // file lama
             $this->tanggal_upload = $persuratan->tanggal_upload;
-
+            $this->persuratan_kategori_id = $persuratan->persuratan_kategori_id;
+            
         }
     }
 
@@ -56,7 +62,7 @@ class PersuratanForm extends Component
             if ($persuratan->file_pdf&& storage_path('app/public/' . $persuratan->file_pdf)) {
             Storage::delete('public/' . $persuratan->file_pdf);
         }
-$pdfPath = $this->file_pdf->store('persuratan', 'public');
+            $pdfPath = $this->file_pdf->store('persuratan', 'public');
 
             $persuratan->update([
                 'nama_surat' => $this->nama_surat,
@@ -81,15 +87,12 @@ $pdfPath = $this->file_pdf->store('persuratan', 'public');
 
         public function delete()
     {
-        // if ($this->existing_pdf && Storage::disk('public')->exists($this->existing_pdf)) {
-        //     Storage::disk('public')->delete($this->existing_pdf);
-        // }
+        
         $persuratan = Persuratan::findOrFail($this->persuratan_id);
 
             if ($persuratan->file_pdf&& storage_path('app/public/' . $persuratan->file_pdf)) {
             Storage::delete('public/' . $persuratan->file_pdf);
         }
-// $pdfPath = $this->file_pdf->store('persuratan', 'public');
 
         Persuratan::where('id', $this->persuratan_id)->delete();
 
