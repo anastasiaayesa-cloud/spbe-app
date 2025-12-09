@@ -16,7 +16,6 @@ return new class extends Migration
             $table->string('nama');
             $table->string('nip')->nullable()->unique();
             $table->string('jabatan')->nullable();
-            $table->string('pangkat_id')->nullable();
             $table->string('tempat_lahir');
             $table->string('tgl_lahir')->format('yyyy-mm-dd');
             $table->enum('jenis_kelamin', ['Laki-laki', 'Perempuan']);

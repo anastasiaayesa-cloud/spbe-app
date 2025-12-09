@@ -2,20 +2,23 @@
 
 namespace App\Livewire\Kepegawaians;
 use App\Models\Kepegawaian;
-
+use App\Models\Pangkat;
 use Livewire\Component;
+
 
 class KepegawaianForm extends Component
 {
-    public $kepegawaian_id, $nama, $nip, $jabatan, $pangkat_id, $tempat_lahir, $tgl_lahir, $jenis_kelamin, $agama, $nama_instansi, $alamat_instansi, $telp_instansi, $kode_kabupaten, $hp, $email, $npwp, $bank_id, $no_rek, $pendidikan_terakhir_id, $is_bpmp;
+    public $kepegawaian_id, $nama, $nip, $jabatan, $pangkat_id, $tempat_lahir, $tgl_lahir, $jenis_kelamin, $agama, $nama_instansi, $alamat_instansi, $telp_instansi, $kode_kabupaten, $hp, $email, $npwp, $bank_id, $no_rek, $pendidikan_terakhir_id, $is_bpmp, $pangkatList = [];
 
     public function mount($kepegawaian_id = null)
     {
+        $this->pangkatList = Pangkat::orderBy('nama')->get();
+
         // kalau parameter ada (edit mode)
         if ($kepegawaian_id) {
             $this->kepegawaian_id = $kepegawaian_id;
-
             $kepegawaian = Kepegawaian::findOrFail($kepegawaian_id);
+
             $this->nama = $kepegawaian->nama;
             $this->nip = $kepegawaian->nip;
             $this->jabatan = $kepegawaian->jabatan;

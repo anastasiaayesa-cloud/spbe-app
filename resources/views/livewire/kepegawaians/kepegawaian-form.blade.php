@@ -37,10 +37,16 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="block mb-1">pangkat id</label>
-                        <input type="text" wire:model.defer="pangkat_id" class="border rounded px-3 py-2 w-full">
+                        <label class="block mb-1">Pangkat</label>
+                        <select wire:model="pangkat_id" class="border rounded px-3 py-2 w-full">
+                            <option value="">-- Pilih Pangkat--</option>
+                            @foreach ($pangkatList as $pangkat)
+                                <option value="{{ $pangkat->id }}">{{ $pangkat->nama }}</option>
+                            @endforeach
+                        </select>
                         @error('pangkat_id') <span class="text-red-600">{{ $message }}</span> @enderror
                     </div>
+
                     
                     <div class="mb-3">
                         <label class="block mb-1">tempat lahir</label>
