@@ -21,5 +21,11 @@ class Perencanaan extends Model
         'realisasi_selesai',
         'keterangan',
         'terlaksana_id',
+        'status_id',
     ];
+
+    public function status()
+    {
+        return $this->belongsTo(Status::class);
+    }
 }
