@@ -1,18 +1,21 @@
 <?php
 
 namespace App\Livewire\Kepegawaians;
+
+use App\Models\Instansi;
 use App\Models\Kepegawaian;
 use App\Models\Pangkat;
 use Livewire\Component;
-
+use Symfony\Contracts\Service\Attribute\Required;
 
 class KepegawaianForm extends Component
 {
-    public $kepegawaian_id, $nama, $nip, $jabatan, $pangkat_id, $tempat_lahir, $tgl_lahir, $jenis_kelamin, $agama, $nama_instansi, $alamat_instansi, $telp_instansi, $kode_kabupaten, $hp, $email, $npwp, $bank_id, $no_rek, $pendidikan_terakhir_id, $is_bpmp, $pangkatList = [];
+    public $kepegawaian_id, $nama, $nip, $jabatan, $pangkat_id, $tempat_lahir, $tgl_lahir, $jenis_kelamin, $agama, $instansi_id, $hp, $email, $npwp, $bank_id, $no_rek, $pendidikan_terakhir_id, $is_bpmp, $pangkatList = [], $instansiList = [];
 
     public function mount($kepegawaian_id = null)
     {
         $this->pangkatList = Pangkat::orderBy('nama')->get();
+        $this->instansiList = Instansi::orderBy('nama_instansi')->get();
 
         // kalau parameter ada (edit mode)
         if ($kepegawaian_id) {
@@ -27,10 +30,7 @@ class KepegawaianForm extends Component
             $this->tgl_lahir = $kepegawaian->tgl_lahir;
             $this->jenis_kelamin = $kepegawaian->jenis_kelamin;
             $this->agama = $kepegawaian->agama;
-            $this->nama_instansi = $kepegawaian->nama_instansi;
-            $this->alamat_instansi = $kepegawaian->alamat_instansi;
-            $this->telp_instansi = $kepegawaian->telp_instansi;
-            $this->kode_kabupaten = $kepegawaian->kode_kabupaten;
+            $this->instansi_id = $kepegawaian->instansi_id;
             $this->hp = $kepegawaian->hp;
             $this->email  = $kepegawaian->email ;
             $this->	npwp = $kepegawaian->npwp;
@@ -38,6 +38,9 @@ class KepegawaianForm extends Component
             $this->no_rek = $kepegawaian->no_rek;
             $this->pendidikan_terakhir_id = $kepegawaian->pendidikan_terakhir_id;
             $this->	is_bpmp = $kepegawaian->is_bpmp;
+        }
+        else{
+
         }
     }
 
@@ -52,10 +55,7 @@ class KepegawaianForm extends Component
             'tgl_lahir' => 'required|date',
             'jenis_kelamin'  => 'required|in:Laki-laki,Perempuan',
             'agama' => 'required|in:Islam,Kristen Katolik,Kristen Protestan,Hindu,Buddha,Konghucu',
-            'nama_instansi' => 'required|string|max:255',
-            'alamat_instansi' => 'nullable|string',
-            'telp_instansi' => 'required|string|max:255',
-            'kode_kabupaten' => 'nullable|string',
+            'instansi_id' => 'required|exists:instansis,id',
             'hp' => 'required|string|max:255',
             'email' => 'nullable|email',
             'npwp' => 'nullable|string',
@@ -84,10 +84,7 @@ class KepegawaianForm extends Component
                 'tgl_lahir' => $this->tgl_lahir,
                 'jenis_kelamin' => $this->jenis_kelamin,
                 'agama' => $this->agama,
-                'nama_instansi' => $this->nama_instansi,
-                'alamat_instansi' => $this->alamat_instansi,
-                'telp_instansi' => $this->telp_instansi,
-                'kode_kabupaten' => $this->kode_kabupaten,
+                'instansi_id' => $this->instansi_id,
                 'hp' => $this->	hp,
                 'email' => $this->email,
                 'npwp' => $this->npwp,
@@ -109,10 +106,7 @@ class KepegawaianForm extends Component
                 'tgl_lahir' => $this->tgl_lahir,
                 'jenis_kelamin' => $this->jenis_kelamin,
                 'agama' => $this->agama,
-                'nama_instansi' => $this->nama_instansi,
-                'alamat_instansi' => $this->alamat_instansi,
-                'telp_instansi' => $this->telp_instansi,
-                'kode_kabupaten' => $this->kode_kabupaten,
+                'instansi_id' => $this->instansi_id,
                 'hp' => $this->	hp,
                 'email' => $this->email,
                 'npwp' => $this->npwp,
