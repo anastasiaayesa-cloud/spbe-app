@@ -5,6 +5,9 @@ use App\Livewire\Kepegawaians\KepegawaianForm;
 use App\Livewire\Perencanaans\PerencanaansIndex;
 use App\Livewire\Kepegawaians\KepegawaiansIndex;
 use App\Livewire\Kabupatens\KabupatensIndex;
+
+use App\Livewire\Persuratans\PersuratanForm;
+use App\Livewire\Persuratans\PersuratansIndex;
 use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
@@ -33,5 +36,10 @@ Route::get('/kepegawaians/{kepegawaian_id}/edit', action: KepegawaianForm::class
 Route::get('/kepegawaians', KepegawaiansIndex::class)->name('kepegawaians.index');
 Route::get('/kepegawaians/create', KepegawaianForm::class)->name('kepegawaians.create');
 Route::get('/kabupatens', KabupatensIndex::class)->name('kabupatens.index');
+
+Route::get('/persuratans', PersuratansIndex::class)->name('persuratans.index');
+Route::get('/persuratans/create', PersuratanForm::class)->name('persuratans.create');
+Route::get('/persuratans/{persuratan_id}/edit', PersuratanForm::class)->name('persuratans.edit');
+
 
 require __DIR__ . '/auth.php';
