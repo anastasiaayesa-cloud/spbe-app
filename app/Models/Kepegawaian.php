@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Kepegawaian extends Model
 {
-    
+
     use HasFactory;
 
     protected $fillable = [
@@ -19,10 +19,11 @@ class Kepegawaian extends Model
         'tgl_lahir',
         'jenis_kelamin',
         'agama',
-        'nama_instansi',
-        'alamat_instansi',
-        'telp_instansi',
-        'kode_kabupaten',
+        // 'nama_instansi',
+        // 'alamat_instansi',
+        // 'telp_instansi',
+        // 'kode_kabupaten',
+        'instansi_id',
         'hp',
         'email',
         'npwp',
@@ -31,10 +32,9 @@ class Kepegawaian extends Model
         'pendidikan_terakhir_id',
         'is_bpmp'
     ];
-    
+
     public function pangkats()
     {
         return $this->belongsTo(Pangkat::class);
     }
-
 }
