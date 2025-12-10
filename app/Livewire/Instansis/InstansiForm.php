@@ -4,14 +4,17 @@ namespace App\Livewire\Instansis;
 
 use Livewire\Component;
 use App\Models\Instansi;
+use App\Models\Kabupaten;
 
 
 class InstansiForm extends Component
 {
- public $instansi_id, $nama_instansi, $alamat_instansi, $telp_instansi;
+ public $instansi_id, $nama_instansi, $alamat_instansi, $telp_instansi, $kabupaten_id, $kabupatenList = [];
 
  public function mount($instansi_id = null)
     {
+        $this->kabupatenList = Kabupaten::orderBy('nama')->get();
+
         // kalau parameter ada (edit mode)
         if ($instansi_id) {
             $this->instansi_id = $instansi_id;
@@ -20,6 +23,7 @@ class InstansiForm extends Component
             $this->nama_instansi = $instansi->nama_instansi;
             $this->alamat_instansi = $instansi->alamat_instansi;
             $this->telp_instansi = $instansi->telp_instansi;
+            $this->kabupaten_id = $instansi->kabupaten_id;
             
     }
 }
@@ -30,6 +34,7 @@ class InstansiForm extends Component
             'nama_instansi' => 'required|string|max:255',
             'alamat_instansi' => 'required|string',
             'telp_instansi' => 'required|string|max:255',
+            'kabupaten_id' => 'required|exists:kabupatens,id',
 
         ];
 
@@ -47,6 +52,7 @@ class InstansiForm extends Component
                 'nama_instansi' => $this->nama_instansi,
                 'alamat_instansi' => $this->alamat_instansi,
                 'telp_instansi' => $this->telp_instansi,
+                'kabupaten_id' => $this->kabupaten_id,
               
             ]);
 
@@ -57,6 +63,7 @@ class InstansiForm extends Component
                 'nama_instansi' => $this->nama_instansi,
                 'alamat_instansi' => $this->alamat_instansi,
                 'telp_instansi' => $this->telp_instansi,
+                'kabupaten_id' => $this->kabupaten_id,
                 
             ]);
 

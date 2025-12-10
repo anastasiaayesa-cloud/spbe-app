@@ -10,4 +10,10 @@ class Kabupaten extends Model
     use HasFactory;
 
     protected $fillable = ['nama'];
+
+    public function instansi()
+    {
+        return $this->belongsTo(Instansi::class);
+    }
+
 }

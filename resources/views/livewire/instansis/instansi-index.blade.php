@@ -47,6 +47,7 @@
                                 <th class="px-4 py-2 border">Alamat Instansi</th>
                                 <th class="px-4 py-2 border">Telpon Instansi</th>
                                 <th class="px-4 py-2 border">Kabupaten</th>
+                                <th class="px-4 py-2 border">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -56,9 +57,10 @@
                                     <td class="px-4 py-2 border">{{ $instansi->nama_instansi }}</td>
                                     <td class="px-4 py-2 border">{{ $instansi->alamat_instansi }}</td>
                                     <td class="px-4 py-2 border">{{ $instansi->telp_instansi }}</td>
+                                    <td class="px-4 py-2 border">{{ $instansi->kabupaten->nama }}</td>
                                     <td class="px-4 py-2 border">
-                                        {{-- <a href="{{ route('items.edit', $item->id) }}"
-                                            class="mr-2 text-blue-600">Edit</a> --}}
+                                        <a href="{{ route('instansis.edit', $instansi->id) }}"
+                                            class="mr-2 text-blue-600">Edit</a>
                                     </td>
                                 </tr>
                             @empty
