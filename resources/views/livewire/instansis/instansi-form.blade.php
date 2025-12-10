@@ -36,6 +36,18 @@
                         @error('telp_instansi') <span class="text-red-600">{{ $message }}</span> @enderror
                     </div>
 
+                    <div class="mb-3">
+                        <label class="block mb-1">Kabupaten</label>
+                        <select wire:model="kabupaten_id" class="border rounded px-3 py-2 w-full">
+                            <option value="">-- Pilih Kabupaten--</option>
+                            @foreach ($kabupatenList as $kabupaten)
+                                <option value="{{ $kabupaten->id }}">{{ $kabupaten->nama }}</option>
+                            @endforeach
+                        </select>
+                        @error('kabupaten_id') <span class="text-red-600">{{ $message }}</span> @enderror
+                    </div>
+
+
                     
 
                     <div class="flex items-center space-x-2">
