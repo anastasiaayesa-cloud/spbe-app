@@ -31,4 +31,10 @@ class Kepegawaian extends Model
         'pendidikan_terakhir_id',
         'is_bpmp'
     ];
+    
+    public function pangkats()
+    {
+        return $this->belongsTo(Pangkat::class);
+    }
+
 }
