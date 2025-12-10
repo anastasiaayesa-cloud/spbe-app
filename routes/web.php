@@ -47,7 +47,4 @@ Route::get('/persuratans/{persuratan_id}/edit', PersuratanForm::class)->name('pe
 Route::get('/instansis', InstansiIndex::class)->name('instansis.index');
 Route::get('/instansis/create', InstansiForm::class)->name('instansis.create');
 
-
-
-
 require __DIR__ . '/auth.php';
