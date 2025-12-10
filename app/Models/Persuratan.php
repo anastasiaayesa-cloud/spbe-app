@@ -13,5 +13,12 @@ class Persuratan extends Model
         'nama_surat',
         'file_pdf',
         'tanggal_upload',
+        'persuratan_kategori_id',
     ];
+
+    public function kategori()
+    {
+        return $this->belongsTo(PersuratanKategori::class);
+    }
+
 }

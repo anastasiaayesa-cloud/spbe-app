@@ -26,6 +26,18 @@
                         @error('nama_surat') <span class="text-red-600">{{ $message }}</span> @enderror
                     </div>
 
+                     <div class="mb-3">
+                        <label class="block mb-1">Kategori Surat</label>
+                        <select wire:model="persuratan_kategori_id" class="border rounded px-3 py-2 w-full">
+                            <option value="">-- Pilih Kategori Surat--</option>
+                            @foreach ($persuratanKategoriList as $kategori)
+                                <option value="{{ $kategori->id }}">{{ $kategori->nama_kategori }}</option>
+                            @endforeach
+                        </select>
+                        @error('persuratan_kategori_id') <span class="text-red-600">{{ $message }}</span> @enderror
+                    </div>
+
+
 <div class="mb-3">
     <label class="block mb-1">File PDF *</label>
     <input type="file" wire:model="file_pdf" accept="application/pdf" class="border rounded px-3 py-2 w-full">
