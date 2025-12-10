@@ -82,27 +82,14 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="block mb-1">nama_instansi</label>
-                        <input type="text" wire:model.defer="nama_instansi" class="border rounded px-3 py-2 w-full" autofocus>
-                        @error('nama_instansi') <span class="text-red-600">{{ $message }}</span> @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="block mb-1">alamat_instansi</label>
-                        <input type="text" wire:model.defer="alamat_instansi" class="border rounded px-3 py-2 w-full" autofocus>
-                        @error('alamat_instansi') <span class="text-red-600">{{ $message }}</span> @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="block mb-1">telp_instansi</label>
-                        <input type="text" wire:model.defer="telp_instansi" class="border rounded px-3 py-2 w-full" autofocus>
-                        @error('telp_instansi') <span class="text-red-600">{{ $message }}</span> @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="block mb-1">kode_kabupaten</label>
-                        <input type="text" wire:model.defer="kode_kabupaten" class="border rounded px-3 py-2 w-full" autofocus>
-                        @error('kode_kabupaten') <span class="text-red-600">{{ $message }}</span> @enderror
+                        <label class="block mb-1">Pilih Instansi</label>
+                        <select wire:model="instansi_id" class="border rounded px-3 py-2 w-full">
+                            <option value="">Instansi</option>
+                            @foreach ($instansiList as $instansi)
+                            <option value="{{ $instansi->id }}">{{ $instansi->nama_instansi }}</option>
+                            @endforeach
+                        </select>
+                        @error('instansi_id') <span class="text-red-600">{{ $message }}</span> @enderror
                     </div>
 
                     <div class="mb-3">
