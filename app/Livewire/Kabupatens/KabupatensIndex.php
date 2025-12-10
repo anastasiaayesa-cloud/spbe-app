@@ -24,7 +24,7 @@ class KabupatensIndex extends Component
     {
         $kabupatens = Kabupaten::query()
             ->select('kabupatens.*')
-            ->orderBy('id', 'desc')
+            ->orderBy('id', 'asc')
             ->paginate(5);
         return view('livewire.kabupatens.kabupatens-index',compact('kabupatens'))
             ->layout('layouts.app');

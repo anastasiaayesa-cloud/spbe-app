@@ -12,6 +12,13 @@ class Instansi extends Model
         'nama_instansi',
         'alamat_instansi',
         'telp_instansi',
-        // 'kode_kabupaten',
+        'kabupaten_id',
     ];
+
+    public function kabupaten()
+    {
+        return $this->belongsTo(Kabupaten::class);
+    }
+
+
 }
