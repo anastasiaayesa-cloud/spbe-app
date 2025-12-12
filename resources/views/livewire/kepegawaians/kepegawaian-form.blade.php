@@ -96,7 +96,7 @@
 
                     <div class="mb-3">
                         <label class="block mb-1">Nomor Handphone</label>
-                        <input type="text" wire:model.defer="hp" class="border rounded px-3 py-2 w-full">
+                        <input type="text" wire:model.defer="hp" class="border rounded px-3 py-2 w-full" required>
                         @error('hp') <span class="text-red-600">{{ $message }}</span> @enderror
                     </div>
 
