@@ -63,6 +63,7 @@
                     <div class="mb-3">
                         <label class="block mb-1">Jenis Kelamin</label>
                         <select wire:model="jenis_kelamin" class="border rounded px-3 py-2 w-full">
+                            <option value="">Pilih Jenis Kelamin</option>
                             <option value="Laki-laki">Laki laki</option>
                             <option value="Perempuan">Perempuan</option>                            
                         </select>
@@ -111,8 +112,13 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="block mb-1">bank_id</label>
-                        <input type="text" wire:model="bank_id" class="border rounded px-3 py-2 w-full" autofocus>
+                        <label class="block mb-1">Bank</label>
+                        <select wire:model="bank_id" class="border rounded px-3 py-2 w-full">
+                            <option value="">-- Pilih Bank--</option>
+                            @foreach ($bankList as $bank)
+                                <option value="{{ $bank->id }}">{{ $bank->nama }}</option>
+                            @endforeach
+                        </select>
                         @error('bank_id') <span class="text-red-600">{{ $message }}</span> @enderror
                     </div>
 
@@ -123,10 +129,17 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="block mb-1">pendidikan_terakhir_id</label>
-                        <input type="text" wire:model.defer="pendidikan_terakhir_id" class="border rounded px-3 py-2 w-full" autofocus>
-                        @error('pendidikan_terakhir_id') <span class="text-red-600">{{ $message }}</span> @enderror
-                    </div>
+    <label class="block mb-1">Pendidikan Terakhir</label>
+    <select wire:model="pendidikan_id" class="border rounded px-3 py-2 w-full">
+        <option value="">-- Pilih Pendidikan--</option>
+        @foreach ($pendidikanList as $pendidikan)
+            <option value="{{ $pendidikan->id }}">{{ $pendidikan->nama_pendidikan }}</option>
+        @endforeach
+    </select>
+    @error('pendidikan_id') 
+        <span class="text-red-600">{{ $message }}</span> 
+    @enderror
+</div>
 
                     <div class="mb-3">
                         <label class="block mb-1">is_bpmp</label>
