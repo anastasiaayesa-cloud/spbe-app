@@ -29,8 +29,9 @@ class Kepegawaian extends Model
         'npwp',
         'bank_id',
         'no_rek',
-        'pendidikan_terakhir_id',
-        'is_bpmp'
+        // 'pendidikan_terakhir_id',
+        'pendidikan_id',
+        // 'is_bpmp'
     ];
 
     public function pangkats()
@@ -42,10 +43,9 @@ class Kepegawaian extends Model
     {
         return $this->belongsTo(Bank::class);
     }
-    
+
     public function status()
     {
         return $this->belongsTo(Pendidikan::class);
     }
-
 }

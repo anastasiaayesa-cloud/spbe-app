@@ -50,7 +50,7 @@
                     
                     <div class="mb-3">
                         <label class="block mb-1">Tempat Lahir</label>
-                        <input type="text" wire:model.defer="tempat_lahir" class="border rounded px-3 py-2 w-full" autofocus>
+                        <input type="text" wire:model.defer="tempat_lahir" class="border rounded px-3 py-2 w-full">
                         @error('tempat_lahir') <span class="text-red-600">{{ $message }}</span> @enderror
                     </div>
 
@@ -63,7 +63,7 @@
                     <div class="mb-3">
                         <label class="block mb-1">Jenis Kelamin</label>
                         <select wire:model="jenis_kelamin" class="border rounded px-3 py-2 w-full">
-                            <option value="">Pilih Jenis Kelamin</option>
+                            <option value="">-- Pilih Jenis Kelamin --</option>
                             <option value="Laki-laki">Laki laki</option>
                             <option value="Perempuan">Perempuan</option>                            
                         </select>
@@ -72,6 +72,7 @@
                     <div class="mb-3">
                         <label class="block mb-1">Agama</label>
                         <select wire:model="agama" class="border rounded px-3 py-2 w-full">
+                            <option value="">-- Pilih Agama --</option>
                             <option value="Islam">Islam</option>
                             <option value="Kristen Katolik">Kristen Katolik</option>  
                             <option value="Kristen Protestan">Kristen Protestan</option>
@@ -85,7 +86,7 @@
                     <div class="mb-3">
                         <label class="block mb-1">Pilih Instansi</label>
                         <select wire:model="instansi_id" class="border rounded px-3 py-2 w-full">
-                            <option value="">Instansi</option>
+                            <option value="">-- Pilih Instansi --</option>
                             @foreach ($instansiList as $instansi)
                             <option value="{{ $instansi->id }}">{{ $instansi->nama_instansi }}</option>
                             @endforeach
@@ -95,19 +96,19 @@
 
                     <div class="mb-3">
                         <label class="block mb-1">Nomor Handphone</label>
-                        <input type="text" wire:model.defer="hp" class="border rounded px-3 py-2 w-full" autofocus>
+                        <input type="text" wire:model.defer="hp" class="border rounded px-3 py-2 w-full">
                         @error('hp') <span class="text-red-600">{{ $message }}</span> @enderror
                     </div>
 
                     <div class="mb-3">
                         <label class="block mb-1">Email</label>
-                        <input type="email" wire:model.defer="email" class="border rounded px-3 py-2 w-full" autofocus>
+                        <input type="email" wire:model.defer="email" class="border rounded px-3 py-2 w-full" required>
                         @error('email') <span class="text-red-600">{{ $message }}</span> @enderror
                     </div>
 
                     <div class="mb-3">
                         <label class="block mb-1">NPWP</label>
-                        <input type="text" wire:model.defer="npwp" class="border rounded px-3 py-2 w-full" autofocus>
+                        <input type="text" wire:model.defer="npwp" class="border rounded px-3 py-2 w-full">
                         @error('npwp') <span class="text-red-600">{{ $message }}</span> @enderror
                     </div>
 
@@ -124,27 +125,21 @@
 
                     <div class="mb-3">
                         <label class="block mb-1">Nomor Rekening</label>
-                        <input type="text" wire:model.defer="no_rek" class="border rounded px-3 py-2 w-full" autofocus>
+                        <input type="text" wire:model.defer="no_rek" class="border rounded px-3 py-2 w-full">
                         @error('no_rek') <span class="text-red-600">{{ $message }}</span> @enderror
                     </div>
 
                     <div class="mb-3">
-    <label class="block mb-1">Pendidikan Terakhir</label>
-    <select wire:model="pendidikan_id" class="border rounded px-3 py-2 w-full">
-        <option value="">-- Pilih Pendidikan--</option>
-        @foreach ($pendidikanList as $pendidikan)
-            <option value="{{ $pendidikan->id }}">{{ $pendidikan->nama_pendidikan }}</option>
-        @endforeach
-    </select>
-    @error('pendidikan_id') 
-        <span class="text-red-600">{{ $message }}</span> 
-    @enderror
-</div>
-
-                    <div class="mb-3">
-                        <label class="block mb-1">IS BPMP</label>
-                        <input type="text" wire:model.defer="is_bpmp" class="border rounded px-3 py-2 w-full" autofocus>
-                        @error('is_bpmp') <span class="text-red-600">{{ $message }}</span> @enderror
+                        <label class="block mb-1">Pendidikan Terakhir</label>
+                        <select wire:model="pendidikan_id" class="border rounded px-3 py-2 w-full">
+                            <option value="">-- Pilih Pendidikan--</option>
+                            @foreach ($pendidikanList as $pendidikan)
+                                <option value="{{ $pendidikan->id }}">{{ $pendidikan->nama_pendidikan }}</option>
+                            @endforeach
+                        </select>
+                        @error('pendidikan_id') 
+                            <span class="text-red-600">{{ $message }}</span> 
+                        @enderror
                     </div>
 
                     <div class="flex items-center space-x-2">
