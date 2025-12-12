@@ -20,5 +20,11 @@ class Instansi extends Model
         return $this->belongsTo(Kabupaten::class);
     }
 
+    public function kepegawaians()
+{
+    return $this->hasMany(Kepegawaian::class, 'instansi_id');
+}
+
+
 
 }

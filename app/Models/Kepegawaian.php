@@ -37,4 +37,15 @@ class Kepegawaian extends Model
     {
         return $this->belongsTo(Pangkat::class);
     }
+
+    public function banks()
+    {
+        return $this->belongsTo(Bank::class);
+    }
+    
+    public function status()
+    {
+        return $this->belongsTo(Pendidikan::class);
+    }
+
 }
