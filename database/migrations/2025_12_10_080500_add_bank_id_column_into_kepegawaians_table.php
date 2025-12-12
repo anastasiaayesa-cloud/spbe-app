@@ -13,14 +13,15 @@ return new class extends Migration
     {
         Schema::table('kepegawaians', function (Blueprint $table) {
             // Periksa apakah kolom 'bank_id' BELUM ADA sebelum menambahkannya.
-            if (!Schema::hasColumn('kepegawaians', 'instansi_id')) {
+            if (!Schema::hasColumn('kepegawaians', 'bank_id')) {
                 // Tambahkan kolom
-                $table->unsignedBigInteger('instansi_id')->nullable()->after('agama');
+                $table->unsignedBigInteger('bank_id')->nullable()->after('npwp');
                 
                 // Tambahkan foreign key
-                $table->foreign('instansi_id')->references('id')->on('instansis')->onDelete('cascade');
+                $table->foreign('bank_id')->references('id')->on('banks')->onDelete('cascade');
             }
         });
+
     }
 
     /**
@@ -29,7 +30,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('kepegawaians', function (Blueprint $table) {
-            $table->dropColumn('instansi_id');
+            $table->dropColumn('bank_id');
+     
         });
     }
 };

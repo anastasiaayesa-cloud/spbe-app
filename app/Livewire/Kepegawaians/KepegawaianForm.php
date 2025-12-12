@@ -5,17 +5,22 @@ namespace App\Livewire\Kepegawaians;
 use App\Models\Instansi;
 use App\Models\Kepegawaian;
 use App\Models\Pangkat;
+use App\Models\Bank;
+use App\Models\Pendidikan;
+
 use Livewire\Component;
 use Symfony\Contracts\Service\Attribute\Required;
 
 class KepegawaianForm extends Component
 {
-    public $kepegawaian_id, $nama, $nip, $jabatan, $pangkat_id, $tempat_lahir, $tgl_lahir, $jenis_kelamin, $agama, $instansi_id, $hp, $email, $npwp, $bank_id, $no_rek, $pendidikan_terakhir_id, $is_bpmp, $pangkatList = [], $instansiList = [];
+    public $kepegawaian_id, $nama, $nip, $jabatan, $pangkat_id, $tempat_lahir, $tgl_lahir, $jenis_kelamin, $agama, $instansi_id, $pendidikan_id, $hp, $email, $npwp, $bank_id, $no_rek, $pendidikan_terakhir_id, $is_bpmp, $pangkatList = [], $instansiList = [], $bankList = [], $pendidikanList = [];
 
     public function mount($kepegawaian_id = null)
     {
         $this->pangkatList = Pangkat::orderBy('nama')->get();
         $this->instansiList = Instansi::orderBy('nama_instansi')->get();
+        $this->bankList = Bank::orderBy('nama')->get();
+        $this->pendidikanList = Pendidikan::orderBy('nama_pendidikan')->get();
 
         // kalau parameter ada (edit mode)
         if ($kepegawaian_id) {
@@ -36,7 +41,7 @@ class KepegawaianForm extends Component
             $this->	npwp = $kepegawaian->npwp;
             $this->bank_id = $kepegawaian->bank_id;
             $this->no_rek = $kepegawaian->no_rek;
-            $this->pendidikan_terakhir_id = $kepegawaian->pendidikan_terakhir_id;
+            $this->pendidikan_id = $kepegawaian->pendidikan_id;
             $this->	is_bpmp = $kepegawaian->is_bpmp;
         }
         else{
@@ -61,7 +66,7 @@ class KepegawaianForm extends Component
             'npwp' => 'nullable|string',
             'bank_id' => 'nullable|string',
             'no_rek' => 'nullable|string',
-            'pendidikan_terakhir_id' => 'required|string|max:255',
+            'pendidikan_id' => 'required|exists:pendidikans,id',
             'is_bpmp' => 'nullable|string',
         ];
 
@@ -90,7 +95,7 @@ class KepegawaianForm extends Component
                 'npwp' => $this->npwp,
                 'bank_id' => $this->bank_id,
                 'no_rek' => $this->no_rek,
-                'pendidikan_terakhir_id' => $this->	pendidikan_terakhir_id,
+                'pendidikan__id' => $this->	pendidikan_id,
                 'is_bpmp' => $this->is_bpmp,
             ]);
 
