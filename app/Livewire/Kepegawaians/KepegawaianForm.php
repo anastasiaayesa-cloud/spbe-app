@@ -13,7 +13,7 @@ use Symfony\Contracts\Service\Attribute\Required;
 
 class KepegawaianForm extends Component
 {
-    public $kepegawaian_id, $nama, $nip, $jabatan, $pangkat_id, $tempat_lahir, $tgl_lahir, $jenis_kelamin, $agama, $instansi_id, $pendidikan_id, $hp, $email, $npwp, $bank_id, $no_rek, $pendidikan_terakhir_id, $is_bpmp, $pangkatList = [], $instansiList = [], $bankList = [], $pendidikanList = [];
+    public $kepegawaian_id, $nama, $nip, $jabatan, $pangkat_id, $tempat_lahir, $tgl_lahir, $jenis_kelamin, $agama, $instansi_id, $pendidikan_id, $hp, $email, $npwp, $bank_id, $no_rek, $pangkatList = [], $instansiList = [], $bankList = [], $pendidikanList = [];
 
     public function mount($kepegawaian_id = null)
     {
@@ -37,15 +37,12 @@ class KepegawaianForm extends Component
             $this->agama = $kepegawaian->agama;
             $this->instansi_id = $kepegawaian->instansi_id;
             $this->hp = $kepegawaian->hp;
-            $this->email  = $kepegawaian->email ;
-            $this->	npwp = $kepegawaian->npwp;
+            $this->email  = $kepegawaian->email;
+            $this->npwp = $kepegawaian->npwp;
             $this->bank_id = $kepegawaian->bank_id;
             $this->no_rek = $kepegawaian->no_rek;
             $this->pendidikan_id = $kepegawaian->pendidikan_id;
-            $this->	is_bpmp = $kepegawaian->is_bpmp;
-        }
-        else{
-
+        } else {
         }
     }
 
@@ -67,7 +64,6 @@ class KepegawaianForm extends Component
             'bank_id' => 'nullable|string',
             'no_rek' => 'nullable|string',
             'pendidikan_id' => 'required|exists:pendidikans,id',
-            'is_bpmp' => 'nullable|string',
         ];
 
         return $rules;
@@ -90,13 +86,12 @@ class KepegawaianForm extends Component
                 'jenis_kelamin' => $this->jenis_kelamin,
                 'agama' => $this->agama,
                 'instansi_id' => $this->instansi_id,
-                'hp' => $this->	hp,
+                'hp' => $this->hp,
                 'email' => $this->email,
                 'npwp' => $this->npwp,
                 'bank_id' => $this->bank_id,
                 'no_rek' => $this->no_rek,
-                'pendidikan__id' => $this->	pendidikan_id,
-                'is_bpmp' => $this->is_bpmp,
+                'pendidikan_id' => $this->pendidikan_id,
             ]);
 
             session()->flash('success', 'Kepegawaian berhasil diedit.');
@@ -112,14 +107,15 @@ class KepegawaianForm extends Component
                 'jenis_kelamin' => $this->jenis_kelamin,
                 'agama' => $this->agama,
                 'instansi_id' => $this->instansi_id,
-                'hp' => $this->	hp,
+                'hp' => $this->hp,
                 'email' => $this->email,
                 'npwp' => $this->npwp,
                 'bank_id' => $this->bank_id,
                 'no_rek' => $this->no_rek,
-                'pendidikan_terakhir_id' => $this->	pendidikan_terakhir_id,
-                'is_bpmp' => $this->is_bpmp,
+                'pendidikan_id' => $this->pendidikan_id,
             ]);
+
+            // dd($kepegawaian);
 
             session()->flash('success', 'Kepegawaian baru berhasil ditambahkan.');
             return redirect()->route('kepegawaians.create');

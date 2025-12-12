@@ -26,7 +26,7 @@ return new class extends Migration
             $table->string('npwp')->nullable();
             $table->string('bank_id')->nullable();
             $table->string('no_rek')->nullable();
-            $table->string('pendidikan_terakhir_id');
+            // $table->string('pendidikan_terakhir_id');
             $table->string('is_bpmp')->nullable();
             $table->timestamps();
         });
