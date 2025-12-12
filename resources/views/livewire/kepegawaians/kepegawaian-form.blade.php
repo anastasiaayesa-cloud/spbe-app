@@ -25,13 +25,13 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="block mb-1">nip</label>
+                        <label class="block mb-1">NIP</label>
                         <input type="text" wire:model.defer="nip" class="border rounded px-3 py-2 w-full">
                         @error('nip') <span class="text-red-600">{{ $message }}</span> @enderror
                     </div>
 
                     <div class="mb-3">
-                        <label class="block mb-1">jabatan</label>
+                        <label class="block mb-1">Jabatan</label>
                         <input type="text" wire:model.defer="jabatan" class="border rounded px-3 py-2 w-full">
                         @error('jabatan') <span class="text-red-600">{{ $message }}</span> @enderror
                     </div>
@@ -49,13 +49,13 @@
 
                     
                     <div class="mb-3">
-                        <label class="block mb-1">tempat lahir</label>
+                        <label class="block mb-1">Tempat Lahir</label>
                         <input type="text" wire:model.defer="tempat_lahir" class="border rounded px-3 py-2 w-full" autofocus>
                         @error('tempat_lahir') <span class="text-red-600">{{ $message }}</span> @enderror
                     </div>
 
                     <div class="mb-3">
-                        <label class="block mb-1">tgl lahir</label>
+                        <label class="block mb-1">Tanggal Lahir</label>
                         <input type="date" wire:model="tgl_lahir" class="border rounded px-3 py-2 w-full">
                         @error('tgl_lahir') <span class="text-red-600">{{ $message }}</span> @enderror
                     </div>
@@ -94,19 +94,19 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="block mb-1">hp</label>
+                        <label class="block mb-1">Nomor Handphone</label>
                         <input type="text" wire:model.defer="hp" class="border rounded px-3 py-2 w-full" autofocus>
                         @error('hp') <span class="text-red-600">{{ $message }}</span> @enderror
                     </div>
 
                     <div class="mb-3">
-                        <label class="block mb-1">email </label>
+                        <label class="block mb-1">Email</label>
                         <input type="email" wire:model.defer="email" class="border rounded px-3 py-2 w-full" autofocus>
                         @error('email') <span class="text-red-600">{{ $message }}</span> @enderror
                     </div>
 
                     <div class="mb-3">
-                        <label class="block mb-1">npwp</label>
+                        <label class="block mb-1">NPWP</label>
                         <input type="text" wire:model.defer="npwp" class="border rounded px-3 py-2 w-full" autofocus>
                         @error('npwp') <span class="text-red-600">{{ $message }}</span> @enderror
                     </div>
@@ -123,7 +123,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="block mb-1">no_rek</label>
+                        <label class="block mb-1">Nomor Rekening</label>
                         <input type="text" wire:model.defer="no_rek" class="border rounded px-3 py-2 w-full" autofocus>
                         @error('no_rek') <span class="text-red-600">{{ $message }}</span> @enderror
                     </div>
@@ -142,7 +142,7 @@
 </div>
 
                     <div class="mb-3">
-                        <label class="block mb-1">is_bpmp</label>
+                        <label class="block mb-1">IS BPMP</label>
                         <input type="text" wire:model.defer="is_bpmp" class="border rounded px-3 py-2 w-full" autofocus>
                         @error('is_bpmp') <span class="text-red-600">{{ $message }}</span> @enderror
                     </div>
