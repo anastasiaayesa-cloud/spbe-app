@@ -128,18 +128,18 @@
                         @error('no_rek') <span class="text-red-600">{{ $message }}</span> @enderror
                     </div>
 
-                    <div class="mb-3">
-    <label class="block mb-1">Pendidikan Terakhir</label>
-    <select wire:model="pendidikan_id" class="border rounded px-3 py-2 w-full">
-        <option value="">-- Pilih Pendidikan--</option>
-        @foreach ($pendidikanList as $pendidikan)
-            <option value="{{ $pendidikan->id }}">{{ $pendidikan->nama_pendidikan }}</option>
-        @endforeach
-    </select>
-    @error('pendidikan_id') 
-        <span class="text-red-600">{{ $message }}</span> 
-    @enderror
-</div>
+                                        <div class="mb-3">
+                        <label class="block mb-1">Pendidikan Terakhir</label>
+                        <select wire:model="pendidikan_id" class="border rounded px-3 py-2 w-full">
+                            <option value="">-- Pilih Pendidikan--</option>
+                            @foreach ($pendidikanList as $pendidikan)
+                                <option value="{{ $pendidikan->id }}">{{ $pendidikan->nama_pendidikan }}</option>
+                            @endforeach
+                        </select>
+                        @error('pendidikan_id') 
+                            <span class="text-red-600">{{ $message }}</span> 
+                        @enderror
+                    </div>
 
                     <div class="mb-3">
                         <label class="block mb-1">is_bpmp</label>

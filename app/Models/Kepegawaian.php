@@ -29,7 +29,7 @@ class Kepegawaian extends Model
         'npwp',
         'bank_id',
         'no_rek',
-        'pendidikan_terakhir_id',
+        'pendidikan_id',
         'is_bpmp'
     ];
 
@@ -43,7 +43,7 @@ class Kepegawaian extends Model
         return $this->belongsTo(Bank::class);
     }
     
-    public function status()
+    public function pendidikans()
     {
         return $this->belongsTo(Pendidikan::class);
     }
