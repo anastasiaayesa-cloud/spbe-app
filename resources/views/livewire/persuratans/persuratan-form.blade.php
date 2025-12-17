@@ -20,6 +20,42 @@
                 @endif
 
                 <form wire:submit.prevent="submit" autocomplete="off">
+                    <div class="mb-4 relative" x-data="{ open: @entangle('showPegawaiDropdown') }">
+                        <label class="font-semibold">Penerima Surat</label>
+
+                        {{-- Selected --}}
+                        <div class="flex flex-wrap gap-2 mb-2">
+                            @foreach($this->pegawaiSelectedData as $pegawai)
+                                <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm flex items-center gap-2">
+                                    {{ $pegawai->nama }}
+                                    <button type="button"
+                                            wire:click="removePegawai({{ $pegawai->id }})"
+                                            class="text-red-600 font-bold">×</button>
+                                </span>
+                            @endforeach
+                        </div>
+
+                        {{-- Input --}}
+                        <input type="text"
+                            wire:model.live="pegawaiSearch"
+                            wire:focus="showAllPegawai"
+                            @click.away="$wire.closeDropdown()"
+                            class="w-full border rounded px-3 py-2"
+                            placeholder="Ketik nama penerima surat">
+
+                        {{-- Dropdown --}}
+                        @if($showPegawaiDropdown && count($pegawaiResults))
+                            <div class="absolute z-10 w-full border rounded mt-1 bg-white max-h-56 overflow-y-auto shadow">
+                                @foreach($pegawaiResults as $pegawai)
+                                    <div class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
+                                        wire:click="addPegawai({{ $pegawai['id'] }})">
+                                        {{ $pegawai['nama'] }}
+                                    </div>
+                                @endforeach
+                            </div>
+                        @endif
+                    </div>
+
                     <div class="mb-3">
                         <label class="block mb-1">Nama File *</label>
                         <input type="text" wire:model.defer="nama_surat" class="border rounded px-3 py-2 w-full" placeholder="Isi Nama Surat" autofocus>
