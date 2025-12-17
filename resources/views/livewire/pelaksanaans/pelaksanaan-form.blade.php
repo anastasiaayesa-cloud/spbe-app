@@ -2,7 +2,7 @@
 
 <x-slot name="header">
     <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-        {{ __('Manajemen Persuratan') }}
+        {{ __('Manajemen Bukti') }}
     </h2>
 </x-slot>
 
@@ -10,7 +10,7 @@
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
             <div class="p-4 max-w-lg">
-                <h2 class="text-xl mb-4">{{ $persuratan_id ? 'Edit Surat' : 'Tambah Surat' }}</h2>                
+                <h2 class="text-xl mb-4">{{ $pelaksanaan_id ? 'Edit Surat' : 'Tambah Surat' }}</h2>                
 
                 @if (session('success'))
                     <div class="mb-4 text-green-700">{{ session('success') }}</div>
@@ -21,19 +21,14 @@
 
                 <form wire:submit.prevent="submit" autocomplete="off">
 
-                    <div class="mb-3">
-                        <label class="block mb-1">Kepada *</label>
-                        <input type="text" wire:model="kepada" class="border rounded px-3 py-2 w-full">
-                        @error('kepada') <span class="text-red-600">{{ $message }}</span> @enderror
-                    </div>
 
                     <div class="mb-3">
-                        <label class="block mb-1">Nama File *</label>
-                        <input type="text" wire:model.defer="nama_surat" class="border rounded px-3 py-2 w-full" placeholder="Isi Nama Surat" autofocus>
-                        @error('nama_surat') <span class="text-red-600">{{ $message }}</span> @enderror
+                        <label class="block mb-1">Jenis Bukti *</label>
+                        <input type="text" wire:model.defer="jenis_bukti" class="border rounded px-3 py-2 w-full" placeholder="Pilih Jenis Bukti" autofocus>
+                        @error('jenis_bukti') <span class="text-red-600">{{ $message }}</span> @enderror
                     </div>
 
-                     <div class="mb-3">
+                     {{-- <div class="mb-3">
                         <label class="block mb-1">Kategori Surat</label>
                         <select wire:model="persuratan_kategori_id" class="border rounded px-3 py-2 w-full">
                             <option value="">-- Pilih Kategori Surat--</option>
@@ -42,14 +37,7 @@
                             @endforeach
                         </select>
                         @error('persuratan_kategori_id') <span class="text-red-600">{{ $message }}</span> @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="block mb-1">Perihal *</label>
-                        <input type="text" wire:model="perihal" class="border rounded px-3 py-2 w-full">
-                        @error('perihal') <span class="text-red-600">{{ $message }}</span> @enderror
-                    </div>
-
+                    </div> --}}
 
 
 <div class="mb-3">
@@ -68,27 +56,18 @@
                         @error('tanggal_upload') <span class="text-red-600">{{ $message }}</span> @enderror
                     </div>
 
-                    <div class="mb-3">
-                        <label class="block mb-1">Jenis Anggaran</label>
-                        <select wire:model="jenis_kelamin" class="border rounded px-3 py-2 w-full">
-                            <option value="">-- Pilih Jenis Anggaran --</option>
-                            <option value="BPMP">BPMP</option>
-                            <option value="Luar BPMP">Luar BPMP</option>                            
-                        </select>
-                        @error('jenis_anggaran') <span class="text-red-600">{{ $message }}</span> @enderror
-                    </div>
 
 
                     <div class="flex items-center space-x-2">
                         <button type="submit" class=" px-4 py-2 rounded">
-                            {{ $persuratan_id ? 'Simpan Perubahan' : 'Simpan' }}
+                            {{ $pelaksanaan_id ? 'Simpan Perubahan' : 'Simpan' }}
                         </button>
-                        @if ($persuratan_id)
+                        @if ($pelaksanaan_id)
                         <button type="button" wire:click="delete" class="px-4 py-2 bg-red-600 text-white rounded">
                             Hapus
                         </button>
                         @endif
-                        <a href="{{ route('persuratans.index') }}" class="px-4 py-2 border rounded">Batal</a>
+                        <a href="{{ route('pelaksanaans.index') }}" class="px-4 py-2 border rounded">Batal</a>
                     </div>
                 </form>
             </div>

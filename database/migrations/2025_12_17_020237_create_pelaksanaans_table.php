@@ -6,22 +6,26 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Run the migrations.
+     */
     public function up(): void
     {
-        Schema::create('persuratans', function (Blueprint $table) {
+        Schema::create('pelaksanaans', function (Blueprint $table) {
             $table->id();
-            $table->string('kepada'); 
-            $table->string('nama_surat'); // nama surat (opsional if needed)
+            $table->string('jenis_bukti');
             $table->string('file_pdf');   // simpan nama file PDF
             $table->date('tanggal_upload'); // tanggal upload
-            $table->string('perihal');
-            $table->enum('jenis_anggaran', ['BPMP', 'Luar BPMP']);
+
             $table->timestamps();
         });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
-        Schema::dropIfExists('persuratans');
+        Schema::dropIfExists('pelaksanaans');
     }
 };

@@ -14,7 +14,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             KabupatenSeeder::class,
-            PangkatSeeder::class
+            PangkatSeeder::class,
             BankSeeder::class,
             PendidikanSeeder::class
         ]);
