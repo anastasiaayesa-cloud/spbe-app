@@ -5,7 +5,7 @@
 
 <x-slot name="header">
     <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-        {{ __('Manajemen Perencanaan') }}
+        {{ __('Manajemen Persuratan') }}
     </h2>
 </x-slot>
 
@@ -16,7 +16,7 @@
 
                 <div class="flex items-center justify-between mb-4">
 
-                    {{-- Tombol tambah perencaan (opsional) --}}
+                    {{-- Tombol tambah persuratan (opsional) --}}
                     <div>
                         <a href="{{ route('persuratans.create') }}"
                             class="inline-block px-4 py-2 rounded">Buat Surat</a>
