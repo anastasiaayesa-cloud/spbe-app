@@ -126,7 +126,7 @@ class KepegawaianForm extends Component
     {
         Kepegawaian::where('id', $this->kepegawaian_id)->delete();
 
-        session()->flash('success', 'Kepegawaian berhasil dihapus.');
+        session()->flash('success', 'Pegawaian berhasil dihapus.');
         return redirect()->route('kepegawaians.index');
     }
 

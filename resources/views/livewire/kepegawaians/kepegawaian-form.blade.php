@@ -1,6 +1,6 @@
 <x-slot name="header">
     <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-        {{ __('Manajemen Kepegawaians') }}
+        {{ __('Pegawai') }}
     </h2>
 </x-slot>
 
@@ -8,7 +8,7 @@
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
             <div class="p-4 max-w-lg">
-                <h2 class="text-xl mb-4">{{ $kepegawaian_id ? 'Edit Kepegawaian' : 'Tambah Kepegawaian' }}</h2>                
+                <h2 class="text-xl mb-4">{{ $kepegawaian_id ? 'Edit Pegawai' : 'Tambah Pegawai' }}</h2>                
 
                 @if (session('success'))
                     <div class="mb-4 text-green-700">{{ session('success') }}</div>

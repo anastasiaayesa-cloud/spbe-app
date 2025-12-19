@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Livewire\Kepegawaians;
+namespace App\Livewire\Perencanaans;
 
-use App\Models\Kepegawaian;
 use Livewire\Component;
 use Livewire\WithPagination;
+use App\Models\DokumenPerencanaan;
 
-class KepegawaiansIndex extends Component
+class DokumenPerencanaanIndex extends Component
 {
     use WithPagination;
 
@@ -23,16 +23,15 @@ class KepegawaiansIndex extends Component
 
     public function render()
     {
-        $kepegawaians = Kepegawaian::query()
-            ->select('kepegawaians.*')
+        $dokumenperencanaans = DokumenPerencanaan::query()
+            ->select('dokumen_perencanaans.*')
             ->when($this->search, function ($query) { //searching di search kolom
-                $query->where('kepegawaians.nama', 'like', '%' . $this->search . '%')
-                    ->orWhere('kepegawaians.nip', 'like', "%{$this->search}%");
+                $query->where('dokumen_perencanaans.nama', 'like', '%' . $this->search . '%');
             })
-            ->orderBy('id', 'desc')
+            ->orderBy('id', 'asc')
             ->paginate(5);
 
-        return view('livewire.kepegawaians.kepegawaians-index', compact('kepegawaians'))
+        return view('livewire.perencanaans.dokumen-perencanaan-index', compact('dokumenperencanaans'))
             ->layout('layouts.app');
     }
 }

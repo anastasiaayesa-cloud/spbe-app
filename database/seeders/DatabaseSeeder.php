@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder
             KabupatenSeeder::class,
             PangkatSeeder::class,
             BankSeeder::class,
-            PendidikanSeeder::class
+            PendidikanSeeder::class,
         ]);
     }
 }

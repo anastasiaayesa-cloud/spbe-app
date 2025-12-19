@@ -1,6 +1,6 @@
 <x-slot name="header">
     <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-        {{ __('Kabupaten') }}
+        {{ __('Pegawai') }}
     </h2>
 </x-slot>
 
@@ -14,13 +14,13 @@
                 {{-- Tombol tambah kepegawaian (opsional) --}}
                     <div>
                         <a href="{{ route('kepegawaians.create') }}"
-                            class="inline-block px-4 py-2 rounded">Tambah Kepegawaian </a>
+                            class="inline-block px-4 py-2 rounded">Tambah Pegawai </a>
                     </div>
 
                     {{-- Search bar --}}
                     <div>
                         <input type="text" wire:model.live="search"
-                            placeholder="Cari perencanaan..."
+                            placeholder="Cari pegawai..."
                             class="border rounded px-3 py-2 w-64 focus:ring focus:ring-blue-200">
                     </div>
                 </div>

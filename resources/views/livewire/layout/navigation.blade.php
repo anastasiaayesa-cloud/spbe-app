@@ -34,12 +34,16 @@ new class extends Component
                         {{ __('Dashboard') }}
                     </x-nav-link>
                     
-                    <x-nav-link :href="route('perencanaans.index')" :active="request()->routeIs('perencanaans.index')" wire:navigate>
+                    <x-nav-link :href="route('dokumen-perencanaan.index')" :active="request()->routeIs('dokumenperencanaans.index')" wire:navigate>
                         {{ __('Perencanaan') }}
                     </x-nav-link>
+                    
+                    <!-- <x-nav-link :href="route('perencanaans.index')" :active="request()->routeIs('perencanaans.index')" wire:navigate>
+                        {{ __('Perencanaan') }}
+                    </x-nav-link> -->
 
                     <x-nav-link :href="route('kepegawaians.index')" :active="request()->routeIs('kepegawaians.index')" wire:navigate>
-                        {{ __('Kepegawaian') }}
+                        {{ __('Pegawai') }}
                     </x-nav-link>
                     
                     <x-nav-link :href="route('persuratans.index')" :active="request()->routeIs('persuratans.index')" wire:navigate>
