@@ -14,7 +14,7 @@ class Persuratan extends Model
         'file_pdf',
         'tanggal_upload',
         'persuratan_kategori_id',
-        'kepada',
+        // 'kepada',
         'perihal',
         'jenis_anggaran'
     ];

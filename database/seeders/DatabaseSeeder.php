@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             PangkatSeeder::class,
             BankSeeder::class,
             PendidikanSeeder::class,
+            KepegawaianSeeder::class,
         ]);
     }
 }

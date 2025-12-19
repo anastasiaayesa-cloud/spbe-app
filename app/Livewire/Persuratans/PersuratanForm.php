@@ -12,7 +12,7 @@ use App\Models\PersuratanKategori;
 class PersuratanForm extends Component
 {
     use WithFileUploads;
-    public $persuratan_id, $nama_surat, $file_pdf, $existing_pdf, $tanggal_upload, $persuratanKategoriList=[], $persuratan_kategori_id, $kepada, $perihal, $jenis_anggaran;
+    public $persuratan_id, $nama_surat, $file_pdf, $existing_pdf, $tanggal_upload, $persuratanKategoriList = [], $persuratan_kategori_id, $kepada, $perihal, $jenis_anggaran;
     // public $persuratan_id, $nama_surat, $file_pdf, $existing_pdf, $tanggal_upload, $persuratanKategoriList = [], $persuratan_kategori_id;
 
     public $pegawaiSearch = '';
@@ -43,7 +43,7 @@ class PersuratanForm extends Component
             $this->jenis_anggaran = $persuratan->jenis_anggaran;
             $this->perihal = $persuratan->perihal;
 
-            
+
 
             $this->pegawaiSelected = $persuratan
                 ->kepegawaians
@@ -120,10 +120,9 @@ class PersuratanForm extends Component
             'nama_surat' => 'required|string|max:255',
             'file_pdf' => 'required|mimes:pdf',
             'tanggal_upload' => 'required|date',
-            'kepada' => 'required|string',
+            // 'kepada' => 'required|string',
             'perihal' => 'required|string',
             'jenis_anggaran' => 'nullable|in:BPMP,Luar BPMP',
-
         ];
 
         return $rules;
@@ -132,6 +131,7 @@ class PersuratanForm extends Component
     public function submit()
     {
         $this->validate();
+
         if ($this->file_pdf) {
             $pdfPath = $this->file_pdf->store('persuratan', 'public');
         }
@@ -148,7 +148,7 @@ class PersuratanForm extends Component
                 'nama_surat' => $this->nama_surat,
                 'file_pdf' => $pdfPath,
                 'tanggal_upload' => $this->tanggal_upload,
-                'kepada' => $this->kepada,
+                // 'kepada' => $this->kepada,
                 'perihal' => $this->perihal,
                 'jenis_aggaran' => $this->jenis_anggaran
 
@@ -163,7 +163,7 @@ class PersuratanForm extends Component
                 'nama_surat' => $this->nama_surat,
                 'file_pdf' => $pdfPath,
                 'tanggal_upload' => $this->tanggal_upload,
-                'kepada' => $this->kepada,
+                // 'kepada' => $this->kepada,
                 'perihal' => $this->perihal,
                 'jenis_aggaran' => $this->jenis_anggaran
             ]);

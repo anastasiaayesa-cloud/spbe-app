@@ -15,15 +15,13 @@ return new class extends Migration
             $table->unsignedBigInteger('pelaksanaan_jenis_id')->nullable()->after('file_pdf');
 
 
-            $table->foreign('pelaksanaan_jenis_id')->references('id')->on('pelaksanaanjenises')->onDelete('cascade');
+            $table->foreign('pelaksanaan_jenis_id')->references('id')->on('pelaksanaan_jenis')->onDelete('cascade');
         });
-
     }
-public function down(): void
+    public function down(): void
     {
         Schema::table('pelaksanaans', function (Blueprint $table) {
             $table->dropColumn('pelaksanaan_jenis_id');
         });
     }
-
 };

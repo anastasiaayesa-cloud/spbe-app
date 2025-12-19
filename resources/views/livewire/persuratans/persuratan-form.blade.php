@@ -20,13 +20,12 @@
                 @endif
 
                 <form wire:submit.prevent="submit" autocomplete="off">
-<<<<<<< HEAD
-
                     <div class="mb-3">
-                        <label class="block mb-1">Kepada *</label>
-                        <input type="text" wire:model="kepada" class="border rounded px-3 py-2 w-full">
-                        @error('kepada') <span class="text-red-600">{{ $message }}</span> @enderror
-=======
+                        <label class="block mb-1">Nama File *</label>
+                        <input type="text" wire:model.defer="nama_surat" class="border rounded px-3 py-2 w-full" placeholder="Isi Nama Surat" autofocus>
+                        @error('nama_surat') <span class="text-red-600">{{ $message }}</span> @enderror
+                    </div>
+
                     <div class="mb-4 relative" x-data="{ open: @entangle('showPegawaiDropdown') }">
                         <label class="font-semibold">Penerima Surat</label>
 
@@ -61,13 +60,6 @@
                                 @endforeach
                             </div>
                         @endif
->>>>>>> f2f887e6c8c56f5155ebee59bfa6441d60ce6e95
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="block mb-1">Nama File *</label>
-                        <input type="text" wire:model.defer="nama_surat" class="border rounded px-3 py-2 w-full" placeholder="Isi Nama Surat" autofocus>
-                        @error('nama_surat') <span class="text-red-600">{{ $message }}</span> @enderror
                     </div>
 
                      <div class="mb-3">

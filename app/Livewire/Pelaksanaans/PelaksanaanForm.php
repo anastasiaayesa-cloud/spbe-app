@@ -19,17 +19,15 @@ class PelaksanaanForm extends Component
         // kalau parameter ada (edit mode)
         if ($pelaksanaan_id) {
             $this->pelaksanaan_id = $pelaksanaan_id;
-            
+
 
             $pelaksanaan = Pelaksanaan::findOrFail($pelaksanaan_id);
 
-            
+
             $this->existing_pdf = $pelaksanaan->file_pdf;
             $this->jenis_bukti = $pelaksanaan->jenis_bukti;
             $this->file_pdf = $pelaksanaan->file_pdf; // file lama
             $this->tanggal_upload = $pelaksanaan->tanggal_upload;
-
-            
         }
     }
 
@@ -50,7 +48,7 @@ class PelaksanaanForm extends Component
         $this->validate();
         if ($this->file_pdf) {
             $pdfPath = $this->file_pdf->store('pelaksanaan', 'public');
-        } 
+        }
         // else {
         //     $pdfPath = $this->existing_pdf; // pakai file lama
         // }
@@ -59,20 +57,20 @@ class PelaksanaanForm extends Component
         if ($this->pelaksanaan_id) {
             $pelaksanaan = Pelaksanaan::findOrFail($this->pelaksanaan_id);
 
-            if ($pelaksanaan->file_pdf&& storage_path('app/public/' . $pelaksanaan->file_pdf)) {
-            Storage::delete('public/' . $pelaksanaan->file_pdf);
-        }
+            if ($pelaksanaan->file_pdf && storage_path('app/public/' . $pelaksanaan->file_pdf)) {
+                Storage::delete('public/' . $pelaksanaan->file_pdf);
+            }
             $pdfPath = $this->file_pdf->store('pelaksanaan', 'public');
 
             $pelaksanaan->update([
                 'jenis_bukti' => $this->jenis_bukti,
-                'file_pdf' => $pdfPath ,
+                'file_pdf' => $pdfPath,
                 'tanggal_upload' => $this->tanggal_upload,
 
 
             ]);
 
-            session()->flash('success', 'Nukti berhasil diedit.');
+            session()->flash('success', 'Bukti berhasil diedit.');
             return redirect()->route('pelaksanaans.index');
         } else {
             $pelaksanaan = Pelaksanaan::create([
@@ -82,16 +80,16 @@ class PelaksanaanForm extends Component
             ]);
 
             session()->flash('success', 'Bukti baru berhasil ditambahkan.');
-            return redirect()->route('pelaksanaan.create');
+            return redirect()->route('pelaksanaans.create');
         }
     }
 
-        public function delete()
+    public function delete()
     {
-        
+
         $pelaksanaan = Pelaksanaan::findOrFail($this->pelaksanaan_id);
 
-            if ($pelaksanaan->file_pdf&& storage_path('app/public/' . $pelaksanaan->file_pdf)) {
+        if ($pelaksanaan->file_pdf && storage_path('app/public/' . $pelaksanaan->file_pdf)) {
             Storage::delete('public/' . $pelaksanaan->file_pdf);
         }
 
@@ -106,5 +104,4 @@ class PelaksanaanForm extends Component
         return view('livewire.pelaksanaans.pelaksanaan-form')
             ->layout('layouts.app');
     }
-    
 }
