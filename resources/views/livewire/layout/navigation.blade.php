@@ -39,7 +39,7 @@ new class extends Component
                     </x-nav-link>
 
                     <x-nav-link :href="route('kepegawaians.index')" :active="request()->routeIs('kepegawaians.index')" wire:navigate>
-                        {{ __('Kepegawaians') }}
+                        {{ __('Kepegawaian') }}
                     </x-nav-link>
                     
                     <x-nav-link :href="route('persuratans.index')" :active="request()->routeIs('persuratans.index')" wire:navigate>
@@ -50,7 +50,11 @@ new class extends Component
                     </x-nav-link>
 
                     <x-nav-link :href="route('kabupatens.index')" :active="request()->routeIs('kabupatens.index')" wire:navigate>
-                        {{ __('Kabupatens') }}
+                        {{ __('Kabupaten') }}
+                    </x-nav-link>
+
+                    <x-nav-link :href="route('pelaksanaans.index')" :active="request()->routeIs('pelaksanaans.index')" wire:navigate>
+                        {{ __('Bukti') }}
                     </x-nav-link>
                 </div>
             </div>

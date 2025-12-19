@@ -20,6 +20,13 @@
                 @endif
 
                 <form wire:submit.prevent="submit" autocomplete="off">
+<<<<<<< HEAD
+
+                    <div class="mb-3">
+                        <label class="block mb-1">Kepada *</label>
+                        <input type="text" wire:model="kepada" class="border rounded px-3 py-2 w-full">
+                        @error('kepada') <span class="text-red-600">{{ $message }}</span> @enderror
+=======
                     <div class="mb-4 relative" x-data="{ open: @entangle('showPegawaiDropdown') }">
                         <label class="font-semibold">Penerima Surat</label>
 
@@ -54,6 +61,7 @@
                                 @endforeach
                             </div>
                         @endif
+>>>>>>> f2f887e6c8c56f5155ebee59bfa6441d60ce6e95
                     </div>
 
                     <div class="mb-3">
@@ -73,6 +81,13 @@
                         @error('persuratan_kategori_id') <span class="text-red-600">{{ $message }}</span> @enderror
                     </div>
 
+                    <div class="mb-3">
+                        <label class="block mb-1">Perihal *</label>
+                        <input type="text" wire:model="perihal" class="border rounded px-3 py-2 w-full">
+                        @error('perihal') <span class="text-red-600">{{ $message }}</span> @enderror
+                    </div>
+
+
 
 <div class="mb-3">
     <label class="block mb-1">File PDF *</label>
@@ -88,6 +103,16 @@
                         <label class="block mb-1">Tanggal Upload *</label>
                         <input type="date" wire:model="tanggal_upload" class="border rounded px-3 py-2 w-full">
                         @error('tanggal_upload') <span class="text-red-600">{{ $message }}</span> @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="block mb-1">Jenis Anggaran</label>
+                        <select wire:model="jenis_kelamin" class="border rounded px-3 py-2 w-full">
+                            <option value="">-- Pilih Jenis Anggaran --</option>
+                            <option value="BPMP">BPMP</option>
+                            <option value="Luar BPMP">Luar BPMP</option>                            
+                        </select>
+                        @error('jenis_anggaran') <span class="text-red-600">{{ $message }}</span> @enderror
                     </div>
 
 

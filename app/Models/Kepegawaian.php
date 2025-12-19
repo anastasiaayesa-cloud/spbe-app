@@ -43,7 +43,7 @@ class Kepegawaian extends Model
     {
         return $this->belongsTo(Bank::class);
     }
-
+    
     public function status()
     {
         return $this->belongsTo(Pendidikan::class);
