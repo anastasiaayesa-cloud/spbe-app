@@ -1,6 +1,6 @@
 <x-slot name="header">
     <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-        {{ __('Manajemen Perencanaan') }}
+        {{ __('Manajemen Instansi') }}
     </h2>
 </x-slot>
 

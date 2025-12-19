@@ -13,6 +13,9 @@ use App\Livewire\Persuratans\PersuratansIndex;
 use App\Livewire\Instansis\InstansiIndex;
 use App\Livewire\Instansis\InstansiForm;
 
+use App\Livewire\Pelaksanaans\PelaksanaansIndex;
+use App\Livewire\Pelaksanaans\PelaksanaanForm;
+
 use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
@@ -52,5 +55,11 @@ Route::get('/persuratans/{persuratan_id}/edit', PersuratanForm::class)->name('pe
 Route::get('/instansis', InstansiIndex::class)->name('instansis.index');
 Route::get('/instansis/create', InstansiForm::class)->name('instansis.create');
 Route::get('/instansis/{instansi_id}/edit', action: InstansiForm::class)->name(name: 'instansis.edit');
+
+Route::get('/pelaksanaans', PelaksanaansIndex::class)->name('pelaksanaans.index');
+Route::get('/pelaksanaans/create', PelaksanaanForm::class)->name(name: 'pelaksanaans.create');
+Route::get('/pelaksanaans/{pelaksanaan_id}/edit', action: PelaksanaanForm::class)->name(name: 'pelaksanaans.edit');
+
+
 
 require __DIR__ . '/auth.php';
