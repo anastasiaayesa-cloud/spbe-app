@@ -67,6 +67,8 @@ Route::get('/pelaksanaans/{pelaksanaan_id}/edit', action: PelaksanaanForm::class
 
 Route::get('/rencanas', RencanasIndex::class)->name('rencanas.index');
 Route::get('/rencanas/create', RencanasForm::class)->name(name: 'rencanas.create');
+Route::get('/rencanas/{rencanas_id}/edit', action: RencanasForm::class)->name(name: 'rencanas.edit');
+
 
 
 

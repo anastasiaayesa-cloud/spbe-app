@@ -39,7 +39,7 @@
                                 <th class="px-4 py-2 border">#</th>
                                 <th class="px-4 py-2 border">Nama Kegiatan</th>
                                 <th class="px-4 py-2 border">Tanggal Kegiatan</th>
-                                <th class="px-4 py-2 border">Pegawai yang Bertugas</th>
+                                <th class="px-4 py-2 border">Pegawai yang Diusulkan</th>
                                 <th class="px-4 py-2 border">Aksi</th>
                             </tr>
                         </thead>
@@ -49,7 +49,16 @@
                                     <td class="px-4 py-2 border">{{ $rencana->id }}</td>
                                     <td class="px-4 py-2 border">{{ $rencana->nama_kegiatan }}</td>
                                     <td class="px-4 py-2 border">{{ $rencana->tanggal_kegiatan }}</td>
-                                    <td class="px-4 py-2 border">{{ $rencana->pegawai }}</td>
+                                    
+                                    <td class="px-4 py-2 border"> 
+                                    @forelse ($rencana->kepegawaians as $pegawai)
+                                            <span class="inline-block bg-blue-100 text-blue-700 px-2 py-1 rounded text-sm mb-1">
+                                                {{ $pegawai->nama }}
+                                            </span>
+                                        @empty
+                                            <span class="text-gray-400">-</span>
+                                        @endforelse
+                                    </td>
                                     <td class="px-4 py-2 border">
                                         <a href="{{ route(name: 'rencanas.edit', parameters: $rencana->id) }}"
                                             class="mr-2 text-blue-600">Edit</a>
