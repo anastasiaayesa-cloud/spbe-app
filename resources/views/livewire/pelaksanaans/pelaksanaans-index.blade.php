@@ -19,7 +19,7 @@
                     {{-- Tombol tambah perencaan (opsional) --}}
                     <div>
                         <a href="{{ route('pelaksanaans.create') }}"
-                            class="inline-block px-4 py-2 rounded">Buat Surat</a>
+                            class="inline-block px-4 py-2 rounded">Upload Bukti Pelaksanaan</a>
                     </div>
 
                     {{-- Search bar --}}
@@ -52,7 +52,7 @@
                             @forelse ($pelaksanaans as $pelaksanaan)
                             <tr>
                                 <td class="px-4 py-2 border">{{ $pelaksanaan->id }}</td>
-                                <td class="px-4 py-2 border">{{ $pelaksanaan->jenis_bukti }}</td>
+                                <td class="px-4 py-2 border">{{ $pelaksanaan->jenis->nama }}</td>
                                     {{-- <td class="px-4 py-2 border">{{ $persuratan->file_pdf }}</td> --}}
                                     <td class="px-4 py-2 border">
                                     @if ($pelaksanaan->file_pdf)
@@ -63,7 +63,7 @@
                                         </a>
                                     @endif
                                 </td>
-                                 <<td class="px-4 py-2 border">{{ $pelaksanaan->tanggal_upload }}</td>
+                                 <td class="px-4 py-2 border">{{ $pelaksanaan->tanggal_upload }}</td>
 
                                 <td class="px-4 py-2 border">
                                     <a href="{{ route('pelaksanaans.edit', $pelaksanaan->id) }}"

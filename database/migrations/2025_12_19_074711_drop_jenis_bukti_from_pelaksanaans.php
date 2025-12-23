@@ -12,14 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('pelaksanaans', function (Blueprint $table) {
-            $table->unsignedBigInteger('pelaksanaan_jenis_id')
-                  ->nullable()
-                  ->after('file_pdf');
-
-            $table->foreign('pelaksanaan_jenis_id')
-                  ->references('id')
-                  ->on('pelaksanaan_jenis')
-                  ->onDelete('cascade');
+            //
         });
     }
 
@@ -29,11 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('pelaksanaans', function (Blueprint $table) {
-            // hapus FK dulu
-            $table->dropForeign(['pelaksanaan_jenis_id']);
-
-            // baru hapus kolom
-            $table->dropColumn('pelaksanaan_jenis_id');
+            //
         });
     }
 };
