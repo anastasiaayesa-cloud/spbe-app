@@ -6,35 +6,35 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use App\Models\Pelaksanaan;
 use Illuminate\Support\Facades\Storage;
+use App\Models\PelaksanaanJenis;
+
 
 
 class PelaksanaanForm extends Component
 {
     use WithFileUploads;
-    public $pelaksanaan_id, $jenis_bukti, $file_pdf, $existing_pdf, $tanggal_upload;
+    public $pelaksanaan_id, $file_pdf, $existing_pdf, $tanggal_upload,$pelaksanaan_jenis_id,$pelaksanaanJenisList = [];
 
     public function mount($pelaksanaan_id = null)
-    {
-        // $this->persuratanKategoriList = PersuratanKategori::orderBy('nama_kategori')->get();
-        // kalau parameter ada (edit mode)
-        if ($pelaksanaan_id) {
-            $this->pelaksanaan_id = $pelaksanaan_id;
+{
+    // INI WAJIB ADA (ISI DROPDOWN)
+    $this->pelaksanaanJenisList = PelaksanaanJenis::orderBy('nama')->get();
 
+    if ($pelaksanaan_id) {
+        $this->pelaksanaan_id = $pelaksanaan_id;
 
-            $pelaksanaan = Pelaksanaan::findOrFail($pelaksanaan_id);
+        $pelaksanaan = Pelaksanaan::findOrFail($pelaksanaan_id);
 
-
-            $this->existing_pdf = $pelaksanaan->file_pdf;
-            $this->jenis_bukti = $pelaksanaan->jenis_bukti;
-            $this->file_pdf = $pelaksanaan->file_pdf; // file lama
-            $this->tanggal_upload = $pelaksanaan->tanggal_upload;
-        }
+        $this->existing_pdf = $pelaksanaan->file_pdf;
+        $this->pelaksanaan_jenis_id = $pelaksanaan->pelaksanaan_jenis_id;
+        $this->tanggal_upload = $pelaksanaan->tanggal_upload;
     }
+}
 
     public function rules()
     {
         $rules = [
-            'jenis_bukti' => 'required|string|max:255',
+            'pelaksanaan_jenis_id' => 'required|exists:pelaksanaan_jenis,id',
             'file_pdf' => 'required|mimes:pdf',
             'tanggal_upload' => 'required|date',
 
@@ -63,7 +63,7 @@ class PelaksanaanForm extends Component
             $pdfPath = $this->file_pdf->store('pelaksanaan', 'public');
 
             $pelaksanaan->update([
-                'jenis_bukti' => $this->jenis_bukti,
+                'pelaksanaan_jenis_id' => $this->pelaksanaan_jenis_id,
                 'file_pdf' => $pdfPath,
                 'tanggal_upload' => $this->tanggal_upload,
 
@@ -74,7 +74,7 @@ class PelaksanaanForm extends Component
             return redirect()->route('pelaksanaans.index');
         } else {
             $pelaksanaan = Pelaksanaan::create([
-                'jenis_bukti' => $this->jenis_bukti,
+                'pelaksanaan_jenis_id' => $this->pelaksanaan_jenis_id,
                 'file_pdf' => $pdfPath,
                 'tanggal_upload' => $this->tanggal_upload,
             ]);

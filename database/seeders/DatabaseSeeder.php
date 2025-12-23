@@ -18,6 +18,8 @@ class DatabaseSeeder extends Seeder
             BankSeeder::class,
             PendidikanSeeder::class,
             KepegawaianSeeder::class,
+            PelaksanaanJenisSeeder::class,
+            PersuratanKategoriSeeder::class,
         ]);
     }
 }

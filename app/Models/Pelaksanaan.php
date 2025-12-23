@@ -9,14 +9,15 @@ class Pelaksanaan extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'jenis_bukti',
+        'pelaksanaan_jenis_id',
         'file_pdf',
         'tanggal_upload',
     ];
 
-    // public function kategori()
-    // {
-    //     return $this->belongsTo(PersuratanKategori::class);
-    // }
+    public function jenis()
+    {
+        return $this->belongsTo(PelaksanaanJenis::class, 'pelaksanaan_jenis_id');
+    }
+    
 
 }

@@ -22,7 +22,8 @@
                 <form wire:submit.prevent="submit" autocomplete="off">
                     <div class="mb-3">
                         <label class="block mb-1">Nama File *</label>
-                        <input type="text" wire:model.defer="nama_surat" class="border rounded px-3 py-2 w-full" placeholder="Isi Nama Surat" autofocus>
+                        <input type="text" wire:model.defer="nama_surat" class="border rounded px-3 py-2 w-full" placeholder="Isi Nama File
+                        " autofocus>
                         @error('nama_surat') <span class="text-red-600">{{ $message }}</span> @enderror
                     </div>
 

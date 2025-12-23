@@ -23,10 +23,24 @@
 
 
                     <div class="mb-3">
-                        <label class="block mb-1">Jenis Bukti *</label>
-                        <input type="text" wire:model.defer="jenis_bukti" class="border rounded px-3 py-2 w-full" placeholder="Pilih Jenis Bukti" autofocus>
-                        @error('jenis_bukti') <span class="text-red-600">{{ $message }}</span> @enderror
-                    </div>
+    <label class="block mb-1">Jenis Bukti *</label>
+
+    <select wire:model.defer="pelaksanaan_jenis_id"
+        class="border rounded px-3 py-2 w-full">
+        <option value="">-- Pilih Jenis Bukti --</option>
+
+        @foreach ($pelaksanaanJenisList as $jenis)
+            <option value="{{ $jenis->id }}">
+                {{ $jenis->nama }}
+            </option>
+        @endforeach
+    </select>
+
+    @error('pelaksanaan_jenis_id')
+        <span class="text-red-600">{{ $message }}</span>
+    @enderror
+</div>
+
 
                      {{-- <div class="mb-3">
                         <label class="block mb-1">Kategori Surat</label>
