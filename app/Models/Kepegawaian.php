@@ -43,7 +43,7 @@ class Kepegawaian extends Model
     {
         return $this->belongsTo(Bank::class);
     }
-    
+
     public function status()
     {
         return $this->belongsTo(Pendidikan::class);
@@ -52,5 +52,10 @@ class Kepegawaian extends Model
     public function persuratans()
     {
         return $this->belongsToMany(Persuratan::class, 'kepegawaian_persuratan');
+    }
+
+    public function rencanas()
+    {
+        return $this->belongsToMany(Rencana::class, 'kepegawaian_rencana_pivot');
     }
 }

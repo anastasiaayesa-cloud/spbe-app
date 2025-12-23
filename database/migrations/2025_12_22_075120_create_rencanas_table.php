@@ -14,8 +14,7 @@ return new class extends Migration
         Schema::create('rencanas', function (Blueprint $table) {
             $table->id();
             $table->string('nama_kegiatan');
-            $table->date('tanggal_upload');
-            $table->string('pegawai');
+            $table->date('tanggal_kegiatan');
             $table->timestamps();
         });
     }
