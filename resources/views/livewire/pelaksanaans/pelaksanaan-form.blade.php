@@ -21,6 +21,30 @@
 
                 <form wire:submit.prevent="submit" autocomplete="off">
 
+                    <div class="mb-4">
+    <label for="perencanaan_nama_id" class="block mb-1 font-medium">
+        Nama Kegiatan <span class="text-red-600">*</span>
+    </label>
+
+    <select
+        id="perencanaan_nama_id"
+        wire:model.defer="perencanaan_nama_id"
+        class="w-full px-3 py-2 border rounded
+               @error('perencanaan_nama_id') border-red-500 @enderror"
+    >
+        <option value="">-- Pilih Nama Kegiatan --</option>
+
+        @foreach ($perencanaanNamas as $item)
+            <option value="{{ $item->id }}">
+                {{ $item->nama }}
+            </option>
+        @endforeach
+    </select>
+
+    @error('perencanaan_nama_id')
+        <span class="text-sm text-red-600">{{ $message }}</span>
+    @enderror
+</div>
 
                     <div class="mb-3">
     <label class="block mb-1">Jenis Bukti *</label>

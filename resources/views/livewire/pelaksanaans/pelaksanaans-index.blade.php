@@ -42,6 +42,7 @@
                         <thead>
                             <tr>
                                 <th class="px-4 py-2 border">#</th>
+                                <th class="px-4 py-2 border">Nama Kegiatan</th>
                                 <th class="px-4 py-2 border">Jenis Bukti</th>
                                 <th class="px-4 py-2 border">File</th>
                                 <th class="px-4 py-2 border">Tanggal upload</th>
@@ -52,6 +53,11 @@
                             @forelse ($pelaksanaans as $pelaksanaan)
                             <tr>
                                 <td class="px-4 py-2 border">{{ $pelaksanaan->id }}</td>
+                                {{-- Nama Kegiatan --}}
+                                <td class="px-4 py-2 border">
+                                    {{ $pelaksanaan->perencanaan?->perencanaanNama?->nama ?? '-' }}
+                                </td>
+
                                 <td class="px-4 py-2 border">{{ $pelaksanaan->jenis->nama }}</td>
                                     {{-- <td class="px-4 py-2 border">{{ $persuratan->file_pdf }}</td> --}}
                                     <td class="px-4 py-2 border">
