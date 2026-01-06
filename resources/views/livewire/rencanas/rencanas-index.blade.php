@@ -1,11 +1,6 @@
-@php
-    use Illuminate\Support\Facades\Storage;
-@endphp
-
-
 <x-slot name="header">
     <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-        {{ __('Manajemen Persuratan') }}
+        {{ __('Pegawai') }}
     </h2>
 </x-slot>
 
@@ -16,16 +11,16 @@
 
                 <div class="flex items-center justify-between mb-4">
 
-                    {{-- Tombol tambah persuratan (opsional) --}}
+                {{-- Tombol tambah kepegawaian (opsional) --}}
                     <div>
-                        <a href="{{ route('persuratans.create') }}"
-                            class="inline-block px-4 py-2 rounded">Buat Surat</a>
+                        <a href="{{ route('rencanas.create') }}"
+                            class="inline-block px-4 py-2 rounded">Tambah Rencana Kegiatan </a>
                     </div>
 
                     {{-- Search bar --}}
                     <div>
                         <input type="text" wire:model.live="search"
-                            placeholder="Cari surat..."
+                            placeholder="Cari Rencana Kegiatan..."
                             class="border rounded px-3 py-2 w-64 focus:ring focus:ring-blue-200">
                     </div>
                 </div>
@@ -42,36 +37,37 @@
                         <thead>
                             <tr>
                                 <th class="px-4 py-2 border">#</th>
-                                <th class="px-4 py-2 border">Nama Surat</th>
-                                <th class="px-4 py-2 border">File</th>
-                                <th class="px-4 py-2 border">Tanggal upload</th>
+                                <th class="px-4 py-2 border">Nama Kegiatan</th>
+                                <th class="px-4 py-2 border">Tanggal Kegiatan</th>
+                                <th class="px-4 py-2 border">Pegawai yang Diusulkan</th>
                                 <th class="px-4 py-2 border">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse ($persuratans as $persuratan)
+                            @forelse ($rencanas as $rencana)
                                 <tr>
-                                    <td class="px-4 py-2 border">{{ $persuratan->id }}</td>
-                                    <td class="px-4 py-2 border">{{ $persuratan->nama_surat }}</td>
-                                    {{-- <td class="px-4 py-2 border">{{ $persuratan->file_pdf }}</td> --}}
+                                    <td class="px-4 py-2 border">{{ $rencana->id }}</td>
+                                    <td class="px-4 py-2 border">{{ $rencana->nama_kegiatan }}</td>
+                                    <td class="px-4 py-2 border">{{ $rencana->tanggal_kegiatan }}</td>
+                                    
                                     <td class="px-4 py-2 border"> 
-                                        @if ($persuratan->file_pdf)
-                                            <a href="{{ Storage::url($persuratan->file_pdf) }}" 
-                                            class="text-blue-600 underline" target="_blank">
-                                            Download File
-                                            </a>
-                                        @endif
+                                    @forelse ($rencana->kepegawaians as $pegawai)
+                                            <span class="inline-block bg-blue-100 text-blue-700 px-2 py-1 rounded text-sm mb-1">
+                                                {{ $pegawai->nama }}
+                                            </span>
+                                        @empty
+                                            <span class="text-gray-400">-</span>
+                                        @endforelse
                                     </td>
-                                    <td class="px-4 py-2 border">{{ $persuratan->tanggal_upload }}</td>
-                                    <td class="px-4 py-2 border"> 
-                                          <a href="{{ route('persuratans.edit', $persuratan->id) }}"
-                                            class="mr-2 text-blue-600">Edit</a> 
+                                    <td class="px-4 py-2 border">
+                                        <a href="{{ route(name: 'rencanas.edit', parameters: $rencana->id) }}"
+                                            class="mr-2 text-blue-600">Edit</a>
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
                                     <td colspan="5" class="px-4 py-2 border text-center">
-                                        Tidak ada Surat .
+                                        Tidak ada Rencana Kegiatan .
                                     </td>
                                 </tr>
                             @endforelse
@@ -80,7 +76,7 @@
                 </div>
 
                 <div class="mt-4">
-                    {{ $persuratans->links() }}
+                    {{ $rencanas->links() }}
                 </div>
 
             </div>

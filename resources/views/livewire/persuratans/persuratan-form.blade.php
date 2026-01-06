@@ -20,6 +20,13 @@
                 @endif
 
                 <form wire:submit.prevent="submit" autocomplete="off">
+                    <div class="mb-3">
+                        <label class="block mb-1">Nama File *</label>
+                        <input type="text" wire:model.defer="nama_surat" class="border rounded px-3 py-2 w-full" placeholder="Isi Nama File
+                        " autofocus>
+                        @error('nama_surat') <span class="text-red-600">{{ $message }}</span> @enderror
+                    </div>
+
                     <div class="mb-4 relative" x-data="{ open: @entangle('showPegawaiDropdown') }">
                         <label class="font-semibold">Penerima Surat</label>
 
@@ -56,12 +63,6 @@
                         @endif
                     </div>
 
-                    <div class="mb-3">
-                        <label class="block mb-1">Nama File *</label>
-                        <input type="text" wire:model.defer="nama_surat" class="border rounded px-3 py-2 w-full" placeholder="Isi Nama Surat" autofocus>
-                        @error('nama_surat') <span class="text-red-600">{{ $message }}</span> @enderror
-                    </div>
-
                      <div class="mb-3">
                         <label class="block mb-1">Kategori Surat</label>
                         <select wire:model="persuratan_kategori_id" class="border rounded px-3 py-2 w-full">
@@ -72,6 +73,13 @@
                         </select>
                         @error('persuratan_kategori_id') <span class="text-red-600">{{ $message }}</span> @enderror
                     </div>
+
+                    <div class="mb-3">
+                        <label class="block mb-1">Perihal *</label>
+                        <input type="text" wire:model="perihal" class="border rounded px-3 py-2 w-full">
+                        @error('perihal') <span class="text-red-600">{{ $message }}</span> @enderror
+                    </div>
+
 
 
 <div class="mb-3">
@@ -88,6 +96,16 @@
                         <label class="block mb-1">Tanggal Upload *</label>
                         <input type="date" wire:model="tanggal_upload" class="border rounded px-3 py-2 w-full">
                         @error('tanggal_upload') <span class="text-red-600">{{ $message }}</span> @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="block mb-1">Jenis Anggaran</label>
+                        <select wire:model="jenis_kelamin" class="border rounded px-3 py-2 w-full">
+                            <option value="">-- Pilih Jenis Anggaran --</option>
+                            <option value="BPMP">BPMP</option>
+                            <option value="Luar BPMP">Luar BPMP</option>                            
+                        </select>
+                        @error('jenis_anggaran') <span class="text-red-600">{{ $message }}</span> @enderror
                     </div>
 
 

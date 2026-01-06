@@ -53,4 +53,9 @@ class Kepegawaian extends Model
     {
         return $this->belongsToMany(Persuratan::class, 'kepegawaian_persuratan');
     }
+
+    public function rencanas()
+    {
+        return $this->belongsToMany(Rencana::class, 'kepegawaian_rencana_pivot');
+    }
 }
