@@ -31,9 +31,9 @@ class PelaksanaansIndex extends Component
             // })
             ->orderBy('id', 'desc')
             ->paginate(5);
-            
+
         return view('livewire.pelaksanaans.pelaksanaans-index', [
-        'pelaksanaans' => $pelaksanaans
-    ])->layout('layouts.app');
+            'pelaksanaans' => $pelaksanaans
+        ])->layout('layouts.app');
     }
 }
