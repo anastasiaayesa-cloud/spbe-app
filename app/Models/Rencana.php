@@ -8,20 +8,26 @@ use Illuminate\Database\Eloquent\Model;
 class Rencana extends Model
 {
     protected $fillable = [
-
         'nama_kegiatan',
-
         'tanggal_kegiatan',
-
+        'lokasi_kegiatan',
     ];
 
-
-
     public function kepegawaians()
-
     {
+        return $this->belongsToMany(
+            Kepegawaian::class,
+            'kepegawaian_rencana_pivot'
+        );
+    }
 
-        return $this->belongsToMany(Kepegawaian::class, 'kepegawaian_rencana_pivot');
-
+    public function perencanaans()
+    {
+        return $this->belongsToMany(
+            Perencanaan::class,
+            'perencanaan_rencana'
+        );
     }
 }
+
+

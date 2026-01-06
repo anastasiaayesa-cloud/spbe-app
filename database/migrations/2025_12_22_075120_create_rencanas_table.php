@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('nama_kegiatan');
             $table->date('tanggal_kegiatan');
+            $table->string('lokasi_kegiatan');
+
             $table->timestamps();
         });
     }

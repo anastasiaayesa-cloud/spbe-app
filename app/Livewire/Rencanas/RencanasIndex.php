@@ -26,6 +26,7 @@ class RencanasIndex extends Component
        $rencanas = Rencana::with('kepegawaians')
     ->when($this->search, function ($query) {
         $query->where('nama_kegiatan', 'like', '%' . $this->search . '%')
+                          ->orWhere('lokasi_kegiatan', 'like', '%' . $this->search . '%')
               ->orWhereHas('kepegawaians', function ($q) {
                   $q->where('nama', 'like', '%' . $this->search . '%');
               });

@@ -4,6 +4,7 @@ namespace App\Livewire\Pelaksanaans;
 
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use App\Models\PerencanaanNama;
 use App\Models\Pelaksanaan;
 use Illuminate\Support\Facades\Storage;
 use App\Models\PelaksanaanJenis;
@@ -34,6 +35,7 @@ class PelaksanaanForm extends Component
     public function rules()
     {
         $rules = [
+            'perencanaan_nama_id' => 'required|exists:kegiatan_nama_id,id',
             'pelaksanaan_jenis_id' => 'required|exists:pelaksanaan_jenis,id',
             'file_pdf' => 'required|mimes:pdf',
             'tanggal_upload' => 'required|date',
@@ -60,6 +62,7 @@ class PelaksanaanForm extends Component
             $pdfPath = $this->file_pdf->store('pelaksanaan', 'public');
 
             $pelaksanaan->update([
+                'perencanaan_nama_id' => $this->perencanaan_nama_id,
                 'pelaksanaan_jenis_id' => $this->pelaksanaan_jenis_id,
                 'file_pdf' => $pdfPath,
                 'tanggal_upload' => $this->tanggal_upload,
@@ -72,6 +75,7 @@ class PelaksanaanForm extends Component
         } else {
             // dd($this->pelaksanaan_jenis_id);
             $pelaksanaan = Pelaksanaan::create([
+                'perencanaan_nama_id' => $this->perencanaan_nama_id,
                 'pelaksanaan_jenis_id' => $this->pelaksanaan_jenis_id,
                 'file_pdf' => $pdfPath,
                 'tanggal_upload' => $this->tanggal_upload,

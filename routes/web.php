@@ -7,6 +7,8 @@ use App\Livewire\Kepegawaians\KepegawaiansIndex;
 use App\Livewire\Kabupatens\KabupatensIndex;
 use App\Livewire\Perencanaans\DokumenPerencanaanIndex;
 use App\Livewire\Perencanaans\DokumenPerencanaanForm;
+use App\Livewire\Perencanaans\PenugasansIndex;
+use App\Livewire\Perencanaans\PerencanaanDetail;
 
 use App\Livewire\Persuratans\PersuratanForm;
 use App\Livewire\Persuratans\PersuratansIndex;
@@ -44,9 +46,12 @@ Route::view('profile', 'profile')
     ->name('profile');
 
 Route::get('/perencanaans', PerencanaansIndex::class)->name('perencanaans.index');
-Route::get('/perencanaans/create', PerencanaanForm::class)->name('perencanaans.create');
 Route::get('/dokumen-perencanaan', DokumenPerencanaanIndex::class)->name('dokumen-perencanaan.index');
 Route::get('/dokumen-perencanaan/create', DokumenPerencanaanForm::class)->name('dokumen-perencanaan.create');
+Route::get('/penugasan', PenugasansIndex::class)->name('penugasans.index');
+
+Route::get('/perencanaans/create', PerencanaanDetail::class)->name('perencanaans.create');
+Route::get('/perencanaans/{id}/edit', PerencanaanDetail::class)->name('perencanaans.edit');
 
 Route::get('/kepegawaians/{kepegawaian_id}/edit', action: KepegawaianForm::class)->name(name: 'kepegawaians.edit');
 Route::get('/kepegawaians', KepegawaiansIndex::class)->name('kepegawaians.index');
