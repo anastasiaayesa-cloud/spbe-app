@@ -12,6 +12,9 @@ class PerencanaansIndex extends Component
 
     public $search = '';
 
+    // 1. Tambahkan property untuk menyimpan ID yang dibuka
+    public $openedRows = [];
+
     // biar gak error di Tailwind pagination
     protected $paginationTheme = 'tailwind';
 
@@ -21,15 +24,27 @@ class PerencanaansIndex extends Component
         $this->resetPage();
     }
 
+    // 2. Fungsi untuk toggle buka/tutup baris
+    public function toggleRow($id)
+    {
+        if (in_array($id, $this->openedRows)) {
+            $this->openedRows = array_diff($this->openedRows, [$id]);
+        } else {
+            $this->openedRows[] = $id;
+        }
+    }
+
     public function render()
     {
         $perencanaans = Perencanaan::query()
+            // 3. Tambahkan with('details') agar tidak lambat (Eager Loading)
+            ->with('details')
             ->select('perencanaans.*')
             ->when($this->search, function ($query) { //searching di search kolom
-                $query->where('perencanaans.komponen', 'like', '%' . $this->search . '%')
-                    ->orWhere('perencanaans.sub_komponen', 'like', "%{$this->search}%");
+                $query->where('perencanaans.kode', 'like', '%' . $this->search . '%')
+                    ->orWhere('perencanaans.dokumen_perencanaan_id', 'like', "%{$this->search}%");
             })
-            ->orderBy('id', 'desc')
+            ->orderBy('id', 'asc')
             ->paginate(5);
 
         return view('livewire.perencanaans.perencanaans-index', compact('perencanaans'))
