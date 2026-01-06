@@ -19,51 +19,43 @@
 
                 <form wire:submit.prevent="submit" autocomplete="off">
                     <div class="mb-3">
-                        <label class="block mb-1">Komponen *</label>
-                        <input type="text" wire:model.defer="komponen" class="border rounded px-3 py-2 w-full" placeholder="Isi Komponen" autofocus>
-                        @error('komponen') <span class="text-red-600">{{ $message }}</span> @enderror
+                        <label class="block mb-1">Dokumen *</label>
+                        <select wire:model="dokumen_perencanaan_id" class="border rounded px-3 py-2 w-full">
+                            <option value="">-- Pilih Dokumen--</option>
+                            @foreach ($dokumenperencanaanList as $dokumenperencanaan)
+                                <option value="{{ $dokumenperencanaan->id }}">{{ $dokumenperencanaan->nama }}</option>
+                            @endforeach
+                        </select>
+                        @error('dokumenperencanan_id') <span class="text-red-600">{{ $message }}</span> @enderror
                     </div>
 
                     <div class="mb-3">
-                        <label class="block mb-1">Uraian Komponen</label>
-                        <input type="text" wire:model.defer="uraian_komponen" class="border rounded px-3 py-2 w-full">
-                        @error('uraian_komponen') <span class="text-red-600">{{ $message }}</span> @enderror
+                        <label class="block mb-1">Kode *</label>
+                        <input type="text" wire:model.defer="kode" class="border rounded px-3 py-2 w-full">
+                        @error('kode') <span class="text-red-600">{{ $message }}</span> @enderror
                     </div>
 
                     <div class="mb-3">
-                        <label class="block mb-1">Sub Komponen *</label>
-                        <input type="text" wire:model.defer="sub_komponen" class="border rounded px-3 py-2 w-full">
-                        @error('sub_komponen') <span class="text-red-600">{{ $message }}</span> @enderror
+                        <label class="block mb-1">Nama *</label>
+                        <input type="text" wire:model.defer="nama" class="border rounded px-3 py-2 w-full">
+                        @error('nama') <span class="text-red-600">{{ $message }}</span> @enderror
                     </div>
 
                     <div class="mb-3">
-                        <label class="block mb-1">Uraian Sub Komponen</label>
-                        <input type="text" wire:model.defer="uraian_sub_komponen" class="border rounded px-3 py-2 w-full">
-                        @error('uraian_sub_komponen') <span class="text-red-600">{{ $message }}</span> @enderror
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label class="block mb-1">Nama Aktivitas *</label>
-                        <input type="text" wire:model.defer="nama_aktivitas" class="border rounded px-3 py-2 w-full" autofocus>
-                        @error('nama_aktivitas') <span class="text-red-600">{{ $message }}</span> @enderror
+                        <label class="block mb-1">Volume *</label>
+                        <input type="text" wire:model.defer="volume" class="border rounded px-3 py-2 w-full">
+                        @error('volume') <span class="text-red-600">{{ $message }}</span> @enderror
                     </div>
 
                     <div class="mb-3">
-                        <label class="block mb-1">Tanggal Rencana Mulai *</label>
-                        <input type="date" wire:model="rencana_mulai" class="border rounded px-3 py-2 w-full">
-                        @error('rencana_mulai') <span class="text-red-600">{{ $message }}</span> @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="block mb-1">Tanggal Rencana Selesai *</label>
-                        <input type="date" wire:model="rencana_selesai" class="border rounded px-3 py-2 w-full">
-                        @error('rencana_selesai') <span class="text-red-600">{{ $message }}</span> @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="block mb-1">Keterangan</label>
-                        <textarea wire:model="keterangan" class="border rounded px-2 py-1 w-full" rows="2"></textarea>
-                        @error('keterangan') <span class="text-red-600">{{ $message }}</span> @enderror
+                        <label class="block mb-1">Jumlah Biaya (Rp) *</label>
+                        <input 
+                            type="integer" 
+                            wire:model.defer="jumlah_biaya" 
+                            class="border rounded px-3 py-2 w-full"
+                            placeholder="Contoh: 50000"
+                        >
+                        @error('jumlah_biaya') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                     </div>
 
                     <div class="flex items-center space-x-2">

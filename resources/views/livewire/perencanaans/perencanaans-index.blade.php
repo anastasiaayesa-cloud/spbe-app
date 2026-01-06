@@ -18,182 +18,6 @@
                         <div class="mb-4 p-3 bg-red-100 text-red-700 border border-red-200 rounded">{{ session('error') }}</div>
                     @endif
 
-                    {{--
-                    ===================================================================
-                    START: VISUALISASI KALENDER PERENCANAAN (GANTT-STYLE TABLE)
-                    ===================================================================
-                    --}}
-                    
-                    <h3 class="font-semibold text-lg mt-8 mb-4 text-gray-800">Kalender Perencanaan</h3>
-                    
-                    {{-- Keterangan Warna (Legend) --}}
-                    <div class="flex flex-wrap gap-4 mb-4 text-sm">
-                        <div class="flex items-center">
-                            <span class="inline-block w-4 h-4 bg-red-500 border border-gray-300 mr-2"></span> Rencana Kegiatan
-                        </div>
-                        <div class="flex items-center">
-                            <span class="inline-block w-4 h-4 bg-green-500 border border-gray-300 mr-2"></span> Realisasi Kegiatan
-                        </div>
-                        <div class="flex items-center">
-                            <span class="inline-block w-4 h-4 bg-blue-500 border border-gray-300 mr-2"></span> Rencana & Realisasi
-                        </div>
-                    </div>
-                    
-                    <style>
-                        /* CSS Tambahan untuk tampilan Gantt yang lebih ringkas */
-                        .gantt-table-container {
-                            max-width: 100%;
-                            overflow-x: auto;
-                            position: relative; 
-                        }
-                        .gantt-cell {
-                            padding: 0;
-                            min-width: 15px; 
-                            height: 20px;
-                            text-align: center;
-                            vertical-align: middle;
-                        }
-                        .gantt-cell div {
-                            width: 100%;
-                            height: 100%;
-                        }
-                        .sticky-col {
-                            position: sticky;
-                            left: 0;
-                            z-index: 10;
-                            background-color: white;
-                            min-width: 200px;
-                            max-width: 200px;
-                            white-space: nowrap;
-                            overflow: hidden;
-                            text-overflow: ellipsis;
-                            text-align: left;
-                        }
-                        .sticky-col.header {
-                            z-index: 20;
-                        }
-                        .livewire-wrapper {
-                            /* Pastikan pembungkus akar ini tidak memiliki styling yang mengganggu layout */
-                            display: block; 
-                        }
-                    </style>
-                    
-                    <div class="gantt-table-container shadow-md sm:rounded-lg">
-                        <table class="bg-white border text-xs">
-                            <thead>
-                                <tr>
-                                    {{-- Kolom Aktivitas (Sticky) --}}
-                                    <th rowspan="2" class="px-2 py-2 border sticky-col header">Aktivitas (Komponen/Sub)</th>
-                                    
-                                    {{-- Membuat Header Bulan (12 Bulan) --}}
-                                    @php
-                                        // Pastikan Carbon digunakan dan tahun diset (misalnya, tahun saat ini)
-                                        $tahun = now()->year; 
-                                        $current_month = now()->month;
-                                    @endphp
-                                    @for ($bulan = 1; $bulan <= 12; $bulan++)
-                                        @php
-                                            // Asumsi Carbon dikonfigurasi untuk bahasa Indonesia (translatedFormat)
-                                            $nama_bulan = \Carbon\Carbon::createFromDate($tahun, $bulan, 1)->translatedFormat('F');
-                                        @endphp
-                                        <th colspan="4" class="px-2 py-1 border text-center {{ $bulan == $current_month ? 'bg-indigo-100' : 'bg-gray-100' }}">
-                                            {{ $nama_bulan }}
-                                        </th>
-                                    @endfor
-                                </tr>
-                                <tr>
-                                    {{-- Membuat Header Minggu (4 Minggu per Bulan) --}}
-                                    @for ($bulan = 1; $bulan <= 12; $bulan++)
-                                        @for ($minggu = 1; $minggu <= 4; $minggu++)
-                                            <th class="px-1 py-1 border font-normal {{ $bulan == $current_month ? 'bg-indigo-50' : 'bg-gray-50' }}">{{ $minggu }}</th>
-                                        @endfor
-                                    @endfor
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse ($perencanaans as $perencanaan)
-                                    @php
-                                        // Mengonversi tanggal dari data ke objek Carbon (Wajib!)
-                                        $rencana_mulai = \Carbon\Carbon::parse($perencanaan->rencana_mulai);
-                                        $rencana_selesai = \Carbon\Carbon::parse($perencanaan->rencana_selesai);
-                                        
-                                        // Asumsi kolom realisasi_mulai dan realisasi_selesai ada (jika tidak, atur ke null)
-                                        $realisasi_mulai = isset($perencanaan->realisasi_mulai) && $perencanaan->realisasi_mulai ? \Carbon\Carbon::parse($perencanaan->realisasi_mulai) : null;
-                                        $realisasi_selesai = isset($perencanaan->realisasi_selesai) && $perencanaan->realisasi_selesai ? \Carbon\Carbon::parse($perencanaan->realisasi_selesai) : null;
-                                    @endphp
-                                    <tr>
-                                        {{-- Kolom Tugas (Sticky) --}}
-                                        <td class="px-2 py-1 border sticky-col text-sm" 
-                                            title="{{ $perencanaan->komponen }} - {{ $perencanaan->sub_komponen }}">
-                                            {{ $perencanaan->sub_komponen }}
-                                        </td>
-                                        
-                                        {{-- Perulangan Sel Waktu (48 Kolom: 12 Bulan x 4 Minggu) --}}
-                                        @for ($bulan = 1; $bulan <= 12; $bulan++)
-                                            @for ($minggu = 1; $minggu <= 4; $minggu++)
-                                                @php
-                                                    // Tentukan rentang tanggal untuk sel mingguan saat ini
-                                                    // Catatan: Ini adalah perkiraan mingguan yang disederhanakan
-                                                    $tanggal_mulai_minggu = \Carbon\Carbon::createFromDate($tahun, $bulan, 1)->startOfWeek()->addWeeks($minggu - 1);
-                                                    $tanggal_akhir_minggu = $tanggal_mulai_minggu->copy()->endOfWeek();
-
-                                                    $class_warna = '';
-                                                    $tooltip = '';
-                                                    
-                                                    // 1. Cek apakah Rencana berpotongan dengan minggu ini
-                                                    $is_rencana = 
-                                                        $tanggal_mulai_minggu->between($rencana_mulai, $rencana_selesai, true) || 
-                                                        $tanggal_akhir_minggu->between($rencana_mulai, $rencana_selesai, true) ||
-                                                        ($rencana_mulai->lte($tanggal_mulai_minggu) && $rencana_selesai->gte($tanggal_akhir_minggu));
-                                                    
-                                                    // 2. Cek apakah Realisasi berpotongan dengan minggu ini
-                                                    $is_realisasi = false;
-                                                    if ($realisasi_mulai && $realisasi_selesai) {
-                                                        $is_realisasi = 
-                                                            $tanggal_mulai_minggu->between($realisasi_mulai, $realisasi_selesai, true) ||
-                                                            $tanggal_akhir_minggu->between($realisasi_mulai, $realisasi_selesai, true) ||
-                                                            ($realisasi_mulai->lte($tanggal_mulai_minggu) && $realisasi_selesai->gte($tanggal_akhir_minggu));
-                                                    }
-
-                                                    // 3. Tentukan Warna (Logika Prioritas: Realisasi & Rencana > Realisasi Saja > Rencana Saja)
-                                                    if ($is_rencana && $is_realisasi) {
-                                                        $class_warna = 'bg-blue-500'; // Rencana dan Realisasi
-                                                        $tooltip = 'Rencana: ' . $rencana_mulai->format('d/m') . ' - ' . $rencana_selesai->format('d/m') . ' | Realisasi: ' . $realisasi_mulai->format('d/m') . ' - ' . $realisasi_selesai->format('d/m');
-                                                    } elseif ($is_realisasi) {
-                                                        $class_warna = 'bg-green-500'; // Hanya Realisasi
-                                                        $tooltip = 'Realisasi Kegiatan: ' . $realisasi_mulai->format('d/m') . ' - ' . $realisasi_selesai->format('d/m');
-                                                    } elseif ($is_rencana) {
-                                                        $class_warna = 'bg-red-500'; // Hanya Rencana
-                                                        $tooltip = 'Rencana Kegiatan: ' . $rencana_mulai->format('d/m') . ' - ' . $rencana_selesai->format('d/m');
-                                                    }
-                                                @endphp
-                                                
-                                                {{-- Cetak Sel dengan Bar (Warna) --}}
-                                                <td class="border gantt-cell">
-                                                    @if ($class_warna)
-                                                        <div class="{{ $class_warna }} hover:opacity-80" title="{{ $perencanaan->sub_komponen }} - {{ $tooltip }}"></div>
-                                                    @else
-                                                        &nbsp;
-                                                    @endif
-                                                </td>
-                                            @endfor
-                                        @endfor
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="49" class="px-4 py-4 border text-center">
-                                            Tidak ada Perencanaans yang ditemukan.
-                                        </td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-                    {{--
-                    ===================================================================
-                    END: VISUALISASI KALENDER PERENCANAAN (GANTT-STYLE TABLE)
-                    ===================================================================
-                    --}}
                     <div class="flex items-center justify-between mb-4">
                         {{-- Tombol tambah perencaan (opsional) --}}
                         <div>
@@ -216,29 +40,78 @@
                             <thead>
                                 <tr>
                                     <th class="px-4 py-2 border">#</th>
-                                    <th class="px-4 py-2 border">Komponen</th>
-                                    <th class="px-4 py-2 border">Sub Komponen</th>
-                                    <th class="px-4 py-2 border">Rencana Mulai</th>
-                                    <th class="px-4 py-2 border">Rencana Selesai</th>
+                                    <th class="px-4 py-2 border">Dokumen</th>
+                                    <th class="px-4 py-2 border">Kode</th>
+                                    <th class="px-4 py-2 border">Nama</th>
+                                    <th class="px-4 py-2 border">Volume</th>
+                                    <th class="px-4 py-2 border">Jumlah Biaya</th>
                                     <th class="px-4 py-2 border">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @forelse ($perencanaans as $perencanaan)
-                                    <tr>
-                                        <td class="px-4 py-2 border">{{ $perencanaan->id }}</td>
-                                        <td class="px-4 py-2 border">{{ $perencanaan->komponen }}</td>
-                                        <td class="px-4 py-2 border">{{ $perencanaan->sub_komponen }}</td>
-                                        <td class="px-4 py-2 border">{{ $perencanaan->rencana_mulai }}</td>
-                                        <td class="px-4 py-2 border">{{ $perencanaan->rencana_selesai }}</td>
-                                        <td class="px-4 py-2 border">
-                                            {{-- Tambahkan tombol aksi di sini --}}
-                                            <a href="#" class="text-blue-600">Edit</a>
+                                    {{-- Baris Utama --}}
+                                    <tr class="{{ in_array($perencanaan->id, $openedRows) ? 'bg-blue-50' : '' }}">
+                                        <td class="px-4 py-2 border">{{ $loop->iteration }}</td>
+                                        <td class="px-4 py-2 border italic text-gray-500 text-sm">{{ $perencanaan->dokumen_perencanaan_id }}</td>
+                                        <td class="px-4 py-2 border font-medium">{{ $perencanaan->kode }}</td>
+                                        <td class="px-4 py-2 border">{{ $perencanaan->nama }}</td>
+                                        <td class="px-4 py-2 border italic text-gray-500 text-sm">{{ $perencanaan->volume }}</td>
+                                        <td class="px-4 py-2 border text-right font-bold">
+                                            {{ number_format($perencanaan->jumlah_biaya, 0, ',', '.') }}
+                                        </td>
+                                        <td class="px-4 py-2 border text-center">
+                                            <div class="flex gap-2 justify-center">
+                                                <button wire:click="toggleRow({{ $perencanaan->id }})" class="bg-gray-200 px-2 py-1 rounded text-xs font-bold uppercase">
+                                                    DETAIL
+                                                </button>
+
+                                                <a href="{{ route('perencanaans.edit', $perencanaan->id) }}" 
+                                                    class="bg-blue-600 text-white px-3 py-1 rounded text-xs font-bold uppercase hover:bg-blue-700 transition">
+                                                    EDIT
+                                                </a>
+                                            </div>
                                         </td>
                                     </tr>
+
+                                    {{-- Baris Expandable (Hanya muncul jika di-toggle) --}}
+                                    @if (in_array($perencanaan->id, $openedRows))
+                                    <tr>
+                                        <td colspan="6" class="p-4 bg-gray-50 border-b shadow-inner">
+                                            <div class="bg-white rounded border overflow-hidden">
+                                                <table class="min-w-full text-sm">
+                                                    <thead class="bg-gray-100 text-gray-700">
+                                                        <tr>
+                                                            <th class="px-4 py-2 border-b text-left">Uraian Rincian</th>
+                                                            <th class="px-4 py-2 border-b text-center">Vol</th>
+                                                            <th class="px-4 py-2 border-b text-center">Satuan</th>
+                                                            <th class="px-4 py-2 border-b text-right">Harga Satuan</th>
+                                                            <th class="px-4 py-2 border-b text-right">Subtotal</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @forelse($perencanaan->details as $detail)
+                                                        <tr class="hover:bg-gray-50">
+                                                            <td class="px-4 py-2 border-b">{{ $detail->uraian_rincian }}</td>
+                                                            <td class="px-4 py-2 border-b text-center">{{ $detail->volume }}</td>
+                                                            <td class="px-4 py-2 border-b text-center">{{ $detail->volume_satuan }}</td>
+                                                            <td class="px-4 py-2 border-b text-right">{{ number_format($detail->harga_satuan, 0, ',', '.') }}</td>
+                                                            <td class="px-4 py-2 border-b text-right font-semibold">{{ number_format($detail->subtotal_biaya, 0, ',', '.') }}</td>
+                                                        </tr>
+                                                        @empty
+                                                        <tr>
+                                                            <td colspan="5" class="px-4 py-4 text-center text-gray-400 italic">Belum ada rincian belanja untuk kegiatan ini.</td>
+                                                        </tr>
+                                                        @endforelse
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    @endif
                                 @empty
                                     <tr>
-                                        <td colspan="6" class="px-4 py-2 border text-center">
+                                        <td colspan="6" class="px-4 py-2 border text-center text-gray-500">
                                             Tidak ada Perencanaans.
                                         </td>
                                     </tr>

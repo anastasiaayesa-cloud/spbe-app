@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('penugasans', function (Blueprint $table) {
             $table->id();
+            $table->string('pegawai');
+            $table->string('nama_tugas');
+            $table->string('deskripsi')->nullable();
+            $table->string('tanggal_mulai')->format('yyyy-mm-dd');
+            $table->string('tanggal_selesai')->format('yyyy-mm-dd');
             $table->timestamps();
         });
     }
