@@ -4,6 +4,7 @@ namespace App\Livewire\Pelaksanaans;
 
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use App\Models\PerencanaanNama;
 use App\Models\Pelaksanaan;
 use Illuminate\Support\Facades\Storage;
 use App\Models\PelaksanaanJenis;
@@ -13,18 +14,20 @@ use App\Models\PelaksanaanJenis;
 class PelaksanaanForm extends Component
 {
     use WithFileUploads;
-    public $pelaksanaan_id, $file_pdf, $existing_pdf, $tanggal_upload,$pelaksanaan_jenis_id,$pelaksanaanJenisList = [];
+    public $pelaksanaan_id, $file_pdf, $existing_pdf, $tanggal_upload,$pelaksanaan_jenis_id,$pelaksanaanJenisList = [], $perencanaan_nama_id, $perencanaanNamas = [];
 
     public function mount($pelaksanaan_id = null)
 {
     // INI WAJIB ADA (ISI DROPDOWN)
     $this->pelaksanaanJenisList = PelaksanaanJenis::orderBy('nama')->get();
+        // Dropdown nama kegiatan (INI WAJIB)
+    $this->perencanaanNamas = PerencanaanNama::orderBy('nama')->get();
 
     if ($pelaksanaan_id) {
         $this->pelaksanaan_id = $pelaksanaan_id;
 
         $pelaksanaan = Pelaksanaan::findOrFail($pelaksanaan_id);
-
+        $this->perencanaan_nama_id = $pelaksanaan->perencanaan_nama_id;
         $this->existing_pdf = $pelaksanaan->file_pdf;
         $this->pelaksanaan_jenis_id = $pelaksanaan->pelaksanaan_jenis_id;
         $this->tanggal_upload = $pelaksanaan->tanggal_upload;
@@ -34,6 +37,7 @@ class PelaksanaanForm extends Component
     public function rules()
     {
         $rules = [
+            'perencanaan_nama_id' => 'required|exists:kegiatan_nama_id,id',
             'pelaksanaan_jenis_id' => 'required|exists:pelaksanaan_jenis,id',
             'file_pdf' => 'required|mimes:pdf',
             'tanggal_upload' => 'required|date',
@@ -63,6 +67,7 @@ class PelaksanaanForm extends Component
             $pdfPath = $this->file_pdf->store('pelaksanaan', 'public');
 
             $pelaksanaan->update([
+                'perencanaan_nama_id' => $this->perencanaan_nama_id,
                 'pelaksanaan_jenis_id' => $this->pelaksanaan_jenis_id,
                 'file_pdf' => $pdfPath,
                 'tanggal_upload' => $this->tanggal_upload,
@@ -74,6 +79,7 @@ class PelaksanaanForm extends Component
             return redirect()->route('pelaksanaans.index');
         } else {
             $pelaksanaan = Pelaksanaan::create([
+                'perencanaan_nama_id' => $this->perencanaan_nama_id,
                 'pelaksanaan_jenis_id' => $this->pelaksanaan_jenis_id,
                 'file_pdf' => $pdfPath,
                 'tanggal_upload' => $this->tanggal_upload,
