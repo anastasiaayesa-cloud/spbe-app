@@ -4,104 +4,118 @@ namespace App\Livewire\Pelaksanaans;
 
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use App\Models\PerencanaanNama;
+use App\Models\Rencana;
 use App\Models\Pelaksanaan;
-use Illuminate\Support\Facades\Storage;
 use App\Models\PelaksanaanJenis;
-
-
+use Illuminate\Support\Facades\Storage;
 
 class PelaksanaanForm extends Component
 {
     use WithFileUploads;
-    public $pelaksanaan_id, $file_pdf, $existing_pdf, $tanggal_upload,$pelaksanaan_jenis_id,$pelaksanaanJenisList = [], $perencanaan_nama_id, $perencanaanNamas = [];
 
-    public function mount($pelaksanaan_id = null)
+    public $pelaksanaan_id;
+    public $rencana_id;
+    public $tanggal_upload;
+
+    // INFO RENCANA
+public $rencana;
+
+    // DROPDOWN
+    public $pelaksanaanJenisList = [];
+
+    // MULTI LAMPIRAN
+    public $lampirans = [];
+
+    // public $nominal;
+
+    public function mount($pelaksanaan_id = null, $rencana_id = null)
 {
-    // INI WAJIB ADA (ISI DROPDOWN)
     $this->pelaksanaanJenisList = PelaksanaanJenis::orderBy('nama')->get();
-        // Dropdown nama kegiatan (INI WAJIB)
-    $this->perencanaanNamas = PerencanaanNama::orderBy('nama')->get();
 
+    // CREATE
+    if ($rencana_id) {
+        $this->rencana_id = $rencana_id;
+        $this->rencana = Rencana::findOrFail($rencana_id);
+        
+        $this->setTanggalDariRencana();
+        $this->rencana_id = request('rencana_id');
+
+        $this->lampirans = [[
+    'file' => null,
+    'pelaksanaan_jenis_id' => '',
+    'nominal' => null,
+    'keterangan' => '',
+]];
+    }
+
+
+    // EDIT
     if ($pelaksanaan_id) {
-        $this->pelaksanaan_id = $pelaksanaan_id;
-
         $pelaksanaan = Pelaksanaan::findOrFail($pelaksanaan_id);
-        $this->perencanaan_nama_id = $pelaksanaan->perencanaan_nama_id;
-        $this->existing_pdf = $pelaksanaan->file_pdf;
-        $this->pelaksanaan_jenis_id = $pelaksanaan->pelaksanaan_jenis_id;
-        $this->tanggal_upload = $pelaksanaan->tanggal_upload;
+
+        $this->pelaksanaan_id = $pelaksanaan->id;
+        $this->rencana_id = $pelaksanaan->rencana_id;
+        
+        $this->rencana = Rencana::findOrFail($pelaksanaan->rencana_id);
+        $this->setTanggalDariRencana();
     }
 }
 
-    public function rules()
+private function setTanggalDariRencana()
+{
+    if ($this->rencana) {
+        $this->tanggal_upload = $this->rencana->tanggal_kegiatan;
+    }
+}
+
+    protected function rules()
     {
-        $rules = [
-            'perencanaan_nama_id' => 'required|exists:kegiatan_nama_id,id',
-            'pelaksanaan_jenis_id' => 'required|exists:pelaksanaan_jenis,id',
-            'file_pdf' => 'required|mimes:pdf',
-            'tanggal_upload' => 'required|date',
-
+        return [
+            'rencana_id' => 'required|exists:rencanas,id',
+            'lampirans.*.file' => 'required|mimes:pdf',
+            'lampirans.*.pelaksanaan_jenis_id' => 'required|exists:pelaksanaan_jenis,id',
+            'lampirans.*.nominal' => 'nullable|numeric|min:0',
+            'lampirans.*.keterangan' => 'nullable|string|max:255',
         ];
+    }
 
-        return $rules;
+    public function addLampiran()
+    {
+        $this->lampirans[] = [
+            'file' => null,
+            'pelaksanaan_jenis_id' => '',
+            'nominal' => null,
+            'keterangan' => '',
+        ];
+    }
+
+    public function removeLampiran($index)
+    {
+        unset($this->lampirans[$index]);
+        $this->lampirans = array_values($this->lampirans);
     }
 
     public function submit()
     {
         $this->validate();
-        if ($this->file_pdf) {
-            $pdfPath = $this->file_pdf->store('pelaksanaan', 'public');
-        }
-        // else {
-        //     $pdfPath = $this->existing_pdf; // pakai file lama
-        // }
 
-        // setelah lulus validasi, lakukan sintaks dibawah
-        if ($this->pelaksanaan_id) {
-            $pelaksanaan = Pelaksanaan::findOrFail($this->pelaksanaan_id);
+       foreach ($this->lampirans as $lampiran) {
 
-            if ($pelaksanaan->file_pdf && storage_path('app/public/' . $pelaksanaan->file_pdf)) {
-                Storage::delete('public/' . $pelaksanaan->file_pdf);
-            }
-            $pdfPath = $this->file_pdf->store('pelaksanaan', 'public');
+    $pdfPath = $lampiran['file']->store('pelaksanaan', 'public');
 
-            $pelaksanaan->update([
-                'perencanaan_nama_id' => $this->perencanaan_nama_id,
-                'pelaksanaan_jenis_id' => $this->pelaksanaan_jenis_id,
-                'file_pdf' => $pdfPath,
-                'tanggal_upload' => $this->tanggal_upload,
+    Pelaksanaan::create([
+        'rencana_id' => $this->rencana_id,
+        'pelaksanaan_jenis_id' => $lampiran['pelaksanaan_jenis_id'],
+        'nominal' => $lampiran['nominal'] ?? null,
+        'file_pdf' => $pdfPath,
+        'keterangan' => $lampiran['keterangan'] ?? null,
+        'tanggal_upload' => $this->tanggal_upload,
+    ]);
+}
 
 
-            ]);
 
-            session()->flash('success', 'Bukti berhasil diedit.');
-            return redirect()->route('pelaksanaans.index');
-        } else {
-            $pelaksanaan = Pelaksanaan::create([
-                'perencanaan_nama_id' => $this->perencanaan_nama_id,
-                'pelaksanaan_jenis_id' => $this->pelaksanaan_jenis_id,
-                'file_pdf' => $pdfPath,
-                'tanggal_upload' => $this->tanggal_upload,
-            ]);
-
-            session()->flash('success', 'Bukti baru berhasil ditambahkan.');
-            return redirect()->route('pelaksanaans.create');
-        }
-    }
-
-    public function delete()
-    {
-
-        $pelaksanaan = Pelaksanaan::findOrFail($this->pelaksanaan_id);
-
-        if ($pelaksanaan->file_pdf && storage_path('app/public/' . $pelaksanaan->file_pdf)) {
-            Storage::delete('public/' . $pelaksanaan->file_pdf);
-        }
-
-        Pelaksanaan::where('id', $this->pelaksanaan_id)->delete();
-
-        session()->flash('success', 'Pelaksanaan berhasil dihapus.');
+        session()->flash('success', 'Bukti berhasil disimpan.');
         return redirect()->route('pelaksanaans.index');
     }
 

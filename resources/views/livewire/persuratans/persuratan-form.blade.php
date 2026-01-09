@@ -43,12 +43,12 @@
                         </div>
 
                         {{-- Input --}}
-                        <input type="text"
-                            wire:model.live="pegawaiSearch"
-                            wire:focus="showAllPegawai"
-                            @click.away="$wire.closeDropdown()"
-                            class="w-full border rounded px-3 py-2"
-                            placeholder="Ketik nama penerima surat">
+                       <input type="text"
+    wire:model.live="pegawaiSearch"
+    wire:focus="openDropdown"
+    @click.away="$wire.closeDropdown()"
+    class="w-full border rounded px-3 py-2"
+    placeholder="Ketik nama penerima surat">
 
                         {{-- Dropdown --}}
                         @if($showPegawaiDropdown && count($pegawaiResults))
@@ -93,14 +93,16 @@
 </button> --}}
 
                     <div class="mb-3">
-                        <label class="block mb-1">Tanggal Upload *</label>
-                        <input type="date" wire:model="tanggal_upload" class="border rounded px-3 py-2 w-full">
-                        @error('tanggal_upload') <span class="text-red-600">{{ $message }}</span> @enderror
-                    </div>
+    <label class="block mb-1">Tanggal Upload *</label>
+    <input type="date"
+        wire:model="tanggal_upload"
+        readonly
+        class="border rounded px-3 py-2 w-full bg-gray-100 cursor-not-allowed">
+</div>
 
                     <div class="mb-3">
                         <label class="block mb-1">Jenis Anggaran</label>
-                        <select wire:model="jenis_kelamin" class="border rounded px-3 py-2 w-full">
+                        <select wire:model="jenis_anggaran" class="border rounded px-3 py-2 w-full">
                             <option value="">-- Pilih Jenis Anggaran --</option>
                             <option value="BPMP">BPMP</option>
                             <option value="Luar BPMP">Luar BPMP</option>                            

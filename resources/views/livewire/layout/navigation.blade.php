@@ -58,10 +58,13 @@ new class extends Component
                     </x-nav-link>
 
                     <x-nav-link :href="route('pelaksanaans.index')" :active="request()->routeIs('pelaksanaans.index')" wire:navigate>
-                        {{ __('Jenis Bukti') }}
+                        {{ __('Upload Bukti') }}
                     </x-nav-link>
                     <x-nav-link :href="route('rencanas.index')" :active="request()->routeIs('rencanas.index')" wire:navigate>
-                        {{ __('Rencana Kegiatan') }}
+                        {{ __('Usulan Kegiatan') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('keuangans.index')" :active="request()->routeIs('keuangans.index')" wire:navigate>
+                        {{ __('Keuangan') }}
                     </x-nav-link>
                 </div>
             </div>

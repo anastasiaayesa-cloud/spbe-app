@@ -16,12 +16,17 @@ class Persuratan extends Model
         'persuratan_kategori_id',
         // 'kepada',
         'perihal',
-        'jenis_anggaran'
+        'jenis_anggaran',
+        'rencana_id'
     ];
 
     public function kategori()
     {
         return $this->belongsTo(PersuratanKategori::class);
+    }
+    public function rencana()
+    {
+        return $this->belongsTo(Rencana::class);
     }
 
     public function kepegawaians()

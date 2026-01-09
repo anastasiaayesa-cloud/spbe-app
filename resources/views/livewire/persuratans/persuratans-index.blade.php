@@ -2,7 +2,6 @@
     use Illuminate\Support\Facades\Storage;
 @endphp
 
-
 <x-slot name="header">
     <h2 class="font-semibold text-xl text-gray-800 leading-tight">
         {{ __('Manajemen Persuratan') }}
@@ -16,71 +15,133 @@
 
                 <div class="flex items-center justify-between mb-4">
 
-                    {{-- Tombol tambah persuratan (opsional) --}}
-                    <div>
-                        <a href="{{ route('persuratans.create') }}"
-                            class="inline-block px-4 py-2 rounded">Buat Surat</a>
-                    </div>
-
                     {{-- Search bar --}}
                     <div>
                         <input type="text" wire:model.live="search"
-                            placeholder="Cari surat..."
+                            placeholder="Cari kegiatan..."
                             class="border rounded px-3 py-2 w-64 focus:ring focus:ring-blue-200">
                     </div>
                 </div>
-
-                @if (session('success'))
-                    <div class="mb-4 text-green-700">{{ session('success') }}</div>
-                @endif
-                @if (session('error'))
-                    <div class="mb-4 text-red-700">{{ session('error') }}</div>
-                @endif
 
                 <div class="overflow-x-auto">
                     <table class="min-w-full bg-white border">
                         <thead>
                             <tr>
                                 <th class="px-4 py-2 border">#</th>
-                                <th class="px-4 py-2 border">Nama Surat</th>
-                                <th class="px-4 py-2 border">File</th>
-                                <th class="px-4 py-2 border">Tanggal upload</th>
+                                <th class="px-4 py-2 border">Tanggal</th>
+                                <th class="px-4 py-2 border">Nama Kegiatan</th>
+                                <th class="px-4 py-2 border">Status</th>
                                 <th class="px-4 py-2 border">Aksi</th>
                             </tr>
                         </thead>
+
                         <tbody>
-                            @forelse ($persuratans as $persuratan)
+                            @forelse ($rencanas as $rencana)
                                 <tr>
-                                    <td class="px-4 py-2 border">{{ $persuratan->id }}</td>
-                                    <td class="px-4 py-2 border">{{ $persuratan->nama_surat }}</td>
-                                    {{-- <td class="px-4 py-2 border">{{ $persuratan->file_pdf }}</td> --}}
-                                    <td class="px-4 py-2 border"> 
-                                        @if ($persuratan->file_pdf)
-                                            <a href="{{ Storage::url($persuratan->file_pdf) }}" 
-                                            class="text-blue-600 underline" target="_blank">
-                                            Download File
+                                    <td class="px-4 py-2 border">
+                                        {{ $loop->iteration }}
+                                    </td>
+
+                                    <td class="px-4 py-2 border">
+                                        {{ \Carbon\Carbon::parse($rencana->tanggal_kegiatan)->format('d/m/Y') }}
+                                    </td>
+
+                                    <td class="px-4 py-2 border">
+                                        {{ $rencana->nama_kegiatan }}
+                                    </td>
+
+                                    {{-- STATUS --}}
+                                    <td class="px-4 py-2 border text-center">
+                                        @if ($rencana->persuratans()->exists())
+    <span class="px-2 py-1 text-sm bg-green-100 text-green-700 rounded">
+        Sudah Upload
+    </span>
+@else
+    <span class="px-2 py-1 text-sm bg-red-100 text-red-700 rounded">
+        Belum Upload
+    </span>
+@endif
+
+                                    </td>
+
+                                    {{-- AKSI --}}
+                                    <td class="px-4 py-2 border text-center">
+                                        @if ($rencana->persuratans->count() > 0)
+                                            @php
+                                                $surat = $rencana->persuratans->first();
+                                            @endphp
+
+                                            <button
+    wire:click="previewSurat({{ $surat->id }})"
+    class="text-blue-600 underline mr-2">
+    Lihat
+</button>
+
+                                            <a href="{{ route('persuratans.edit', $surat->id) }}"
+                                               class="text-yellow-600">
+                                                Edit
+                                            </a>
+                                        @else
+                                            <a href="{{ route('persuratans.create', ['rencana_id' => $rencana->id]) }}"
+                                               class="text-blue-600 font-semibold">
+                                                Upload Surat
                                             </a>
                                         @endif
-                                    </td>
-                                    <td class="px-4 py-2 border">{{ $persuratan->tanggal_upload }}</td>
-                                    <td class="px-4 py-2 border"> 
-                                          <a href="{{ route('persuratans.edit', $persuratan->id) }}"
-                                            class="mr-2 text-blue-600">Edit</a> 
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
                                     <td colspan="5" class="px-4 py-2 border text-center">
-                                        Tidak ada Surat .
+                                        Tidak ada data kegiatan.
                                     </td>
                                 </tr>
                             @endforelse
                         </tbody>
                     </table>
+
+                @if ($showPreview)
+<div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+
+    <div class="bg-white w-11/12 md:w-4/5 h-[85vh] rounded-lg shadow-lg relative">
+
+        {{-- HEADER --}}
+        <div class="flex justify-between items-center px-4 py-2 border-b">
+            <h3 class="font-semibold text-lg">
+                {{ $previewNama }}
+            </h3>
+
+            <button
+                wire:click="closePreview"
+                class="text-red-600 font-bold text-xl">
+                ✕
+            </button>
+        </div>
+
+        {{-- PDF VIEWER --}}
+        <div class="h-full">
+            <iframe
+                src="{{ $previewUrl }}"
+                class="w-full h-full border-none">
+            </iframe>
+        </div>
+
+        {{-- FOOTER --}}
+        <div class="absolute bottom-3 right-4">
+            <a href="{{ $previewUrl }}"
+               download
+               class="px-4 py-2 bg-blue-600 text-white rounded">
+                Download
+            </a>
+        </div>
+
+    </div>
+</div>
+@endif
+
                 </div>
 
                 <div class="mt-4">
-                    {{ $persuratans->links() }}
+                    {{ $rencanas->links() }}
                 </div>
 
             </div>

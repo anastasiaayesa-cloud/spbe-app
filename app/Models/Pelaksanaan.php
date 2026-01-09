@@ -8,23 +8,31 @@ use Illuminate\Database\Eloquent\Model;
 class Pelaksanaan extends Model
 {
     use HasFactory;
+
     protected $fillable = [
-        'perencanaan_nama_id',
+        'rencana_id',
         'pelaksanaan_jenis_id',
+        'nominal',
         'file_pdf',
         'tanggal_upload',
     ];
+
+    public function rencana()
+    {
+        return $this->belongsTo(Rencana::class);
+    }
 
     public function jenis()
     {
         return $this->belongsTo(PelaksanaanJenis::class, 'pelaksanaan_jenis_id');
     }
+    public function pelaksanaanJenis()
+{
+    return $this->belongsTo(PelaksanaanJenis::class);
+}
 
-    public function perencanaannama()
+public function keuangans()
     {
-        return $this->belongsTo(PerencanaanNama::class);
+        return $this->hasMany(Keuangan::class);
     }
-
-    
-
 }

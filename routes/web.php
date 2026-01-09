@@ -15,9 +15,14 @@ use App\Livewire\Instansis\InstansiForm;
 
 use App\Livewire\Pelaksanaans\PelaksanaansIndex;
 use App\Livewire\Pelaksanaans\PelaksanaanForm;
+use App\Livewire\Pelaksanaans\PelaksanaanShow;
 
 use App\Livewire\Rencanas\RencanasIndex;
 use App\Livewire\Rencanas\RencanasForm;
+
+use App\Livewire\Keuangans\KeuanganIndex;
+use App\Livewire\Keuangans\KeuanganForm;
+
 
 
 
@@ -61,15 +66,27 @@ Route::get('/instansis', InstansiIndex::class)->name('instansis.index');
 Route::get('/instansis/create', InstansiForm::class)->name('instansis.create');
 Route::get('/instansis/{instansi_id}/edit', action: InstansiForm::class)->name(name: 'instansis.edit');
 
-Route::get('/pelaksanaans', PelaksanaansIndex::class)->name('pelaksanaans.index');
-Route::get('/pelaksanaans/create', PelaksanaanForm::class)->name(name: 'pelaksanaans.create');
-Route::get('/pelaksanaans/{pelaksanaan_id}/edit', action: PelaksanaanForm::class)->name(name: 'pelaksanaans.edit');
+Route::get('/pelaksanaans', PelaksanaansIndex::class)
+    ->name('pelaksanaans.index');
+
+Route::get('/pelaksanaans/create/{rencana_id}', PelaksanaanForm::class)
+    ->name('pelaksanaans.create');
+
+Route::get('/pelaksanaans/{pelaksanaan}/edit', PelaksanaanForm::class)
+    ->name('pelaksanaans.edit');
+
+Route::get(
+    '/pelaksanaans/rencana/{rencana}',
+    \App\Livewire\Pelaksanaans\PelaksanaanShow::class
+)->name('pelaksanaans.show.by-rencana');
+
 
 Route::get('/rencanas', RencanasIndex::class)->name('rencanas.index');
 Route::get('/rencanas/create', RencanasForm::class)->name(name: 'rencanas.create');
 Route::get('/rencanas/{rencanas_id}/edit', action: RencanasForm::class)->name(name: 'rencanas.edit');
 
-
+Route::get('/keuangans', KeuanganIndex::class)->name('keuangans.index');
+Route::get('/keuangans/create', KeuanganForm::class)->name('keuangans.create');
 
 
 
