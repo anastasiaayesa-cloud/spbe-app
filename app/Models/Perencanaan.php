@@ -31,4 +31,20 @@ class Perencanaan extends Model
     {
         return $this->hasMany(PerencanaanDetail::class);
     }
+
+    public function rencanas()
+    {
+        return $this->belongsToMany(
+            Rencana::class,
+            'perencanaan_rencana'
+        );
+    }
+
+
+
+//     public function perencanaanNama()
+// {
+//     return $this->belongsTo(PerencanaanNama::class);
+// }
+
 }

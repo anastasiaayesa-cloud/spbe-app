@@ -13,4 +13,10 @@ class DokumenPerencanaan extends Model
         'file_pdf',
         'tanggal',
     ];
+
+    public function perencanaanNama()
+{
+    return $this->belongsTo(PerencanaanNama::class);
+}
+
 }

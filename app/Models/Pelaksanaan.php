@@ -9,6 +9,7 @@ class Pelaksanaan extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'perencanaan_nama_id',
         'pelaksanaan_jenis_id',
         'file_pdf',
         'tanggal_upload',
@@ -18,6 +19,12 @@ class Pelaksanaan extends Model
     {
         return $this->belongsTo(PelaksanaanJenis::class, 'pelaksanaan_jenis_id');
     }
+
+    public function perencanaannama()
+    {
+        return $this->belongsTo(PerencanaanNama::class);
+    }
+
     
 
 }

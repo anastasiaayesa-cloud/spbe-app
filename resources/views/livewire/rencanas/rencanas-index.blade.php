@@ -39,6 +39,7 @@
                                 <th class="px-4 py-2 border">#</th>
                                 <th class="px-4 py-2 border">Nama Kegiatan</th>
                                 <th class="px-4 py-2 border">Tanggal Kegiatan</th>
+                                <th class="px-4 py-2 border">Lokasi Kegiatan</th>
                                 <th class="px-4 py-2 border">Pegawai yang Diusulkan</th>
                                 <th class="px-4 py-2 border">Aksi</th>
                             </tr>
@@ -49,6 +50,7 @@
                                     <td class="px-4 py-2 border">{{ $rencana->id }}</td>
                                     <td class="px-4 py-2 border">{{ $rencana->nama_kegiatan }}</td>
                                     <td class="px-4 py-2 border">{{ $rencana->tanggal_kegiatan }}</td>
+                                    <td class="px-4 py-2 border">{{ $rencana->lokasi_kegiatan }}</td>            
                                     
                                     <td class="px-4 py-2 border"> 
                                     @forelse ($rencana->kepegawaians as $pegawai)

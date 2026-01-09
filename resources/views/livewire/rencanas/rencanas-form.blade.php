@@ -18,8 +18,49 @@
                 @endif
 
                 <form wire:submit.prevent="submit" autocomplete="off">
+                     <div class="mb-4 relative">
+    <label class="font-semibold">Nama Perencanaan *</label>
+
+    {{-- Selected --}}
+    <div class="flex flex-wrap gap-2 mb-2">
+        
+        @foreach($this->perencanaanSelectedData as $item)
+            <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm flex items-center gap-2">
+                {{ $item->nama_aktivitas }}
+                <button type="button"
+                        wire:click="removePerencanaan({{ $item->id }})"
+                        class="text-red-600 font-bold">×</button>
+            </span>
+        @endforeach
+    </div>
+
+    {{-- Input --}}
+    <input type="text"
+           wire:model.live="perencanaanSearch"
+           wire:focus="showAllPerencanaan"
+           wire:click.away="closePerencanaanDropdown"
+           class="w-full border rounded px-3 py-2"
+           placeholder="Pilih perencanaan">
+
+    {{-- Dropdown --}}
+    @if($showPerencanaanDropdown && count($perencanaanResults))
+        <div class="absolute z-10 w-full border rounded mt-1 bg-white max-h-56 overflow-y-auto shadow">
+            @foreach($perencanaanResults as $item)
+                <div class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
+                     wire:click="addPerencanaan({{ $item['id'] }})">
+                    {{ $item['nama_aktivitas'] }}
+                </div>
+            @endforeach
+        </div>
+    @endif
+
+    @error('perencanaanSelected')
+        <span class="text-red-600">{{ $message }}</span>
+    @enderror
+</div>
+
                     <div class="mb-3">
-                        <label class="block mb-1">Nama Kegiatan *</label>
+                        <label class="block mb-1">Rincian Kegiatan *</label>
                         <input type="text" wire:model.defer="nama_kegiatan" class="border rounded px-3 py-2 w-full" placeholder="Isi Kegiatan" autofocus>
                         @error('nama_kegiatan') <span class="text-red-600">{{ $message }}</span> @enderror
                     </div>
@@ -30,41 +71,49 @@
                         @error('tanggal_kegiatan') <span class="text-red-600">{{ $message }}</span> @enderror
                     </div>
 
-                    <div class="mb-4 relative" x-data="{ open: @entangle('showPegawaiDropdown') }">
-                        <label class="font-semibold">Penerima Surat (Pegawai)</label>
+                    <div class="mb-3">
+                        <label class="block mb-1">Lokasi Kegiatan *</label>
+                        <input type="text" wire:model.defer="lokasi_kegiatan" class="border rounded px-3 py-2 w-full" placeholder="Isi lokasi Kegiatan" autofocus>
+                        @error('lokasi_kegiatan') <span class="text-red-600">{{ $message }}</span> @enderror
+                    </div>
 
-                        {{-- Selected --}}
-                        <div class="flex flex-wrap gap-2 mb-2">
-                            @foreach($this->pegawaiSelectedData as $pegawai)
-                                <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm flex items-center gap-2">
-                                    {{ $pegawai->nama }}
-                                    <button type="button"
-                                            wire:click="removePegawai({{ $pegawai->id }})"
-                                            class="text-red-600 font-bold">×</button>
-                                </span>
-                            @endforeach
-                        </div>
+                    <div class="mb-4 relative">
+    <label class="font-semibold">Penerima Surat (Pegawai)</label>
 
-                        {{-- Input --}}
-                        <input type="text"
-                            wire:model.live="pegawaiSearch"
-                            wire:focus="showAllPegawai"
-                            @click.away="$wire.closeDropdown()"
-                            class="w-full border rounded px-3 py-2"
-                            placeholder="Ketik nama penerima surat">
+    <div class="flex flex-wrap gap-2 mb-2">
+        @foreach($this->pegawaiSelectedData as $pegawai)
+            <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm flex items-center gap-2">
+                {{ $pegawai->nama }}
+                <button type="button"
+                        wire:click="removePegawai({{ $pegawai->id }})"
+                        class="text-red-600 font-bold">×</button>
+            </span>
+        @endforeach
+    </div>
 
-                        {{-- Dropdown --}}
-                        @if($showPegawaiDropdown && count($pegawaiResults))
-                            <div class="absolute z-10 w-full border rounded mt-1 bg-white max-h-56 overflow-y-auto shadow">
-                                @foreach($pegawaiResults as $pegawai)
-                                    <div class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
-                                        wire:click="addPegawai({{ $pegawai['id'] }})">
-                                        {{ $pegawai['nama'] }}
-                                    </div>
-                                @endforeach
-                            </div>
-                        @endif
-                    </div>                    
+    <input type="text"
+        wire:model.debounce.300ms="pegawaiSearch"
+        wire:focusin="showAllPegawai"
+        wire:click.away="closePegawaiDropdown"
+        class="w-full border rounded px-3 py-2"
+        placeholder="Ketik nama penerima surat">
+
+
+@if($showPegawaiDropdown && count($pegawaiResults))
+    <div class="absolute z-20 w-full bottom-full mb-1 bg-white max-h-56 overflow-y-auto shadow">
+        @forelse($pegawaiResults as $pegawai)
+            <div class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
+                 wire:click="addPegawai({{ $pegawai['id'] }})">
+                {{ $pegawai['nama'] }}
+            </div>
+        @empty
+            <div class="px-3 py-2 text-gray-400">
+                Pegawai tidak ditemukan
+            </div>
+        @endforelse
+    </div>
+@endif
+</div>             
 
                     <div class="flex items-center space-x-2">
                         <button type="submit" class=" px-4 py-2 rounded">
