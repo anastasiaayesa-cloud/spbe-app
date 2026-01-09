@@ -38,49 +38,66 @@
                 @endif
 
                 <div class="overflow-x-auto">
-                    <table class="min-w-full bg-white border">
-                        <thead>
-                            <tr>
-                                <th class="px-4 py-2 border">#</th>
-                                <th class="px-4 py-2 border">Nama Surat</th>
-                                <th class="px-4 py-2 border">File</th>
-                                <th class="px-4 py-2 border">Tanggal upload</th>
-                                <th class="px-4 py-2 border">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse ($persuratans as $persuratan)
-                                <tr>
-                                    <td class="px-4 py-2 border">{{ $persuratan->id }}</td>
-                                    <td class="px-4 py-2 border">{{ $persuratan->nama_surat }}</td>
-                                    {{-- <td class="px-4 py-2 border">{{ $persuratan->file_pdf }}</td> --}}
-                                    <td class="px-4 py-2 border"> 
-                                        @if ($persuratan->file_pdf)
-                                            <a href="{{ Storage::url($persuratan->file_pdf) }}" 
-                                            class="text-blue-600 underline" target="_blank">
-                                            Download File
-                                            </a>
-                                        @endif
-                                    </td>
-                                    <td class="px-4 py-2 border">{{ $persuratan->tanggal_upload }}</td>
-                                    <td class="px-4 py-2 border"> 
-                                          <a href="{{ route('persuratans.edit', $persuratan->id) }}"
-                                            class="mr-2 text-blue-600">Edit</a> 
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="5" class="px-4 py-2 border text-center">
-                                        Tidak ada Surat .
-                                    </td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
+                <table class="min-w-full border-collapse">
+                    <thead>
+                        <tr class="bg-gray-100">
+                            <th class="px-4 py-2 border">#</th>
+                            <th class="px-4 py-2 border">Nama Kegiatan</th>
+                            <th class="px-4 py-2 border">Tanggal Kegiatan</th>
+                            {{-- Kolom Pegawai Dihapus --}}
+                            <th class="px-4 py-2 border">Status</th>
+                            <th class="px-4 py-2 border">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($rencanas as $rencana)
+                        <tr>
+                            <td class="px-4 py-2 border text-center">{{ $loop->iteration }}</td>
+                            <td class="px-4 py-2 border">{{ $rencana->nama_kegiatan }}</td>
+                            <td class="px-4 py-2 border text-center">{{ $rencana->tanggal_kegiatan }}</td>
+                            
+                            {{-- Kolom Status --}}
+                            <td class="px-4 py-2 border">
+                                @php
+                                    // Ambil data surat berdasarkan rencana_id dari tabel pivot
+                                    $daftarSurat = \App\Models\Persuratan::whereHas('rencanas', function($q) use ($rencana) {
+                                        $q->where('rencanas.id', $rencana->id_rencana);
+                                    })->get();
+                                @endphp
 
-                <div class="mt-4">
-                    {{ $persuratans->links() }}
+                                @if($daftarSurat->isNotEmpty())
+                                    <span class="text-green-600 font-bold text-xs">Terupload ({{ $daftarSurat->count() }}):</span>
+                                    <ul class="list-disc ml-4">
+                                        @foreach($daftarSurat as $s)
+                                            <li>
+                                                <a href="{{ asset('storage/'.$s->file_pdf) }}" target="_blank" class="text-blue-500 underline text-xs">
+                                                    {{ $s->nama_surat }}
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                @else
+                                    <span class="text-red-500 italic text-sm">Belum ada surat</span>
+                                @endif
+                            </td>
+
+                            {{-- Kolom Aksi --}}
+                            <td class="px-4 py-2 border text-center">
+                                {{-- Hapus pengecekan @if(!$rencana->id_surat) agar tombol selalu ada --}}
+                                <a href="{{ route('persuratans.create', ['rencana_id' => $rencana->id_rencana]) }}" 
+                                class="bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600">
+                                    Buat Surat
+                                </a>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+
+                    {{-- Pastikan pagination juga menggunakan $rencanas --}}
+                    <div class="mt-4">
+                        {{ $rencanas->links() }}
+                    </div>>
                 </div>
 
             </div>
