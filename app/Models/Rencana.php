@@ -18,10 +18,13 @@ class Rencana extends Model
 
 
     public function kepegawaians()
-
     {
-
         return $this->belongsToMany(Kepegawaian::class, 'kepegawaian_rencana_pivot');
-
     }
+
+    public function persuratans()
+    {
+        return $this->belongsToMany(Persuratan::class, 'pivot_persuratans_rencanas');
+    }
+
 }
