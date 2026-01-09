@@ -28,6 +28,12 @@ class Rencana extends Model
             'perencanaan_rencana'
         );
     }
+
+    public function persuratans()
+    {
+        return $this->belongsToMany(Persuratan::class, 'pivot_persuratans_rencanas');
+    }
+
 }
 
 

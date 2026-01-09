@@ -33,36 +33,50 @@ new class extends Component
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
                         {{ __('Dashboard') }}
                     </x-nav-link>
-                    
-                    <x-nav-link :href="route('dokumen-perencanaan.index')" :active="request()->routeIs('dokumenperencanaans.index')" wire:navigate>
-                        {{ __('Dokumen Perencanaan') }}
-                    </x-nav-link>
-                    
-                    <x-nav-link :href="route('perencanaans.index')" :active="request()->routeIs('perencanaans.index')" wire:navigate>
-                        {{ __('Perencanaan') }}
-                    </x-nav-link>
+    
+                    @role('perencanaan|admin')
+                        <x-nav-link :href="route('dokumen-perencanaan.index')" :active="request()->routeIs('dokumen-perencanaan.index')" wire:navigate>
+                            {{ __('Dokumen Perencanaan') }}
+                        </x-nav-link>
+        
+                        <x-nav-link :href="route('perencanaans.index')" :active="request()->routeIs('perencanaans.index')" wire:navigate>
+                            {{ __('Perencanaan') }}
+                        </x-nav-link>
+                    @endrole
 
-                    <x-nav-link :href="route('kepegawaians.index')" :active="request()->routeIs('kepegawaians.index')" wire:navigate>
-                        {{ __('Pegawai') }}
-                    </x-nav-link>
-                    
-                    <x-nav-link :href="route('persuratans.index')" :active="request()->routeIs('persuratans.index')" wire:navigate>
-                        {{ __('Persuratan') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('instansis.index')" :active="request()->routeIs('instansis.index')" wire:navigate>
-                        {{ __('Instansi') }}
-                    </x-nav-link>
+                    @role('kepegawaian|admin')
+                        <x-nav-link :href="route('kepegawaians.index')" :active="request()->routeIs('kepegawaians.index')" wire:navigate>
+                            {{ __('Pegawai') }}
+                        </x-nav-link>
+                    @endrole
+    
+                    @role('kesekretariatan|admin')
+                        <x-nav-link :href="route('persuratans.index')" :active="request()->routeIs('persuratans.index')" wire:navigate>
+                            {{ __('Persuratan') }}
+                        </x-nav-link>
+                    @endrole
 
-                    <x-nav-link :href="route('kabupatens.index')" :active="request()->routeIs('kabupatens.index')" wire:navigate>
-                        {{ __('Kabupaten') }}
-                    </x-nav-link>
+                    @role('pegawai|admin')
+                        <x-nav-link :href="route('pelaksanaans.index')" :active="request()->routeIs('pelaksanaans.index')" wire:navigate>
+                            {{ __('Jenis Bukti') }}
+                        </x-nav-link>
+                    @endrole
 
-                    <x-nav-link :href="route('pelaksanaans.index')" :active="request()->routeIs('pelaksanaans.index')" wire:navigate>
-                        {{ __('Jenis Bukti') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('rencanas.index')" :active="request()->routeIs('rencanas.index')" wire:navigate>
-                        {{ __('Rencana Kegiatan') }}
-                    </x-nav-link>
+                    @role('katim|admin')
+                        <x-nav-link :href="route('rencanas.index')" :active="request()->routeIs('rencanas.index')" wire:navigate>
+                            {{ __('Rencana Kegiatan') }}
+                        </x-nav-link>
+                    @endrole
+
+                    @role('admin')
+                        <x-nav-link :href="route('instansis.index')" :active="request()->routeIs('instansis.index')" wire:navigate>
+                            {{ __('Instansi') }}
+                        </x-nav-link>
+
+                        <x-nav-link :href="route('kabupatens.index')" :active="request()->routeIs('kabupatens.index')" wire:navigate>
+                            {{ __('Kabupaten') }}
+                        </x-nav-link>
+                    @endrole
                 </div>
             </div>
 
@@ -124,6 +138,50 @@ new class extends Component
             </div>
 
             <div class="mt-3 space-y-1">
+                @role('perencanaan|admin')
+                    <x-nav-link :href="route('dokumen-perencanaan.index')" :active="request()->routeIs('dokumen-perencanaan.index')" wire:navigate>
+                        {{ __('Dokumen Perencanaan') }}
+                    </x-nav-link>
+        
+                    <x-nav-link :href="route('perencanaans.index')" :active="request()->routeIs('perencanaans.index')" wire:navigate>
+                        {{ __('Perencanaan') }}
+                    </x-nav-link>
+                @endrole
+
+                @role('kepegawaian|admin')
+                    <x-nav-link :href="route('kepegawaians.index')" :active="request()->routeIs('kepegawaians.index')" wire:navigate>
+                        {{ __('Pegawai') }}
+                    </x-nav-link>
+                @endrole
+    
+                @role('kesekretariatan|admin')
+                    <x-nav-link :href="route('persuratans.index')" :active="request()->routeIs('persuratans.index')" wire:navigate>
+                        {{ __('Persuratan') }}
+                    </x-nav-link>
+                @endrole
+
+                @role('pegawai|admin')
+                    <x-nav-link :href="route('pelaksanaans.index')" :active="request()->routeIs('pelaksanaans.index')" wire:navigate>
+                        {{ __('Jenis Bukti') }}
+                    </x-nav-link>
+                @endrole
+
+                @role('katim|admin')
+                    <x-nav-link :href="route('rencanas.index')" :active="request()->routeIs('rencanas.index')" wire:navigate>
+                        {{ __('Rencana Kegiatan') }}
+                    </x-nav-link>
+                @endrole
+
+                @role('admin')
+                    <x-nav-link :href="route('instansis.index')" :active="request()->routeIs('instansis.index')" wire:navigate>
+                        {{ __('Instansi') }}
+                    </x-nav-link>
+
+                    <x-nav-link :href="route('kabupatens.index')" :active="request()->routeIs('kabupatens.index')" wire:navigate>
+                        {{ __('Kabupaten') }}
+                    </x-nav-link>
+                @endrole
+                
                 <x-responsive-nav-link :href="route('profile')" wire:navigate>
                     {{ __('Profile') }}
                 </x-responsive-nav-link>

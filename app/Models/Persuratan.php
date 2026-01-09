@@ -11,12 +11,11 @@ class Persuratan extends Model
 
     protected $fillable = [
         'nama_surat',
-        'file_pdf',
-        'tanggal_upload',
+        'penerima_surat',
         'persuratan_kategori_id',
-        // 'kepada',
         'perihal',
-        'jenis_anggaran'
+        'file_pdf',
+        'jenis_anggaran',
     ];
 
     public function kategori()
@@ -28,4 +27,15 @@ class Persuratan extends Model
     {
         return $this->belongsToMany(Kepegawaian::class, 'kepegawaian_persuratan');
     }
+
+    public function rencanas()
+    {
+        return $this->belongsToMany(
+            Rencana::class, 
+            'pivot_persuratans_rencanas', // Nama tabel pivot di database kamu
+            'persuratan_id', 
+            'rencana_id'
+        );
+    }
+
 }
