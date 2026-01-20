@@ -26,7 +26,7 @@
         
         @foreach($this->perencanaanSelectedData as $item)
             <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm flex items-center gap-2">
-                {{ $item->nama_aktivitas }}
+                {{ $item->nama }}
                 <button type="button"
                         wire:click="removePerencanaan({{ $item->id }})"
                         class="text-red-600 font-bold">×</button>
@@ -48,7 +48,7 @@
             @foreach($perencanaanResults as $item)
                 <div class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
                      wire:click="addPerencanaan({{ $item['id'] }})">
-                    {{ $item['nama_aktivitas'] }}
+                    {{ $item['nama'] }}
                 </div>
             @endforeach
         </div>

@@ -21,7 +21,7 @@ use App\Livewire\Pelaksanaans\PelaksanaanForm;
 use App\Livewire\Rencanas\RencanasIndex;
 use App\Livewire\Rencanas\RencanasForm;
 
-
+use App\Livewire\Admin\ManajemenAkses;
 
 use Illuminate\Support\Facades\Route;
 /*
@@ -84,6 +84,7 @@ Route::get('/rencanas/{rencanas_id}/edit', action: Rencanasform::class)->name(na
 Route::get('/instansis', InstansiIndex::class)->name('instansis.index');
 Route::get('/instansis/create', InstansiForm::class)->name('instansis.create');
 Route::get('/instansis/{instansi_id}/edit', action: InstansiForm::class)->name(name: 'instansis.edit');
+Route::get('/admin/manajemen-akses', ManajemenAkses::class)->name(name: 'admin.akses');
 
 
 // Route::get('/rencanas', RencanasIndex::class)->name('rencanas.index');

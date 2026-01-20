@@ -76,6 +76,10 @@ new class extends Component
                         <x-nav-link :href="route('kabupatens.index')" :active="request()->routeIs('kabupatens.index')" wire:navigate>
                             {{ __('Kabupaten') }}
                         </x-nav-link>
+
+                        <x-nav-link :href="route('admin.akses')" :active="request()->routeIs('admin.akses')" wire:navigate>
+                            {{ __('Manajemen Hak Akses') }}
+                        </x-nav-link>
                     @endrole
                 </div>
             </div>
