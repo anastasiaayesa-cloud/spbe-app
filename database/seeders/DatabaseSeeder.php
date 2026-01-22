@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             KepegawaianSeeder::class,
             PelaksanaanJenisSeeder::class,
             PersuratanKategoriSeeder::class,
+            RolePermissionSeeder::class,
         ]);
     }
 }

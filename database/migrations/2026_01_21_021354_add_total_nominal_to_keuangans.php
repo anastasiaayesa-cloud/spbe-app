@@ -9,20 +9,19 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-   public function up(): void
-{
-    Schema::table('perencanaans', function (Blueprint $table) {
-        $table->dropForeign('perencanaans_perencanaan_nama_id_foreign');
-        $table->dropColumn('perencanaan_nama_id');
-    });
-}
+    public function up(): void
+    {
+        Schema::table('keuangans', function (Blueprint $table) {
+    $table->bigInteger('total_nominal')->default(0);
+});
+    }
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::table('perencanaans', function (Blueprint $table) {
+        Schema::table('keuangans', function (Blueprint $table) {
             //
         });
     }

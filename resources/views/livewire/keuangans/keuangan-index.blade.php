@@ -6,88 +6,92 @@
 
 <div class="py-6">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+        <div class="bg-white shadow-sm sm:rounded-lg">
             <div class="p-6 text-gray-900">
 
-                {{-- Header action --}}
-                <div class="flex items-center justify-between mb-4">
-                    <a href="{{ route('keuangans.create') }}"
-                       class="inline-block px-4 py-2 bg-blue-600 text-white rounded">
-                        Tambah Keuangan
-                    </a>
-
-                    {{-- Search --}}
+                {{-- Search --}}
+                <div class="flex justify-end mb-4">
                     <input
                         type="text"
                         wire:model.debounce.500ms="search"
-                        placeholder="Cari No SPPD / Pegawai / Pelaksanaan..."
-                        class="border rounded px-3 py-2 w-64"
+                        placeholder="Cari kegiatan / lokasi / tanggal..."
+                        class="border rounded px-3 py-2 w-72"
                     >
                 </div>
 
-                {{-- Flash message --}}
-                @if (session('success'))
-                    <div class="mb-4 text-green-700">
-                        {{ session('success') }}
-                    </div>
-                @endif
-
                 {{-- Table --}}
                 <div class="overflow-x-auto">
-                    <table class="min-w-full bg-white border">
-                        <thead class="bg-gray-100">
+                    <table class="min-w-full border">
+                        <thead class="bg-gray-100 text-sm">
                             <tr>
                                 <th class="px-4 py-2 border">#</th>
-                                <th class="px-4 py-2 border">No SPPD</th>
-                                <th class="px-4 py-2 border">Tanggal SPPD</th>
-                                <th class="px-4 py-2 border">Pegawai</th>
-                                <th class="px-4 py-2 border">Pelaksanaan</th>
-                                <th class="px-4 py-2 border">Dibuat</th>
+                                <th class="px-4 py-2 border text-left">Kegiatan</th>
+                                <th class="px-4 py-2 border text-left">Tempat</th>
+                                <th class="px-4 py-2 border">Tanggal</th>
+                                <th class="px-4 py-2 border">Status</th>
                                 <th class="px-4 py-2 border">Aksi</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            @forelse ($keuangans as $index => $item)
+
+                        <tbody class="text-sm">
+                            @php $no = $pelaksanaans->firstItem(); @endphp
+
+                            @forelse ($pelaksanaans as $pelaksanaan)
                                 <tr>
-                                    <td class="px-4 py-2 border">
-                                        {{ $keuangans->firstItem() + $index }}
+                                    <td class="px-4 py-2 border text-center">
+                                        {{ $no++ }}
                                     </td>
 
                                     <td class="px-4 py-2 border">
-                                        {{ $item->no_sppd }}
+                                        {{ $pelaksanaan->rencana->nama_kegiatan ?? '-' }}
                                     </td>
 
                                     <td class="px-4 py-2 border">
-                                        {{ \Carbon\Carbon::parse($item->tanggal_sppd)->format('d-m-Y') }}
+                                        {{ $pelaksanaan->rencana->lokasi_kegiatan ?? '-' }}
                                     </td>
 
-                                    <td class="px-4 py-2 border">
-                                        {{ $item->kepegawaian->nama ?? '-' }}
+                                    <td class="px-4 py-2 border text-center">
+                                        {{ optional($pelaksanaan->rencana?->tanggal_kegiatan)
+                                            ? \Carbon\Carbon::parse($pelaksanaan->rencana->tanggal_kegiatan)->format('d M Y')
+                                            : '-' }}
                                     </td>
 
-                                    <td class="px-4 py-2 border">
-                                        {{ $item->pelaksanaan->nama_kegiatan ?? '-' }} <br>
-                                        <span class="text-sm text-gray-500">
-                                            {{ $item->pelaksanaan->lokasi_kegiatan ?? '' }}
-                                        </span>
+                                    {{-- Status --}}
+                                    <td class="px-4 py-2 border text-center">
+                                        @if ($pelaksanaan->keuangans->count())
+                                            <span class="px-3 py-1 bg-green-600 text-white rounded text-xs font-semibold">
+                                                Sudah Diajukan
+                                            </span>
+                                        @else
+                                            <span class="px-3 py-1 bg-gray-400 text-white rounded text-xs font-semibold">
+                                                Belum Diajukan
+                                            </span>
+                                        @endif
                                     </td>
 
-                                    <td class="px-4 py-2 border">
-                                        {{ $item->created_at->format('d-m-Y H:i') }}
-                                    </td>
-
-                                    <td class="px-4 py-2 border">
-                                        <button
-                                            wire:click="cetakPdf({{ $item->id }})"
-                                            class="text-blue-600 hover:underline">
-                                            Cetak PDF
-                                        </button>
+                                    {{-- Aksi --}}
+                                    <td class="px-4 py-2 border text-center">
+                                        @if ($pelaksanaan->keuangans->count())
+                                            <a
+                                                href="{{ route('keuangans.show', $pelaksanaan->keuangans->first()->id) }}"
+                                                class="text-blue-600 hover:underline"
+                                            >
+                                                Lihat Keuangan
+                                            </a>
+                                        @else
+                                            <a
+                                                href="{{ route('keuangans.create', ['pelaksanaan' => $pelaksanaan->id]) }}"
+                                                class="inline-block px-3 py-1 bg-blue-600 text-white rounded text-xs"
+                                            >
+                                                Ajukan Keuangan
+                                            </a>
+                                        @endif
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="7" class="px-4 py-2 border text-center text-gray-500">
-                                        Data keuangan belum tersedia.
+                                    <td colspan="6" class="text-center text-gray-400 py-6">
+                                        Data pelaksanaan belum tersedia
                                     </td>
                                 </tr>
                             @endforelse
@@ -97,7 +101,7 @@
 
                 {{-- Pagination --}}
                 <div class="mt-4">
-                    {{ $keuangans->links() }}
+                    {{ $pelaksanaans->links() }}
                 </div>
 
             </div>

@@ -8,86 +8,55 @@ use App\Models\Pelaksanaan;
 
 class KeuanganForm extends Component
 {
-    public $keuangan_id;
-
-    public $no_sppd;
-    public $tanggal_sppd;
     public $pelaksanaan_id;
+    public $pelaksanaan;
 
-    /**
-     * MOUNT
-     */
-    public function mount($keuangan_id = null)
+    public $pelaksanaanPreview;
+    public $totalNominal = 0;
+
+    public function mount($pelaksanaan)
     {
-        if ($keuangan_id) {
-            $keuangan = Keuangan::findOrFail($keuangan_id);
+        // simpan id
+        $this->pelaksanaan_id = $pelaksanaan;
 
-            $this->keuangan_id = $keuangan->id;
-            $this->no_sppd = $keuangan->no_sppd;
-            $this->tanggal_sppd = $keuangan->tanggal_sppd;
-            $this->pelaksanaan_id = $keuangan->pelaksanaan_id;
-        }
+        // ambil pelaksanaan utama
+        $this->pelaksanaan = Pelaksanaan::with([
+            'rencana.kepegawaians',
+            'pelaksanaanJenis',
+            'keuangans'
+        ])->findOrFail($pelaksanaan);
+
+        // ambil preview pelaksanaan lain dalam rencana yang sama
+        $this->pelaksanaanPreview = Pelaksanaan::with('pelaksanaanJenis')
+            ->where('rencana_id', $this->pelaksanaan->rencana_id)
+            ->get();
+
+        // hitung total
+        $this->totalNominal = $this->pelaksanaanPreview->sum('nominal');
     }
 
-    /**
-     * RULES
-     */
-    protected function rules()
-    {
-        return [
-            'no_sppd' => 'required|string|max:255',
-            'tanggal_sppd' => 'required|date',
-            'pelaksanaan_id' => 'required|exists:pelaksanaans,id',
-        ];
-    }
-
-    /**
-     * AUTO ISI TANGGAL DARI PELAKSANAAN
-     */
-    public function updatedPelaksanaanId($value)
-    {
-        if ($value) {
-            $pelaksanaan = Pelaksanaan::find($value);
-
-            if ($pelaksanaan) {
-                $this->tanggal_sppd = $pelaksanaan->tanggal_pelaksanaan?->format('Y-m-d');
-            }
-        } else {
-            $this->tanggal_sppd = null;
-        }
-    }
-
-    /**
-     * SUBMIT
-     */
     public function submit()
     {
-        $this->validate();
+        // cegah double pengajuan
+        if ($this->pelaksanaan->keuangans()->exists()) {
+            session()->flash('error', 'Keuangan sudah diajukan.');
+            return;
+        }
 
-        $data = [
-            'no_sppd' => $this->no_sppd,
-            'tanggal_sppd' => $this->tanggal_sppd,
-            'pelaksanaan_id' => $this->pelaksanaan_id,
-        ];
+        Keuangan::create([
+            'pelaksanaan_id' => $this->pelaksanaan->id,
+            'rencana_id'     => $this->pelaksanaan->rencana_id,
+            'total_nominal'  => $this->totalNominal,
+            'status'         => 'belum_lunas',
+        ]);
 
-        Keuangan::updateOrCreate(
-            ['id' => $this->keuangan_id],
-            $data
-        );
-
-        session()->flash('success', 'Data keuangan berhasil disimpan');
+        session()->flash('success', 'Keuangan berhasil diajukan.');
         return redirect()->route('keuangans.index');
     }
 
-    /**
-     * RENDER
-     */
     public function render()
     {
-        return view('livewire.keuangans.keuangan-form', [
-            'pelaksanaanList' => Pelaksanaan::with('perencanaanNama')
-                ->orderBy('id')
-                ->get(),
-        ])->layout('layouts.app');
+        return view('livewire.keuangans.keuangan-form')
+            ->layout('layouts.app');
     }
 }

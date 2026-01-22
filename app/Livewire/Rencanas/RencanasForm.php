@@ -38,7 +38,7 @@ public $showPerencanaanDropdown = false;
         $rencana = Rencana::with(['perencanaans', 'kepegawaians'])
             ->findOrFail($rencana_id);
 
-        $this->nama_kegiatan = $rencana->nama_kegiatan;
+        $this->nama = $rencana->nama_kegiatan;
         $this->tanggal_kegiatan = $rencana->tanggal_kegiatan;
         $this->lokasi_kegiatan = $rencana->lokasi_kegiatan;
 
@@ -87,7 +87,7 @@ public function showAllPerencanaan()
     $this->showPerencanaanDropdown = true;
 
     $this->perencanaanResults = Perencanaan::whereNotIn('id', $this->perencanaanSelected)
-        ->orderBy('nama_aktivitas')
+        ->orderBy('nama')
         ->limit(20)
         ->get()
         ->toArray();

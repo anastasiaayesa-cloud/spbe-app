@@ -6,25 +6,24 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Run the migrations.
+     */
     public function up(): void
     {
         Schema::table('perencanaans', function (Blueprint $table) {
-            // hapus foreign key dulu
-            $table->dropForeign(['perencanaan_nama_id']);
-            // lalu hapus kolom
-            $table->dropColumn('perencanaan_nama_id');
+            $table->unsignedBigInteger('dokumen_perencanaan_id')->nullable()->after('status_id');
+            $table->foreign('dokumen_perencanaan_id')->references('id')->on('dokumen_perencanaans')->onDelete('cascade');
         });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
         Schema::table('perencanaans', function (Blueprint $table) {
-            $table->unsignedBigInteger('perencanaan_nama_id');
-
-            $table->foreign('perencanaan_nama_id')
-                  ->references('id')
-                  ->on('perencanaan_namas')
-                  ->onDelete('cascade');
+            $table->dropColumn('dokumen_perencanaan_id');
         });
     }
 };

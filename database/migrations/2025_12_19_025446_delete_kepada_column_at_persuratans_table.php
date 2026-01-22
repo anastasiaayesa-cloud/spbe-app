@@ -12,7 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('persuratans', function (Blueprint $table) {
-            $table->dropColumn('kepada');
+            // Tambahkan pengecekan if di sini
+            if (Schema::hasColumn('persuratans', 'kepada')) {
+                $table->dropColumn('kepada');
+            }
         });
     }
 
@@ -22,7 +25,9 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('persuratans', function (Blueprint $table) {
-            $table->string('kepada')->after('id');
+            if (!Schema::hasColumn('persuratans', 'kepada')) {
+                $table->string('kepada')->after('id');
+            }
         });
     }
 };

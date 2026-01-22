@@ -24,124 +24,66 @@
                 </div>
 
                 <div class="overflow-x-auto">
-                    <table class="min-w-full bg-white border">
-                        <thead>
-                            <tr>
-                                <th class="px-4 py-2 border">#</th>
-                                <th class="px-4 py-2 border">Tanggal</th>
-                                <th class="px-4 py-2 border">Nama Kegiatan</th>
-                                <th class="px-4 py-2 border">Status</th>
-                                <th class="px-4 py-2 border">Aksi</th>
-                            </tr>
-                        </thead>
+                <table class="min-w-full border-collapse">
+                    <thead>
+                        <tr class="bg-gray-100">
+                            <th class="px-4 py-2 border">#</th>
+                            <th class="px-4 py-2 border">Nama Kegiatan</th>
+                            <th class="px-4 py-2 border">Tanggal Kegiatan</th>
+                            {{-- Kolom Pegawai Dihapus --}}
+                            <th class="px-4 py-2 border">Status</th>
+                            <th class="px-4 py-2 border">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($rencanas as $rencana)
+                        <tr>
+                            <td class="px-4 py-2 border text-center">{{ $loop->iteration }}</td>
+                            <td class="px-4 py-2 border">{{ $rencana->nama_kegiatan }}</td>
+                            <td class="px-4 py-2 border text-center">{{ $rencana->tanggal_kegiatan }}</td>
+                            
+                            {{-- Kolom Status --}}
+                            <td class="px-4 py-2 border">
+                                @php
+                                    // Ambil data surat berdasarkan rencana_id dari tabel pivot
+                                    $daftarSurat = \App\Models\Persuratan::whereHas('rencanas', function($q) use ($rencana) {
+                                        $q->where('rencanas.id', $rencana->id_rencana);
+                                    })->get();
+                                @endphp
 
-                        <tbody>
-                            @forelse ($rencanas as $rencana)
-                                <tr>
-                                    <td class="px-4 py-2 border">
-                                        {{ $loop->iteration }}
-                                    </td>
+                                @if($daftarSurat->isNotEmpty())
+                                    <span class="text-green-600 font-bold text-xs">Terupload ({{ $daftarSurat->count() }}):</span>
+                                    <ul class="list-disc ml-4">
+                                        @foreach($daftarSurat as $s)
+                                            <li>
+                                                <a href="{{ asset('storage/'.$s->file_pdf) }}" target="_blank" class="text-blue-500 underline text-xs">
+                                                    {{ $s->nama_surat }}
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                @else
+                                    <span class="text-red-500 italic text-sm">Belum ada surat</span>
+                                @endif
+                            </td>
 
-                                    <td class="px-4 py-2 border">
-                                        {{ \Carbon\Carbon::parse($rencana->tanggal_kegiatan)->format('d/m/Y') }}
-                                    </td>
+                            {{-- Kolom Aksi --}}
+                            <td class="px-4 py-2 border text-center">
+                                {{-- Hapus pengecekan @if(!$rencana->id_surat) agar tombol selalu ada --}}
+                                <a href="{{ route('persuratans.create', ['rencana_id' => $rencana->id_rencana]) }}" 
+                                class="bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600">
+                                    Buat Surat
+                                </a>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
 
-                                    <td class="px-4 py-2 border">
-                                        {{ $rencana->nama_kegiatan }}
-                                    </td>
-
-                                    {{-- STATUS --}}
-                                    <td class="px-4 py-2 border text-center">
-                                        @if ($rencana->persuratans()->exists())
-    <span class="px-2 py-1 text-sm bg-green-100 text-green-700 rounded">
-        Sudah Upload
-    </span>
-@else
-    <span class="px-2 py-1 text-sm bg-red-100 text-red-700 rounded">
-        Belum Upload
-    </span>
-@endif
-
-                                    </td>
-
-                                    {{-- AKSI --}}
-                                    <td class="px-4 py-2 border text-center">
-                                        @if ($rencana->persuratans->count() > 0)
-                                            @php
-                                                $surat = $rencana->persuratans->first();
-                                            @endphp
-
-                                            <button
-    wire:click="previewSurat({{ $surat->id }})"
-    class="text-blue-600 underline mr-2">
-    Lihat
-</button>
-
-                                            <a href="{{ route('persuratans.edit', $surat->id) }}"
-                                               class="text-yellow-600">
-                                                Edit
-                                            </a>
-                                        @else
-                                            <a href="{{ route('persuratans.create', ['rencana_id' => $rencana->id]) }}"
-                                               class="text-blue-600 font-semibold">
-                                                Upload Surat
-                                            </a>
-                                        @endif
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="5" class="px-4 py-2 border text-center">
-                                        Tidak ada data kegiatan.
-                                    </td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-
-                @if ($showPreview)
-<div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-
-    <div class="bg-white w-11/12 md:w-4/5 h-[85vh] rounded-lg shadow-lg relative">
-
-        {{-- HEADER --}}
-        <div class="flex justify-between items-center px-4 py-2 border-b">
-            <h3 class="font-semibold text-lg">
-                {{ $previewNama }}
-            </h3>
-
-            <button
-                wire:click="closePreview"
-                class="text-red-600 font-bold text-xl">
-                ✕
-            </button>
-        </div>
-
-        {{-- PDF VIEWER --}}
-        <div class="h-full">
-            <iframe
-                src="{{ $previewUrl }}"
-                class="w-full h-full border-none">
-            </iframe>
-        </div>
-
-        {{-- FOOTER --}}
-        <div class="absolute bottom-3 right-4">
-            <a href="{{ $previewUrl }}"
-               download
-               class="px-4 py-2 bg-blue-600 text-white rounded">
-                Download
-            </a>
-        </div>
-
-    </div>
-</div>
-@endif
-
-                </div>
-
-                <div class="mt-4">
-                    {{ $rencanas->links() }}
+                    {{-- Pastikan pagination juga menggunakan $rencanas --}}
+                    <div class="mt-4">
+                        {{ $rencanas->links() }}
+                    </div>>
                 </div>
 
             </div>

@@ -27,20 +27,26 @@
                         @error('nama_surat') <span class="text-red-600">{{ $message }}</span> @enderror
                     </div>
 
-                    <div class="mb-4 relative" x-data="{ open: @entangle('showPegawaiDropdown') }">
-                        <label class="font-semibold">Penerima Surat</label>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Penerima Surat</label>
+                        
+                        <div class="flex flex-wrap gap-2 p-2 border border-gray-200 rounded-md bg-gray-50">
+                            @php
+                                // Memecah string nama yang digabung di mount menjadi array
+                                $daftarPenerima = explode(', ', $penerima_surat);
+                            @endphp
 
-                        {{-- Selected --}}
-                        <div class="flex flex-wrap gap-2 mb-2">
-                            @foreach($this->pegawaiSelectedData as $pegawai)
-                                <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm flex items-center gap-2">
-                                    {{ $pegawai->nama }}
-                                    <button type="button"
-                                            wire:click="removePegawai({{ $pegawai->id }})"
-                                            class="text-red-600 font-bold">×</button>
-                                </span>
-                            @endforeach
+                            @forelse($daftarPenerima as $nama)
+                                @if($nama)
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 border border-blue-200">
+                                        {{ $nama }}
+                                    </span>
+                                @endif
+                            @empty
+                                <span class="text-gray-400 italic text-sm">Tidak ada pegawai yang diusulkan</span>
+                            @endforelse
                         </div>
+<<<<<<< HEAD
 
                         {{-- Input --}}
                        <input type="text"
@@ -61,6 +67,10 @@
                                 @endforeach
                             </div>
                         @endif
+=======
+                        {{-- Input tersembunyi agar data tetap terkirim saat save --}}
+                        <input type="hidden" wire:model="penerima_surat">
+>>>>>>> a8759c416d59441eda4ba22c4638541b63eaa223
                     </div>
 
                      <div class="mb-3">
@@ -80,25 +90,33 @@
                         @error('perihal') <span class="text-red-600">{{ $message }}</span> @enderror
                     </div>
 
-
-
-<div class="mb-3">
-    <label class="block mb-1">File PDF *</label>
-    <input type="file" wire:model="file_pdf" accept="application/pdf" class="border rounded px-3 py-2 w-full">
-    @error('file_pdf') <span class="text-red-600">{{ $message }}</span> @enderror
-</div>
-
-{{-- <button wire:click="save" class="bg-blue-600 text-white px-4 py-2 rounded">
-    Simpan
-</button> --}}
-
                     <div class="mb-3">
+<<<<<<< HEAD
     <label class="block mb-1">Tanggal Upload *</label>
     <input type="date"
         wire:model="tanggal_upload"
         readonly
         class="border rounded px-3 py-2 w-full bg-gray-100 cursor-not-allowed">
 </div>
+=======
+                        <label class="block mb-1">File PDF *</label>
+                        <input type="file" wire:model="file_pdf" accept="application/pdf" class="border rounded px-3 py-2 w-full">
+                        @error('file_pdf') <span class="text-red-600">{{ $message }}</span> @enderror
+                    </div>
+>>>>>>> a8759c416d59441eda4ba22c4638541b63eaa223
+
+                    {{-- <button wire:click="save" class="bg-blue-600 text-white px-4 py-2 rounded">
+                        Simpan
+                    </button> --}}
+
+                    <!-- <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700">Tanggal Upload *</label>
+                        <input type="date" 
+                            wire:model="tanggal_upload" {{-- Pastikan baris ini ada --}}
+                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm bg-gray-100" 
+                            readonly>
+                        <p class="text-xs text-gray-500 mt-1 italic">* Tanggal diset otomatis ke hari ini.</p>
+                    </div> -->
 
                     <div class="mb-3">
                         <label class="block mb-1">Jenis Anggaran</label>

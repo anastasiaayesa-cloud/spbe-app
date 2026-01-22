@@ -58,4 +58,10 @@ class Kepegawaian extends Model
     {
         return $this->belongsToMany(Rencana::class, 'kepegawaian_rencana_pivot');
     }
+
+    public function detailKeuangans()
+{
+    return $this->hasMany(DetailKeuangan::class, 'pegawai_id');
+}
+
 }

@@ -29,28 +29,28 @@
                 <form wire:submit.prevent="submit" autocomplete="off">
 
                     {{-- INFO KEGIATAN (DARI RENCANA) --}}
-@if ($rencana)
-    <div class="mb-5 p-4 border rounded bg-gray-50">
-        <div class="mb-3">
-            <span class="block text-sm text-gray-500">
-                Nama Kegiatan
-            </span>
-            <span class="font-semibold text-gray-800">
-                {{ $rencana->nama_kegiatan }}
-            </span>
-        </div>
+                    @if ($rencana)
+                        <div class="mb-5 p-4 border rounded bg-gray-50">
+                            <div class="mb-3">
+                                <span class="block text-sm text-gray-500">
+                                    Nama Kegiatan
+                                </span>
+                                <span class="font-semibold text-gray-800">
+                                    {{ $rencana->nama_kegiatan }}
+                                </span>
+                            </div>
 
-        <div>
-            <span class="block text-sm text-gray-500">
-                Tanggal Kegiatan
-            </span>
-            <span class="font-semibold text-gray-800">
-                {{ \Carbon\Carbon::parse($rencana->tanggal_kegiatan)
-                    ->translatedFormat('d F Y') }}
-            </span>
-        </div>
-    </div>
-@endif
+                            <div>
+                                <span class="block text-sm text-gray-500">
+                                    Tanggal Kegiatan
+                                </span>
+                                <span class="font-semibold text-gray-800">
+                                    {{ \Carbon\Carbon::parse($rencana->tanggal_kegiatan)
+                                        ->translatedFormat('d F Y') }}
+                                </span>
+                            </div>
+                        </div>
+                    @endif
 
 
                     {{-- HIDDEN RENCANA --}}
@@ -90,15 +90,23 @@
                                     @enderror
                                 </div>
 
-                                {{-- KETERANGAN --}}
+                                {{-- NOMINAL --}}
                                 <div class="w-1/3">
-                                    <input type="number"
-                                        wire:model="lampirans.{{ $index }}.nominal"
-                                        placeholder="Nominal (Rp)"
-                                        min="0"
-                                        step="1000"
-                                        class="border rounded px-3 py-2 w-full text-sm">
+                                    @if ($lampiran['pelaksanaan_jenis_id'] == $laporanJenisId)
+                                        <input type="text"
+                                            value="0 (Laporan Kegiatan)"
+                                            disabled
+                                            class="border rounded px-3 py-2 w-full text-sm bg-gray-100 text-gray-600">
+                                    @else
+                                        <input type="number"
+                                            wire:model="lampirans.{{ $index }}.nominal"
+                                            placeholder="Nominal (Rp)"
+                                            min="0"
+                                            step="1000"
+                                            class="border rounded px-3 py-2 w-full text-sm">
+                                    @endif
                                 </div>
+
 
 
                                 {{-- BUTTON --}}

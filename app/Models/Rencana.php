@@ -13,6 +13,8 @@ class Rencana extends Model
         'nama_kegiatan',
         'tanggal_kegiatan',
         'lokasi_kegiatan',
+        'pivot_pegawai'
+
     ];
 
     /**
@@ -28,11 +30,11 @@ class Rencana extends Model
 
     /**
      * Persuratan berdasarkan rencana
-     */
-    public function persuratans()
-    {
-        return $this->hasMany(Persuratan::class);
-    }
+    //  */
+    // public function persuratans()
+    // {
+    //     return $this->hasMany(Persuratan::class);
+    // }
 
     /**
      * Pelaksanaan berdasarkan rencana
@@ -52,4 +54,10 @@ class Rencana extends Model
             'perencanaan_rencana'
         );
     }
+
+    public function persuratans()
+    {
+        return $this->belongsToMany(Persuratan::class, 'pivot_persuratans_rencanas');
+    }
+
 }
