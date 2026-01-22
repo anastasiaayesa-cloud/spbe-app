@@ -87,7 +87,7 @@ public function showAllPerencanaan()
     $this->showPerencanaanDropdown = true;
 
     $this->perencanaanResults = Perencanaan::whereNotIn('id', $this->perencanaanSelected)
-        ->orderBy('nama_aktivitas')
+        ->orderBy('nama')
         ->limit(20)
         ->get()
         ->toArray();

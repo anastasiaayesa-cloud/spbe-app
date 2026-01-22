@@ -12,7 +12,7 @@ use Spatie\Permission\Traits\HasRoles; // 1. TAMBAHKAN INI
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
-
+    protected $guard_name = 'web';
     /**
      * The attributes that are mass assignable.
      *
@@ -20,6 +20,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'pegawai_id',
         'email',
         'password',
     ];
@@ -43,4 +44,8 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function pegawai() {
+        return $this->hasOne(Kepegawaian::class, 'user_id');
+    }
 }
