@@ -27,19 +27,9 @@ class PersuratansIndex extends Component
 
     public function render()
     {
-        $rencanas = \DB::table('rencanas')
-            // Join ke tabel pivot dan persuratans untuk cek status surat
-            ->leftJoin('persuratans', 'pivot_persuratans_rencanas.persuratan_id', '=', 'persuratans.id')
-            ->select(
-                'rencanas.id as id_rencana',
-                'rencanas.nama_kegiatan',
-                'rencanas.tanggal_kegiatan',
-                'persuratans.id as id_surat',
-                'persuratans.nama_surat',
-                'persuratans.file_pdf'
-            )
-            ->where('rencanas.nama_kegiatan', 'like', '%' . $this->search . '%')
-            ->orderBy('rencanas.id', 'desc')
+        $rencanas = Rencana::with('persuratans')
+            ->where('nama_kegiatan', 'like', '%' . $this->search . '%')
+            ->orderByDesc('id')
             ->paginate(5);
 
         return view('livewire.persuratans.persuratans-index', compact('rencanas'))

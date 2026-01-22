@@ -17,10 +17,10 @@
                 <div class="flex items-center justify-between mb-4">
 
                     {{-- Tombol tambah persuratan (opsional) --}}
-                    <div>
+                    {{-- <div>
                         <a href="{{ route('persuratans.create') }}"
                             class="inline-block px-4 py-2 rounded">Buat Surat</a>
-                    </div>
+                    </div> --}}
 
                     {{-- Search bar --}}
                     <div>
@@ -84,7 +84,11 @@
                             {{-- Kolom Aksi --}}
                             <td class="px-4 py-2 border text-center">
                                 {{-- Hapus pengecekan @if(!$rencana->id_surat) agar tombol selalu ada --}}
-                                <a href="{{ route('persuratans.create', ['rencana_id' => $rencana->id_rencana]) }}"
+                                {{-- <a href="{{ route('persuratans.create', ['rencana_id' => $rencana->id_rencana]) }}"
+                                class="bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600">
+                                    Buat Surat
+                                </a> --}}
+                                <a href="{{ route('persuratans.create', ['rencana_id' => $rencana->id]) }}"
                                 class="bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600">
                                     Buat Surat
                                 </a>
@@ -96,8 +100,8 @@
 
                     {{-- Pastikan pagination juga menggunakan $rencanas --}}
                     <div class="mt-4">
-                        {{ $rencanas->links() }}
-                    </div>
+                        {{-- {{ $rencanas->links() }} --}}
+                    </div>>
                 </div>
 
             </div>

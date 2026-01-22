@@ -22,7 +22,7 @@ class RolePermissionSeeder extends Seeder
     $permissions = [
         'mengelola user',       // Admin
         'akses perencanaan',    // Perencanaan
-        'tambah perencanaan',   
+        'tambah perencanaan',
         'akses kepegawaian',    // Kepegawaian
         'tambah pegawai',
         'akses persuratan',     // Kesektariatan
@@ -57,40 +57,40 @@ class RolePermissionSeeder extends Seeder
 
 
     // 4. Buat User (Gunakan updateOrCreate agar tidak error jika dijalankan ulang)
-    // $admin = User::updateOrCreate(
-    //     ['email' => 'admin@spbe.go.id'],
-    //     ['name' => 'Admin SPBE', 'password' => bcrypt('password123')]
-    // );
-    // $admin->assignRole($roleAdmin);
+    $admin = User::updateOrCreate(
+        ['email' => 'admin@spbe.go.id'],
+        ['name' => 'Admin SPBE', 'password' => bcrypt('password123')]
+    );
+    $admin->assignRole($roleAdmin);
 
-    // $perencanaan = User::updateOrCreate(
-    //     ['email' => 'perencanaan@spbe.go.id'],
-    //     ['name' => 'Staf Perencanaan', 'password' => bcrypt('password123')]
-    // );
-    // $perencanaan->assignRole($rolePerencanaan);
+    $perencanaan = User::updateOrCreate(
+        ['email' => 'perencanaan@spbe.go.id'],
+        ['name' => 'Staf Perencanaan', 'password' => bcrypt('password123')]
+    );
+    $perencanaan->assignRole($rolePerencanaan);
 
-    // $kepegawaian = User::updateOrCreate(
-    //     ['email' => 'kepegawaian@spbe.go.id'],
-    //     ['name' => 'Staf Kepegawaian', 'password' => bcrypt('password123')]
-    // );
-    // $kepegawaian->assignRole($roleKepegawaian);
+    $kepegawaian = User::updateOrCreate(
+        ['email' => 'kepegawaian@spbe.go.id'],
+        ['name' => 'Staf Kepegawaian', 'password' => bcrypt('password123')]
+    );
+    $kepegawaian->assignRole($roleKepegawaian);
 
-    // $kesekretariatan = User::updateOrCreate(
-    //     ['email' => 'kesekretariatan@spbe.go.id'],
-    //     ['name' => 'Staf kesekretariatan', 'password' => bcrypt('password123')]
-    // );
-    // $kesekretariatan->assignRole($roleKesekretariatan);
+    $kesekretariatan = User::updateOrCreate(
+        ['email' => 'kesekretariatan@spbe.go.id'],
+        ['name' => 'Staf kesekretariatan', 'password' => bcrypt('password123')]
+    );
+    $kesekretariatan->assignRole($roleKesekretariatan);
 
-    // $pegawai = User::updateOrCreate(
-    //     ['email' => 'pegawai@spbe.go.id'],
-    //     ['name' => 'Pegawai', 'password' => bcrypt('password123')]
-    // );
-    // $pegawai->assignRole($rolePegawai);
+    $pegawai = User::updateOrCreate(
+        ['email' => 'pegawai@spbe.go.id'],
+        ['name' => 'Pegawai', 'password' => bcrypt('password123')]
+    );
+    $pegawai->assignRole($rolePegawai);
 
-    // $katim = User::updateOrCreate(
-    //     ['email' => 'katim@spbe.go.id'],
-    //     ['name' => 'katim', 'password' => bcrypt('password123')]
-    // );
-    // $katim->assignRole($roleKatim);
+    $katim = User::updateOrCreate(
+        ['email' => 'katim@spbe.go.id'],
+        ['name' => 'katim', 'password' => bcrypt('password123')]
+    );
+    $katim->assignRole($roleKatim);
 }
 }
