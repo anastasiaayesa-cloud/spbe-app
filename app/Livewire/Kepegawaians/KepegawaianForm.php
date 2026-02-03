@@ -7,6 +7,7 @@ use App\Models\Kepegawaian;
 use App\Models\Pangkat;
 use App\Models\Bank;
 use App\Models\Pendidikan;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests; // WAJIB ADA
 
 use Livewire\Component;
 use Symfony\Contracts\Service\Attribute\Required;
@@ -24,6 +25,8 @@ class KepegawaianForm extends Component
 
         // kalau parameter ada (edit mode)
         if ($kepegawaian_id) {
+            $this->authorize('kepegawaian-edit');
+
             $this->kepegawaian_id = $kepegawaian_id;
             $kepegawaian = Kepegawaian::findOrFail($kepegawaian_id);
 
@@ -43,6 +46,7 @@ class KepegawaianForm extends Component
             $this->no_rek = $kepegawaian->no_rek;
             $this->pendidikan_id = $kepegawaian->pendidikan_id;
         } else {
+            $this->authorize('kepegawaian-create');
         }
     }
 
@@ -71,6 +75,13 @@ class KepegawaianForm extends Component
 
     public function submit()
     {
+        // KEAMANAN: Cek ulang izin sebelum proses simpan/update dimulai
+        if ($this->kepegawaian_id) {
+            $this->authorize('kepegawaian-edit');
+        } else {
+            $this->authorize('kepegawaian-create');
+        }
+        
         $this->validate();
 
         // setelah lulus validasi, lakukan sintaks dibawah

@@ -8,6 +8,8 @@ use Livewire\WithFileUploads;
 use App\Models\Persuratan;
 use Illuminate\Support\Facades\Storage;
 use App\Models\PersuratanKategori;
+use App\Models\Rencana;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests; // WAJIB ADA
 
 class PersuratanForm extends Component
 {
@@ -22,7 +24,7 @@ class PersuratanForm extends Component
     public $pegawaiSelected = []; // array of pegawai_id
     public $showPegawaiDropdown = false;
 
-    public function mount($persuratan_id = null)
+    public function mount($persuratan_id = null, $rencana_id = null)
     {
         // INIT WAJIB (CREATE MODE)
         $this->pegawaiSelected = [];
@@ -46,6 +48,8 @@ class PersuratanForm extends Component
         }
         // EDIT MODE
         if ($persuratan_id) {
+            $this->authorize('persuratan-edit');
+
             $this->persuratan_id = $persuratan_id;
 
             $persuratan = Persuratan::with('kepegawaians')->findOrFail($persuratan_id);
@@ -63,6 +67,8 @@ class PersuratanForm extends Component
                 ->kepegawaians
                 ->pluck('id')
                 ->toArray();
+        }else{
+            $this->authorize('persuratan-create');
         }
     }
 
@@ -142,6 +148,13 @@ class PersuratanForm extends Component
 
     public function submit()
     {
+        // KEAMANAN: Cek ulang izin sebelum proses simpan/update dimulai
+        if ($this->persuratan_id) {
+            $this->authorize('persuratan-edit');
+        } else {
+            $this->authorize('persuratan-create');
+        }
+
         $this->validate();
 
         if ($this->file_pdf) {
@@ -173,7 +186,7 @@ class PersuratanForm extends Component
         } else {
             $persuratan = Persuratan::create([
                 'nama_surat'             => $this->nama_surat,
-                'penerima_surat'         => $this->penerima_surat,
+                // 'penerima_surat'         => $this->penerima_surat,
                 'file_pdf'               => $pdfPath,
                 'perihal'                => $this->perihal,
                 'jenis_anggaran'         => $this->jenis_anggaran,

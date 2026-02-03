@@ -8,8 +8,7 @@ use App\Models\PerencanaanNama;
 use App\Models\Pelaksanaan;
 use Illuminate\Support\Facades\Storage;
 use App\Models\PelaksanaanJenis;
-
-
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests; // WAJIB ADA
 
 class PelaksanaanForm extends Component
 {
@@ -24,13 +23,16 @@ class PelaksanaanForm extends Component
     $this->perencanaanNamas = PerencanaanNama::orderBy('nama')->get();
 
     if ($pelaksanaan_id) {
-        $this->pelaksanaan_id = $pelaksanaan_id;
+        $this->authorize('pelaksanaan-edit');
 
+        $this->pelaksanaan_id = $pelaksanaan_id;
         $pelaksanaan = Pelaksanaan::findOrFail($pelaksanaan_id);
         $this->perencanaan_nama_id = $pelaksanaan->perencanaan_nama_id;
         $this->existing_pdf = $pelaksanaan->file_pdf;
         $this->pelaksanaan_jenis_id = $pelaksanaan->pelaksanaan_jenis_id;
         $this->tanggal_upload = $pelaksanaan->tanggal_upload;
+    }else{
+        $this->authorize('pelaksanaan-create');
     }
 }
 
@@ -49,6 +51,13 @@ class PelaksanaanForm extends Component
 
     public function submit()
     {
+        // KEAMANAN: Cek ulang izin sebelum proses simpan/update dimulai
+        if ($this->dokumenperencanaan_id) {
+            $this->authorize('dokumen-perencanaan-edit');
+        } else {
+            $this->authorize('dokumen-perencanaan-create');
+        }
+        
         $this->validate();
         if ($this->file_pdf) {
             $pdfPath = $this->file_pdf->store('pelaksanaan', 'public');

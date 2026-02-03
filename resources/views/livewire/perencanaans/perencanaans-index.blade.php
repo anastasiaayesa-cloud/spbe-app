@@ -20,9 +20,16 @@
 
                     <div class="flex items-center justify-between mb-4">
                         {{-- Tombol tambah perencaan (opsional) --}}
-                        <div>
-                        <a href="{{ route('perencanaans.create') }}"
-                            class="inline-block px-4 py-2 rounded">Tambah Perencanaan </a>
+                        <div class="flex items-center space-x-2">
+                            <a href="/perencanaans/create" class="bg-blue-500 text-white px-4 py-2 rounded">Tambah Perencanaan</a>
+
+                            <div class="flex items-center border p-1 rounded bg-gray-50">
+                                <input type="file" wire:model="file_excel" class="text-sm text-gray-500">
+                                <button wire:click="importExcel" wire:loading.attr="disabled" class="bg-green-600 text-white px-4 py-2 rounded">
+                                    <span wire:loading.remove>Upload Excel</span>
+                                    <span wire:loading>Processing...</span>
+                                </button>
+                            </div>
                         </div>
 
                         {{-- Search bar (disesuaikan untuk Livewire) --}}

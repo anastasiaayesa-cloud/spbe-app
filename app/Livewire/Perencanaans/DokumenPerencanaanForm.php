@@ -6,10 +6,11 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use App\Models\DokumenPerencanaan;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests; // WAJIB ADA
 
 class DokumenPerencanaanForm extends Component
 {
-    use WithFileUploads;
+    use WithFileUploads, AuthorizesRequests;
     public $dokumenperencanaan_id, $nama, $file_pdf, $tanggal;
 
     public function mount($dokumenperencanaan_id = null)
@@ -17,16 +18,16 @@ class DokumenPerencanaanForm extends Component
         // $this->persuratanKategoriList = PersuratanKategori::orderBy('nama_kategori')->get();
         // kalau parameter ada (edit mode)
         if ($dokumenperencanaan_id) {
+            $this->authorize('dokumen-perencanaan-edit');
+
             $this->dokumenperencanaan_id = $dokumenperencanaan_id;
-            
-
             $dokumenperencanaan = DokumenPerencanaan::findOrFail($dokumenperencanaan_id);
-
-            
             $existing_pdf = $dokumenperencanaan->file_pdf;
             $this->nama = $dokumenperencanaan->nama;
             $this->file_pdf = $dokumenperencanaan->file_pdf;
             $this->tanggal = $dokumenperencanaan->tanggal;
+        }else{
+            $this->authorize('dokumen-perencanaan-create');
         }
     }
 
@@ -43,6 +44,13 @@ class DokumenPerencanaanForm extends Component
 
     public function submit()
     {
+        // KEAMANAN: Cek ulang izin sebelum proses simpan/update dimulai
+        if ($this->dokumenperencanaan_id) {
+            $this->authorize('dokumen-perencanaan-edit');
+        } else {
+            $this->authorize('dokumen-perencanaan-create');
+        }
+        
         $this->validate();
         if ($this->file_pdf) {
             $pdfPath = $this->file_pdf->store('dokumenperencanaan', 'public');

@@ -11,7 +11,7 @@ class Persuratan extends Model
 
     protected $fillable = [
         'nama_surat',
-        'penerima_surat',
+        // 'penerima_surat',
         'persuratan_kategori_id',
         'perihal',
         'file_pdf',

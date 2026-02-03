@@ -6,6 +6,7 @@ use Livewire\Component;
 use App\Models\Perencanaan;
 use Illuminate\Support\Facades\DB;
 use App\Models\DokumenPerencanaan;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests; // WAJIB ADA
 
 class PerencanaanDetail extends Component
 {
@@ -20,6 +21,8 @@ class PerencanaanDetail extends Component
         $this->dokumenperencanaanList = DokumenPerencanaan::orderBy('nama')->get();
         // Inisialisasi baris pertama agar form tidak kosong
         if ($id) {
+
+            $this->authorize('perencanaans-edit');
             // Mode EDIT: Ambil data lama
             $this->perencanaanId = $id;
             $perencanaan = Perencanaan::with('details')->findOrFail($id);
@@ -41,6 +44,7 @@ class PerencanaanDetail extends Component
             }
         } else {
             // Mode CREATE: Inisialisasi baris kosong
+            $this->authorize('perencanaans-edit');
             $this->addDetail();
         }
     }
