@@ -4,54 +4,29 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\DetailKeuangan;
-
 
 class Keuangan extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-    'kepegawaian_id',
-    'pelaksanaan_id',
-    'status',
-    'total_nominal'
+        'pelaksanaan_id',
+        'status',
+        'total_nominal',
+        'lunas_at', // ⬅️ wajib
     ];
 
-    public function rencana()
-{
-    return $this->belongsTo(Rencana::class);
-}
+    protected $casts = [
+        'lunas_at' => 'datetime',
+    ];
 
-public function pelaksanaan()
-{
-    return $this->belongsTo(Pelaksanaan::class);
-}
-
-public function detailKeuangans()
+    public function pelaksanaan()
     {
-        return $this->hasMany(
-            DetailKeuangan::class,
-            'keuangan_id' // FK di tabel detail_keuangans
-        );
+        return $this->belongsTo(Pelaksanaan::class);
     }
 
-    public function kepegawaians()
+    public function detailKeuangans()
     {
-        return $this->belongsToMany(
-            Kepegawaian::class,
-            'pivot_pegawai', // ganti sesuai tabel pivot
-            'rencana_id',
-            'kepegawaian_id'
-        );
+        return $this->hasMany(DetailKeuangan::class, 'keuangan_id');
     }
-
-   public function getTotalNominalAttribute()
-{
-    return $this->pelaksanaan
-        ->rencana
-        ->pelaksanaans
-        ->sum('nominal');
-}
-    
 }

@@ -5,6 +5,9 @@ namespace App\Livewire\Persuratans;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Persuratan;
+use App\Models\Rencana;
+use Illuminate\Support\Facades\Storage;
+
 use Illuminate\Support\Facades\DB;
 
 
@@ -28,7 +31,10 @@ class PersuratansIndex extends Component
 
     public function previewSurat($persuratanId)
     {
-        $surat = Persuratan::findOrFail($persuratanId);
+        $rencanas = Rencana::with('persuratans')
+            ->where('nama_kegiatan', 'like', '%' . $this->search . '%')
+            ->orderByDesc('id')
+            ->paginate(5);
 
         $this->previewUrl = Storage::url($surat->file_pdf);
         $this->previewNama = $surat->nama_surat;

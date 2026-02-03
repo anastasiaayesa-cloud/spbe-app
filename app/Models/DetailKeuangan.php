@@ -8,6 +8,7 @@ class DetailKeuangan extends Model
 {
     protected $fillable = [
         'keuangan_id',
+        'kepegawaian_id',
         'uraian',
         'nominal',
     ];
@@ -17,8 +18,8 @@ class DetailKeuangan extends Model
         return $this->belongsTo(Keuangan::class);
     }
 
-    public function pegawai()
+    public function kepegawaian()
     {
-        return $this->belongsTo(Kepegawaian::class, 'pegawai_id');
+        return $this->belongsTo(Kepegawaian::class, 'kepegawaian_id');
     }
 }

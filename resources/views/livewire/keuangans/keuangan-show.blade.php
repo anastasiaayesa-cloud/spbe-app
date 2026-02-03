@@ -29,16 +29,40 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="font-semibold">Status</td>
-                    <td>:
-                        <span class="px-2 py-1 rounded text-xs font-semibold
-                            {{ $keuangan->status === 'lunas'
-                                ? 'bg-green-600 text-white'
-                                : 'bg-red-600 text-white' }}">
-                            {{ ucfirst($keuangan->status) }}
-                        </span>
-                    </td>
-                </tr>
+    <td class="font-semibold">Status</td>
+    <td>:
+    <div class="inline-flex items-center gap-2">
+        @role('admin')
+            <button
+                type="button"
+                wire:click="toggleStatus"
+                wire:loading.attr="disabled"
+                class="px-2 py-1 rounded text-xs font-semibold
+                    {{ $keuangan->status === 'lunas'
+                        ? 'bg-green-600 text-white'
+                        : 'bg-red-600 text-white' }}"
+            >
+                {{ ucfirst($keuangan->status) }}
+            </button>
+        @else
+            <span class="px-2 py-1 rounded text-xs font-semibold
+                {{ $keuangan->status === 'lunas'
+                    ? 'bg-green-600 text-white'
+                    : 'bg-red-600 text-white' }}">
+                {{ ucfirst($keuangan->status) }}
+            </span>
+        @endrole
+
+        @if ($keuangan->lunas_at)
+            <span class="text-xs text-gray-500">
+                ({{ $keuangan->lunas_at->format('d M Y H:i') }} WIB)
+            </span>
+        @endif
+    </div>
+</td>
+
+</tr>
+
             </table>
         </div>
 
@@ -50,70 +74,84 @@
 
             @foreach ($keuangan->pelaksanaan->rencana->kepegawaians as $pegawai)
 
-                @php
-                    $buktis = $keuangan->detailKeuangans
-                        ->where('pegawai_id', $pegawai->id);
-                @endphp
+    @php
+    $buktis = $buktiPengeluaran
+        ->where('kepegawaian_id', $pegawai->id);
+@endphp
 
-                <div class="border rounded-lg p-4 mb-5 bg-gray-50">
-                    <div class="flex justify-between items-center mb-3">
-                        <h4 class="font-semibold text-md">
-                            {{ $pegawai->nama }}
-                        </h4>
+    <div class="border rounded-lg p-4 mb-5 bg-gray-50">
+        <div class="flex justify-between items-center mb-3">
+    <h4 class="font-semibold text-md">
+        {{ $pegawai->nama }}
+    </h4>
 
-                        <span class="text-sm font-semibold">
-                            Total:
-                            Rp {{ number_format($buktis->sum('nominal'), 0, ',', '.') }}
-                        </span>
+    <div class="flex items-center gap-3">
+        <span class="text-sm font-semibold">
+            Total:
+            Rp {{ number_format($buktis->sum('nominal'), 0, ',', '.') }}
+        </span>
+
+        @if ($buktis->isNotEmpty())
+            <a
+                href="{{ route('keuangan.cetak', [
+                    'keuangan' => $keuangan->id,
+                    'pegawai' => $pegawai->id
+                ]) }}"
+                target="_blank"
+                class="px-3 py-1 text-sm bg-red-600 text-white rounded hover:bg-red-700"
+            >
+                Cetak PDF
+            </a>
+        @endif
+    </div>
+</div>
+
+        @if ($buktis->isEmpty())
+            <div class="text-sm italic text-gray-500">
+                Belum ada bukti pengeluaran.
+            </div>
+        @else
+            <div class="space-y-3">
+                @foreach ($buktis as $bukti)
+                    <div class="grid grid-cols-3 gap-4 text-sm bg-white border rounded p-3">
+
+                        <div>
+                            <div class="text-gray-500">Uraian</div>
+                            <div class="font-semibold">
+                                {{ $bukti->pelaksanaanJenis->nama ?? '-' }}
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="text-gray-500">Nominal</div>
+                            <div class="font-semibold text-green-700">
+                                Rp {{ number_format($bukti->nominal, 0, ',', '.') }}
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="text-gray-500">File Bukti</div>
+                            @if ($bukti->file_pdf)
+                                <a href="{{ Storage::url($bukti->file_pdf) }}"
+                                   target="_blank"
+                                   class="text-blue-600 underline">
+                                    Lihat Bukti
+                                </a>
+                            @else
+                                <span class="italic text-gray-400">
+                                    Tidak ada file
+                                </span>
+                            @endif
+                        </div>
+
                     </div>
+                @endforeach
+            </div>
+        @endif
+    </div>
 
-                    @if ($buktis->isEmpty())
-                        <div class="text-sm italic text-gray-500">
-                            Belum ada bukti pengeluaran.
-                        </div>
-                    @else
-                        <div class="space-y-3">
-                            @foreach ($buktis as $bukti)
-                                <div class="grid grid-cols-3 gap-4 text-sm bg-white border rounded p-3">
+@endforeach
 
-                                    <div>
-                                        <div class="text-gray-500">Jenis Bukti</div>
-                                        <div class="font-semibold">
-                                            {{ $bukti->jenis_bukti ?? '-' }}
-                                        </div>
-                                    </div>
-
-                                    <div>
-                                        <div class="text-gray-500">Nominal</div>
-                                        <div class="font-semibold text-green-700">
-                                            Rp {{ number_format($bukti->nominal, 0, ',', '.') }}
-                                        </div>
-                                    </div>
-
-                                    <div>
-                                        <div class="text-gray-500">File Bukti</div>
-                                        @if ($bukti->file_pdf)
-                                            <a
-                                                href="{{ Storage::url($bukti->file_pdf) }}"
-                                                target="_blank"
-                                                class="text-blue-600 underline"
-                                            >
-                                                Lihat PDF
-                                            </a>
-                                        @else
-                                            <span class="italic text-gray-400">
-                                                Tidak ada file
-                                            </span>
-                                        @endif
-                                    </div>
-
-                                </div>
-                            @endforeach
-                        </div>
-                    @endif
-                </div>
-
-            @endforeach
         </div>
 
         {{-- ================= TOTAL GLOBAL ================= --}}

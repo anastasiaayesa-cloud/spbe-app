@@ -21,23 +21,19 @@ class KeuanganIndex extends Component
     }
 
     public function render()
-    {
-        $pelaksanaans = Pelaksanaan::with(['rencana', 'keuangans'])
-            ->when($this->search, function ($query) {
-                $query->whereHas('rencana', function ($q) {
-                    $q->where('nama_kegiatan', 'like', '%' . $this->search . '%')
-                      ->orWhere('lokasi_kegiatan', 'like', '%' . $this->search . '%')
-                      ->orWhere('tanggal_kegiatan', 'like', '%' . $this->search . '%');
-                });
-            })
-            ->orderBy(
-                Rencana::select('tanggal_kegiatan')
-                    ->whereColumn('rencanas.id', 'pelaksanaans.rencana_id'),
-                'desc'
-            )
-            ->paginate(10);
+{
+    $rencanas = Rencana::with([
+            'pelaksanaans.keuangans'
+        ])
+        ->when($this->search, function ($query) {
+            $query->where('nama_kegiatan', 'like', '%' . $this->search . '%')
+                  ->orWhere('lokasi_kegiatan', 'like', '%' . $this->search . '%')
+                  ->orWhere('tanggal_kegiatan', 'like', '%' . $this->search . '%');
+        })
+        ->orderBy('tanggal_kegiatan', 'desc')
+        ->paginate(10);
 
-        return view('livewire.keuangans.keuangan-index', compact('pelaksanaans'))
-            ->layout('layouts.app');
-    }
+    return view('livewire.keuangans.keuangan-index', compact('rencanas'))
+        ->layout('layouts.app');
+}
 }

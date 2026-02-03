@@ -11,10 +11,14 @@ class Pelaksanaan extends Model
 
     protected $fillable = [
         'rencana_id',
+        'kepegawaian_id',
         'pelaksanaan_jenis_id',
         'nominal',
         'file_pdf',
+        'file_type',      // 👈 TAMBAH
         'tanggal_upload',
+        // 'keterangan',
+
     ];
 
     public function rencana()
@@ -22,10 +26,7 @@ class Pelaksanaan extends Model
         return $this->belongsTo(Rencana::class);
     }
 
-    public function jenis()
-    {
-        return $this->belongsTo(PelaksanaanJenis::class, 'pelaksanaan_jenis_id');
-    }
+
     public function pelaksanaanJenis()
 {
     return $this->belongsTo(PelaksanaanJenis::class);
@@ -35,4 +36,9 @@ public function keuangans()
     {
         return $this->hasMany(Keuangan::class);
     }
+
+    public function kepegawaian()
+{
+    return $this->belongsTo(Kepegawaian::class);
+}
 }

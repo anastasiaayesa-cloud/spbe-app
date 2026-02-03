@@ -22,7 +22,7 @@ class RolePermissionSeeder extends Seeder
     $permissions = [
         'mengelola user',       // Admin
         'akses perencanaan',    // Perencanaan
-        'tambah perencanaan',   
+        'tambah perencanaan',
         'akses kepegawaian',    // Kepegawaian
         'tambah pegawai',
         'akses persuratan',     // Kesektariatan

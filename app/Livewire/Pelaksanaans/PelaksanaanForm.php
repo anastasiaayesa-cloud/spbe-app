@@ -68,7 +68,7 @@ class PelaksanaanForm extends Component
     {
         return [
             'rencana_id' => 'required|exists:rencanas,id',
-            'lampirans.*.file' => 'required|file|mimes:pdf',
+            'lampirans.*.file' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120',
             'lampirans.*.pelaksanaan_jenis_id' => 'required|exists:pelaksanaan_jenis,id',
             'lampirans.*.nominal' => 'nullable|numeric|min:0',
             'lampirans.*.keterangan' => 'nullable|string|max:255',
@@ -95,28 +95,51 @@ class PelaksanaanForm extends Component
 {
     $this->validate();
 
+    $user = auth()->user();
+
+    // 🛡️ ADMIN BOLEH LEWAT
+    if (! $user->hasRole('admin') && ! $user->kepegawaian) {
+        abort(403, 'User belum terhubung ke data pegawai');
+    }
+
     foreach ($this->lampirans as $lampiran) {
 
-        $pdfPath = $lampiran['file']->store('pelaksanaan', 'public');
+    $file = $lampiran['file'];
+    $extension = strtolower($file->getClientOriginalExtension());
 
-        // 🔥 LOGIKA REVISI
+    $fileType = in_array($extension, ['jpg','jpeg','png'])
+        ? 'image'
+        : 'pdf';
+
+    $filePath = $file->store('pelaksanaan', 'public');
         $nominal = $lampiran['pelaksanaan_jenis_id'] == $this->laporanJenisId
             ? 0
             : ($lampiran['nominal'] ?? 0);
 
         Pelaksanaan::create([
-            'rencana_id' => $this->rencana_id,
-            'pelaksanaan_jenis_id' => $lampiran['pelaksanaan_jenis_id'],
-            'nominal' => $nominal,
-            'file_pdf' => $pdfPath,
-            'keterangan' => $lampiran['keterangan'],
-            'tanggal_upload' => $this->tanggal_upload,
-        ]);
+    'rencana_id' => $this->rencana_id,
+
+    'kepegawaian_id' => $user->hasRole('admin')
+        ? null
+        : $user->kepegawaian->id,
+
+    'pelaksanaan_jenis_id' => $lampiran['pelaksanaan_jenis_id'],
+    'nominal' => $nominal,
+
+    'file_pdf' => $filePath,
+    'file_type' => $fileType,   // 👈 PENTING
+
+    'keterangan' => $lampiran['keterangan'],
+    'tanggal_upload' => $this->tanggal_upload,
+]);
+
     }
 
     session()->flash('success', 'Bukti pelaksanaan berhasil disimpan.');
     return redirect()->route('pelaksanaans.index');
 }
+
+
 
     public function render()
     {

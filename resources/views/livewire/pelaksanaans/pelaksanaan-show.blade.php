@@ -23,54 +23,82 @@
                         ->translatedFormat('d F Y') }}
                 </div>
             </div>
+
+            <div class="mb-2">
+                <span class="text-sm text-gray-500">Lokasi Kegiatan</span>
+                <div class="font-semibold">
+                    {{ $rencana->lokasi_kegiatan }}
+                </div>
+            </div>
+
+            @foreach ($rencana->kepegawaians as $pegawai)
+
+    <div class="border rounded-lg p-4 mb-6 bg-gray-50">
+
+        {{-- HEADER PEGAWAI --}}
+        <div class="flex justify-between items-center mb-3">
+            <h4 class="font-semibold text-md">
+                {{ $pegawai->nama }}
+            </h4>
+            <span class="text-sm text-gray-500">
+                NIP: {{ $pegawai->nip }}
+            </span>
         </div>
 
-        {{-- DAFTAR BUKTI --}}
-        <div class="bg-white shadow rounded p-6">
-            <h3 class="font-semibold mb-4">Daftar Bukti</h3>
+        {{-- BUKTI PELAKSANAAN --}}
+@forelse (
+    $rencana->pelaksanaans->where('kepegawaian_id', $pegawai->id)
+    as $pelaksanaan
+)
+            <div class="border rounded p-4 mb-3 bg-white">
+                <div class="grid grid-cols-2 gap-4 text-sm">
 
-            @forelse ($pelaksanaans as $pelaksanaan)
-                <div class="border rounded p-4 mb-4">
-
-                    <div class="grid grid-cols-2 gap-4 text-sm">
-
-                        <div>
-                            <span class="text-gray-500">Jenis Bukti</span>
-                            <div class="font-semibold">
-                                {{ $pelaksanaan->pelaksanaanJenis->nama }}
-                            </div>
+                    <div>
+                        <span class="text-gray-500">Jenis Bukti</span>
+                        <div class="font-semibold">
+                            {{ $pelaksanaan->pelaksanaanJenis->nama }}
                         </div>
-
-                        <div>
-                            <span class="text-gray-500">Nominal</span>
-                            <div class="font-semibold text-green-600">
-                                Rp {{ number_format($pelaksanaan->nominal ?? 0, 0, ',', '.') }}
-                            </div>
-                        </div>
-
-                        <div class="col-span-2">
-                            <span class="text-gray-500">Keterangan</span>
-                            <div class="font-semibold">
-                                {{ $pelaksanaan->keterangan ?? '-' }}
-                            </div>
-                        </div>
-
-                        <div class="col-span-2">
-                            <a href="{{ Storage::url($pelaksanaan->file_pdf) }}"
-                               target="_blank"
-                               class="text-blue-600 underline">
-                                Lihat File PDF
-                            </a>
-                        </div>
-
                     </div>
+
+                    <div>
+                        <span class="text-gray-500">Nominal</span>
+                        <div class="font-semibold text-green-600">
+                            Rp {{ number_format($pelaksanaan->nominal, 0, ',', '.') }}
+                        </div>
+                    </div>
+
+                    <div class="col-span-2">
+                        <span class="text-gray-500">Keterangan</span>
+                        <div>{{ $pelaksanaan->keterangan ?? '-' }}</div>
+                    </div>
+
+                    <div class="col-span-2">
+                        <a href="{{ Storage::url($pelaksanaan->file_pdf) }}"
+                           target="_blank"
+                           class="text-blue-600 underline">
+                            Lihat Bukti
+                        </a>
+                    </div>
+
                 </div>
-            @empty
-                <div class="text-gray-500 italic">
-                    Belum ada bukti pelaksanaan.
-                </div>
-            @endforelse
+            </div>
+
+        @empty
+            <div class="text-gray-500 italic">
+                Belum ada bukti pelaksanaan.
+            </div>
+        @endforelse
+
+    </div>
+
+@endforeach
+
+
+
+
         </div>
+
+        
 
         <div class="mt-4">
             <a href="{{ route('pelaksanaans.index') }}"

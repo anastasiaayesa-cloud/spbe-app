@@ -34,74 +34,105 @@
                         </thead>
 
                         <tbody class="text-sm">
-                            @php $no = $pelaksanaans->firstItem(); @endphp
+    @php $no = $rencanas->firstItem(); @endphp
 
-                            @forelse ($pelaksanaans as $pelaksanaan)
-                                <tr>
-                                    <td class="px-4 py-2 border text-center">
-                                        {{ $no++ }}
-                                    </td>
+    @forelse ($rencanas as $rencana)
+        @php
+    $totalPegawai = $rencana->pelaksanaans->count();
 
-                                    <td class="px-4 py-2 border">
-                                        {{ $pelaksanaan->rencana->nama_kegiatan ?? '-' }}
-                                    </td>
+    $pegawaiSudahAjukan = $rencana->pelaksanaans
+        ->filter(fn ($p) => $p->keuangans->isNotEmpty())
+        ->count();
+@endphp
 
-                                    <td class="px-4 py-2 border">
-                                        {{ $pelaksanaan->rencana->lokasi_kegiatan ?? '-' }}
-                                    </td>
+        <tr>
+            <td class="px-4 py-2 border text-center">
+                {{ $no++ }}
+            </td>
 
-                                    <td class="px-4 py-2 border text-center">
-                                        {{ optional($pelaksanaan->rencana?->tanggal_kegiatan)
-                                            ? \Carbon\Carbon::parse($pelaksanaan->rencana->tanggal_kegiatan)->format('d M Y')
-                                            : '-' }}
-                                    </td>
+            <td class="px-4 py-2 border">
+                {{ $rencana->nama_kegiatan ?? '-' }}
+            </td>
 
-                                    {{-- Status --}}
-                                    <td class="px-4 py-2 border text-center">
-                                        @if ($pelaksanaan->keuangans->count())
-                                            <span class="px-3 py-1 bg-green-600 text-white rounded text-xs font-semibold">
-                                                Sudah Diajukan
-                                            </span>
-                                        @else
-                                            <span class="px-3 py-1 bg-gray-400 text-white rounded text-xs font-semibold">
-                                                Belum Diajukan
-                                            </span>
-                                        @endif
-                                    </td>
+            <td class="px-4 py-2 border">
+                {{ $rencana->lokasi_kegiatan ?? '-' }}
+            </td>
 
-                                    {{-- Aksi --}}
-                                    <td class="px-4 py-2 border text-center">
-                                        @if ($pelaksanaan->keuangans->count())
-                                            <a
-                                                href="{{ route('keuangans.show', $pelaksanaan->keuangans->first()->id) }}"
-                                                class="text-blue-600 hover:underline"
-                                            >
-                                                Lihat Keuangan
-                                            </a>
-                                        @else
-                                            <a
-                                                href="{{ route('keuangans.create', ['pelaksanaan' => $pelaksanaan->id]) }}"
-                                                class="inline-block px-3 py-1 bg-blue-600 text-white rounded text-xs"
-                                            >
-                                                Ajukan Keuangan
-                                            </a>
-                                        @endif
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="6" class="text-center text-gray-400 py-6">
-                                        Data pelaksanaan belum tersedia
-                                    </td>
-                                </tr>
-                            @endforelse
-                        </tbody>
+            <td class="px-4 py-2 border text-center">
+                {{ $rencana->tanggal_kegiatan
+                    ? \Carbon\Carbon::parse($rencana->tanggal_kegiatan)->format('d M Y')
+                    : '-' }}
+            </td>
+
+            @php
+    $pelaksanaanPegawai = $rencana->pelaksanaans
+        ->where('kepegawaian_id', auth()->user()->pegawai_id)
+        ->first();
+
+    $keuangan = $rencana->pelaksanaans
+        ->flatMap(fn ($p) => $p->keuangans)
+        ->first();
+@endphp
+
+            {{-- STATUS --}}
+            <td class="px-4 py-2 border text-center">
+    @if (!$keuangan)
+        <span class="px-3 py-1 bg-gray-400 text-white rounded text-xs font-semibold">
+            Belum Diajukan
+        </span>
+    @elseif ($keuangan->status === 'lunas')
+        <span class="px-3 py-1 bg-green-600 text-white rounded text-xs font-semibold">
+            Lunas
+        </span>
+    @else
+        <span class="px-3 py-1 bg-red-600 text-white rounded text-xs font-semibold">
+            Belum Lunas
+        </span>
+    @endif
+</td>
+
+           
+
+            {{-- AKSI --}}
+           <td class="px-4 py-2 border text-center space-x-2">
+
+    {{-- AJUKAN (hanya kalau pegawai ini belum ajukan) --}}
+    @if ($pelaksanaanPegawai && $pelaksanaanPegawai->keuangans->isEmpty())
+        <a
+            href="{{ route('keuangans.create', ['pelaksanaan' => $pelaksanaanPegawai->id]) }}"
+            class="inline-block px-3 py-1 bg-blue-600 text-white rounded text-xs"
+        >
+            Ajukan
+        </a>
+    @endif
+
+    {{-- LIHAT (kalau sudah ada keuangan di rencana ini) --}}
+    @if ($keuangan)
+        <a
+            href="{{ route('keuangans.show', $keuangan->id) }}"
+            class="text-blue-600 hover:underline text-xs"
+        >
+            Lihat
+        </a>
+    @endif
+
+</td>
+        </tr>
+    @empty
+        <tr>
+            <td colspan="6" class="text-center text-gray-400 py-6">
+                Data rencana belum tersedia
+            </td>
+        </tr>
+    @endforelse
+</tbody>
+
                     </table>
                 </div>
 
                 {{-- Pagination --}}
                 <div class="mt-4">
-                    {{ $pelaksanaans->links() }}
+                    {{ $rencanas->links() }}
                 </div>
 
             </div>

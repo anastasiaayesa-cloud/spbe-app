@@ -29,6 +29,7 @@ use App\Livewire\Keuangans\KeuanganShow;
 
 
 
+use App\Livewire\Admin\ManajemenAkses;
 
 use Illuminate\Support\Facades\Route;
 /*
@@ -107,6 +108,7 @@ Route::middleware(['auth', 'role:admin|katim'])->group(function () {
 Route::get('/instansis', InstansiIndex::class)->name('instansis.index');
 Route::get('/instansis/create', InstansiForm::class)->name('instansis.create');
 Route::get('/instansis/{instansi_id}/edit', action: InstansiForm::class)->name(name: 'instansis.edit');
+Route::get('/admin/manajemen-akses', ManajemenAkses::class)->name(name: 'admin.akses');
 
 
 Route::get('/keuangans', KeuanganIndex::class)->name('keuangans.index');
@@ -114,9 +116,7 @@ Route::get('/keuangans/create/{pelaksanaan}', KeuanganForm::class)->name('keuang
 Route::get('/keuangans/{keuangan}/pegawai/{pegawai}/cetak', function ($keuangan, $pegawai) {
 
     $keuangan = \App\Models\Keuangan::with([
-        'pelaksanaan.rencana.kepegawaians',
-        'pelaksanaan.rencana.perencanaans',
-        'detailKeuangans'
+        'pelaksanaan.rencana',
     ])->findOrFail($keuangan);
 
     $pegawai = $keuangan->pelaksanaan
@@ -125,9 +125,18 @@ Route::get('/keuangans/{keuangan}/pegawai/{pegawai}/cetak', function ($keuangan,
         ->where('id', $pegawai)
         ->firstOrFail();
 
+    // 🔥 INI KUNCINYA: AMBIL PELAKSANAAN PER PEGAWAI
+    $items = \App\Models\Pelaksanaan::where(
+        'rencana_id',
+        $keuangan->pelaksanaan->rencana_id
+    )
+    ->where('kepegawaian_id', $pegawai->id)
+    ->with('pelaksanaanJenis')
+    ->get();
+
     return \Barryvdh\DomPDF\Facade\Pdf::loadView(
         'pdf.keuangans.master',
-        compact('keuangan', 'pegawai')
+        compact('keuangan', 'pegawai', 'items')
     )
     ->setPaper('A4', 'portrait')
     ->stream('keuangan-' . $pegawai->nama . '.pdf');

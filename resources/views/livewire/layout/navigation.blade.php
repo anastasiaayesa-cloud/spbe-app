@@ -16,110 +16,147 @@ new class extends Component
     }
 }; ?>
 
-<aside x-data="{ open: true }"
-    class="fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-gray-200
-           transform transition-transform duration-200 ease-in-out
-           lg:translate-x-0"
-    :class="{ '-translate-x-full': !open }">
+<aside x-data="{ open: true }" class="fixed top-0 left-0 z-40 w-64 h-screen bg-white border-r border-gray-200">
+    <div class="flex flex-col h-full px-4 py-6">
 
-    <!-- Logo -->
-    <div class="h-16 flex items-center px-8 border-b">
-        <a href="{{ route('dashboard') }}" wire:navigate class="flex items-center gap-2">
-            <x-application-logo class="h-8 w-auto text-gray-800" />
-            <span class="font-semibold text-gray-700">SPBE</span>
-        </a>
-    </div>
-
-    <!-- Menu -->
-    <nav class="flex-1 px-3 py-8 space-y-1 text-sm">
-
-    @php
-        $menuClass = 'block px-3 py-2 rounded-md transition';
-        $activeClass = 'bg-blue-100 text-blue-700 font-semibold';
-        $inactiveClass = 'text-gray-700 hover:bg-gray-100';
-    @endphp
-
-    <a href="{{ route('dashboard') }}" wire:navigate
-       class="{{ $menuClass }} {{ request()->routeIs('dashboard') ? $activeClass : $inactiveClass }}">
-        Dashboard
-    </a>
-
-    @role('perencanaan|admin')
-        <a href="{{ route('dokumen-perencanaan.index') }}" wire:navigate
-           class="{{ $menuClass }} {{ request()->routeIs('dokumen-perencanaan.index') ? $activeClass : $inactiveClass }}">
-            Dokumen Perencanaan
-        </a>
-
-        <a href="{{ route('perencanaans.index') }}" wire:navigate
-           class="{{ $menuClass }} {{ request()->routeIs('perencanaans.index') ? $activeClass : $inactiveClass }}">
-            Perencanaan
-        </a>
-    @endrole
-
-    @role('kepegawaian|admin')
-        <a href="{{ route('kepegawaians.index') }}" wire:navigate
-           class="{{ $menuClass }} {{ request()->routeIs('kepegawaians.index') ? $activeClass : $inactiveClass }}">
-            Pegawai
-        </a>
-
-        <a href="{{ route('keuangans.index') }}" wire:navigate
-           class="{{ $menuClass }} {{ request()->routeIs('keuangans.index') ? $activeClass : $inactiveClass }}">
-            Keuangan
-        </a>
-    @endrole
-
-    @role('kesekretariatan|admin')
-        <a href="{{ route('persuratans.index') }}" wire:navigate
-           class="{{ $menuClass }} {{ request()->routeIs('persuratans.index') ? $activeClass : $inactiveClass }}">
-            Persuratan
-        </a>
-    @endrole
-
-    @role('pegawai|admin')
-        <a href="{{ route('pelaksanaans.index') }}" wire:navigate
-           class="{{ $menuClass }} {{ request()->routeIs('pelaksanaans.index') ? $activeClass : $inactiveClass }}">
-            Submit Bukti Pelaksanaan
-        </a>
-    @endrole
-
-    @role('katim|admin')
-        <a href="{{ route('rencanas.index') }}" wire:navigate
-           class="{{ $menuClass }} {{ request()->routeIs('rencanas.index') ? $activeClass : $inactiveClass }}">
-            Rencana Kegiatan
-        </a>
-    @endrole
-
-    @role('admin')
-        <a href="{{ route('instansis.index') }}" wire:navigate
-           class="{{ $menuClass }} {{ request()->routeIs('instansis.index') ? $activeClass : $inactiveClass }}">
-            Instansi
-        </a>
-
-        <a href="{{ route('kabupatens.index') }}" wire:navigate
-           class="{{ $menuClass }} {{ request()->routeIs('kabupatens.index') ? $activeClass : $inactiveClass }}">
-            Kabupaten
-        </a>
-    @endrole
-</nav>
-
-
-    <!-- User -->
-    <div class="border-t px-4 py-4 text-sm">
-        <div class="font-medium text-gray-700">
-            {{ auth()->user()->name }}
-        </div>
-        <div class="text-xs text-gray-500 mb-3">
-            {{ auth()->user()->email }}
+        <!-- Logo -->
+        <div class="flex items-center gap-3 mb-8 px-2">
+            <a href="{{ route('dashboard') }}" wire:navigate class="flex items-center gap-2">
+                <x-application-logo class="h-8 w-auto text-gray-800" />
+                <span class="text-lg font-semibold tracking-wide">SPBE</span>
+            </a>
         </div>
 
-        <x-nav-link :href="route('profile')" wire:navigate>
-            Profile
-        </x-nav-link>
+        <!-- Navigation -->
+        <nav class="flex-1 space-y-1 text-sm">
 
-        <button wire:click="logout"
-            class="w-full text-left mt-2 text-red-600 hover:bg-red-50 rounded px-2 py-1">
-            Log Out
-        </button>
+            <x-nav-link class="block px-3 py-2 rounded-lg"
+                :href="route('dashboard')"
+                :active="request()->routeIs('dashboard')"
+                wire:navigate>
+                Dashboard
+            </x-nav-link>
+
+            @role('perencanaan|admin')
+                <x-nav-link class="block px-3 py-2 rounded-lg"
+                    :href="route('dokumen-perencanaan.index')"
+                    :active="request()->routeIs('dokumen-perencanaan.*')"
+                    wire:navigate>
+                    Dokumen Perencanaan
+                </x-nav-link>
+
+                <x-nav-link class="block px-3 py-2 rounded-lg"
+                    :href="route('perencanaans.index')"
+                    :active="request()->routeIs('perencanaans.*')"
+                    wire:navigate>
+                    Perencanaan Pegawai
+                </x-nav-link>
+            @endrole
+
+            @role('kepegawaian|admin')
+                <x-nav-link class="block px-3 py-2 rounded-lg"
+                    :href="route('kepegawaians.index')"
+                    :active="request()->routeIs('kepegawaians.*')"
+                    wire:navigate>
+                    Pegawai
+                </x-nav-link>
+
+                <x-nav-link class="block px-3 py-2 rounded-lg"
+                    :href="route('keuangans.index')"
+                    :active="request()->routeIs('keuangans.*')"
+                    wire:navigate>
+                    Keuangan
+                </x-nav-link>
+
+                <x-nav-link class="block px-3 py-2 rounded-lg"
+                    :href="route('pelaksanaans.index')"
+                    :active="request()->routeIs('pelaksanaans.*')"
+                    wire:navigate>
+                    Jenis Bukti
+                </x-nav-link>
+            @endrole
+
+            @role('kesekretariatan|admin')
+                <x-nav-link class="block px-3 py-2 rounded-lg"
+                    :href="route('persuratans.index')"
+                    :active="request()->routeIs('persuratans.*')"
+                    wire:navigate>
+                    Persuratan
+                </x-nav-link>
+            @endrole
+
+            @role('pegawai|admin')
+                <x-nav-link class="block px-3 py-2 rounded-lg"
+                    :href="route('pelaksanaans.index')"
+                    :active="request()->routeIs('pelaksanaans.*')"
+                    wire:navigate>
+                    Jenis Bukti
+                </x-nav-link>
+
+                <x-nav-link class="block px-3 py-2 rounded-lg"
+                    :href="route('keuangans.index')"
+                    :active="request()->routeIs('keuangans.*')"
+                    wire:navigate>
+                    Keuangan
+                </x-nav-link>
+            @endrole
+
+            @role('katim|admin')
+                <x-nav-link class="block px-3 py-2 rounded-lg"
+                    :href="route('rencanas.index')"
+                    :active="request()->routeIs('rencanas.*')"
+                    wire:navigate>
+                    Rencana Kegiatan Instansi
+                </x-nav-link>
+            @endrole
+
+            @role('admin')
+                <!-- 🔹 MENU KEUANGAN (DITAMBAHKAN) -->
+                <x-nav-link class="block px-3 py-2 rounded-lg"
+                    :href="route('keuangans.index')"
+                    :active="request()->routeIs('keuangans.*')"
+                    wire:navigate>
+                    Keuangan
+                </x-nav-link>
+
+                <x-nav-link class="block px-3 py-2 rounded-lg"
+                    :href="route('instansis.index')"
+                    :active="request()->routeIs('instansis.*')"
+                    wire:navigate>
+                    Instansi
+                </x-nav-link>
+
+                <x-nav-link class="block px-3 py-2 rounded-lg"
+                    :href="route('kabupatens.index')"
+                    :active="request()->routeIs('kabupatens.*')"
+                    wire:navigate>
+                    Kabupaten
+                </x-nav-link>
+
+                <x-nav-link class="block px-3 py-2 rounded-lg"
+                    :href="route('admin.akses')"
+                    :active="request()->routeIs('admin.akses')"
+                    wire:navigate>
+                    Manajemen Hak Akses
+                </x-nav-link>
+            @endrole
+
+        </nav>
+
+        <!-- User -->
+        <div class="pt-4 mt-4 border-t space-y-1">
+            <x-nav-link class="block px-3 py-2 rounded-lg"
+                :href="route('profile')"
+                wire:navigate>
+                Profile
+            </x-nav-link>
+
+            <button wire:click="logout"
+                class="w-full text-left px-3 py-2 rounded-lg text-red-600 hover:bg-red-50 transition">
+                Log Out
+            </button>
+        </div>
+
     </div>
 </aside>
 

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+// use Spatie\Permission\Traits\HasRoles;
 
 class Kepegawaian extends Model
 {
@@ -31,6 +32,7 @@ class Kepegawaian extends Model
         'no_rek',
         // 'pendidikan_terakhir_id',
         'pendidikan_id',
+        'user_id',
         // 'is_bpmp'
     ];
 
@@ -61,7 +63,12 @@ class Kepegawaian extends Model
 
     public function detailKeuangans()
 {
-    return $this->hasMany(DetailKeuangan::class, 'pegawai_id');
+    return $this->hasMany(DetailKeuangan::class, 'kepegawaian_id');
 }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
 }

@@ -1,125 +1,217 @@
-@include('pdf.partials.kop-surat')
-<h3 class="text-center">RINCIAN BIAYA PERJALANAN DINAS</h3>
+<style>
+    body {
+        font-family: "Times New Roman", Times, serif;
+        font-size: 11pt;
+        line-height: 1.5;
+    }
+
+    @page {
+        margin: 3cm 3cm 3cm 3cm;
+    }
+
+    h3 {
+        font-size: 12pt;
+        font-weight: bold;
+        text-align: center;
+        margin: 20px 0 15px 0;
+        text-decoration: underline;
+    }
+
+    p {
+        margin: 6px 0;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+        font-size: 11pt;
+    }
+        /* Menghilangkan garis horizontal antar item di dalam body */
+    .table-bersih tbody td {
+        border-top: none !important;
+        border-bottom: none !important;
+    }
+
+    /* Munculkan garis bawah hanya pada item terakhir agar tabel tertutup */
+    .table-bersih tbody tr.item-terakhir td {
+        border-bottom: 0.5pt solid #000 !important;
+    }
+
+    /* Baris footer (Jumlah & Terbilang) tetap pakai border normal */
+    .table-bersih tr.footer td {
+        border: 0.5pt solid #000 !important;
+    }
+
+    th, td {
+        border: 0.5pt solid #000;
+        padding: 6px 6px;
+        vertical-align: top;
+    }
+
+    th {
+        text-align: center;
+        font-weight: normal;
+    }
+
+    .text-center { text-align: center; }
+    .text-right { text-align: right; }
+
+    .no-border,
+    .no-border td {
+        border: none !important;
+    }
+
+    hr.solid {
+        border: 0;
+        border-top: 1px solid #000;
+        margin: 15px 0;
+    }
+
+    .ttd-space {
+        height: 70px;
+    }
+</style>
+
+
+<h3>RINCIAN BIAYA PERJALANAN DINAS</h3>
 
 <p class="text-center">
-    {{-- <strong>{{ $keuangan->kegiatan }}</strong><br> --}}Kegiatan {{ $keuangan->pelaksanaan->rencana->first()->nama_kegiatan ?? '-'}}<br>
-    Pada tanggal {{ \Carbon\Carbon::parse($keuangan->tanggal_kegiatan)->translatedFormat('d F Y') }}<br>
-    di {{ $keuangan->lokasi_kegiatan }}
+    Kegiatan {{ $keuangan->pelaksanaan->rencana->first()->nama_kegiatan ?? '-' }}<br>
+    Pada tanggal {{ \Carbon\Carbon::parse($keuangan->tanggal_kegiatan)->translatedFormat('d F Y') }} di {{ $keuangan->pelaksanaan->rencana->lokasi_kegiatan ?? '-' }}
 </p>
 
 <p>
-    Lampiran SPPD Nomor : {{ $keuangan->pelaksanaan->rencana->perencanaans->first()->no_sppd ?? '' }}<br>
-    Tanggal : {{ \Carbon\Carbon::parse($keuangan->tanggal_sppd)->translatedFormat('d F Y') }}
+    <span style="display:inline-block; width:160px;">
+        Lampiran SPPD Nomor
+    </span>
+    :
+    {{ $keuangan->pelaksanaan->rencana->perencanaans->first()->no_sppd ?? '-' }}
+    <br>
+
+    <span style="display:inline-block; width:160px;">
+        Tanggal
+    </span>
+    :
+    {{ \Carbon\Carbon::parse($keuangan->tanggal_sppd)->translatedFormat('d F Y') }}
 </p>
 
-<table>
+<table class="table-bersih">
     <thead>
         <tr>
             <th width="5%">No</th>
             <th>Perincian Biaya</th>
-            <th width="30%">Jumlah</th>
-            <th>Keterangan</th>
+            <th width="25%">Jumlah</th>
+            <th width="20%">Keterangan</th>
         </tr>
     </thead>
     <tbody>
-@php $total = 0; @endphp
+        @php $total = 0; @endphp
 
-@forelse (
-    $keuangan->pelaksanaan->rencana->pelaksanaans ?? collect()
-    as $index => $item
-)
-    @php $total += $item->nominal; @endphp
-    <tr>
-        <td class="text-center">{{ $index + 1 }}</td>
-        <td>{{ $item->jenis->nama }}</td>
-        <td class="text-right">
-            Rp {{ number_format($item->nominal, 0, ',', '.') }}
-        </td>
-        <td></td>
-    </tr>
-@empty
-    <tr>
-        <td colspan="4" class="text-center">
-            <em>Belum ada biaya pelaksanaan</em>
-        </td>
-    </tr>
-@endforelse
+        @foreach ($items as $index => $item)
+            @php $total += $item->nominal; @endphp
+            {{-- Class 'item-terakhir' otomatis muncul hanya di baris paling bawah @foreach --}}
+            <tr class="{{ $loop->last ? 'item-terakhir' : '' }}">
+                <td class="text-center">{{ $index + 1 }}</td>
+                <td>{{ $item->pelaksanaanJenis->nama ?? '-' }}</td>
+                <td class="text-right">
+                    Rp. {{ number_format($item->nominal, 0, ',', '.') }}
+                </td>
+                <td></td>
+            </tr>
+        @endforeach
 
-<tr>
-    <td colspan="2"><strong>Jumlah</strong></td>
-    <td class="text-right">
-        <strong>
-            Rp {{ number_format($keuangan->total_nominal, 0, ',', '.') }}
-        </strong>    </td>
-    <td></td>
-</tr>
+        {{-- JUMLAH --}}
+        <tr class="footer">
+            <td colspan="2" class="text-right">Jumlah</td>
+            <td class="text-right">
+                Rp {{ number_format($total, 0, ',', '.') }}
+            </td>
+            <td></td>
+        </tr>
 
-</tbody>
-
+        {{-- TERBILANG --}}
+        <tr class="footer">
+            <td colspan="4">
+                Terbilang :
+                <strong><em>
+                    {{ ucfirst(terbilang(angka: $total)) }} Rupiah
+                </em></strong>
+            </td>
+        </tr>
+    </tbody>
 </table>
 
-<p>
-    <strong>Terbilang :   <strong>{{ ucfirst(terbilang(angka: $total)) }} rupiah</strong>
-</p>
 
-<br>
-
-<table class="no-border" width="100%">
+<table class="no-border">
     <tr class="no-border">
         <td class="no-border">
             Telah dibayar sejumlah<br>
-        <strong>
-            Rp {{ number_format($keuangan->total_nominal, 0, ',', '.') }}
-        </strong>            Bendahara Pengeluaran,<br><br><br>
-            <strong>Pujo Santoso, S.T.</strong><br>
+            Rp {{ number_format($total, 0, ',', '.') }}<br>
+            Bendahara Pengeluaran,<br><br>
+            <div class="ttd-space"></div>
+            Pujo Santoso, S.T.<br>
             NIP. 199002172015041001
         </td>
-        <td class="no-border text-right">
-            {{ $keuangan->tempat_ttd ?? 'Bintan' }},
-            {{ \Carbon\Carbon::parse($keuangan->tanggal_ttd)->translatedFormat('d F Y') }}<br>
-            Yang menerima uang,<br><br><br>
-            <strong>{{ $pegawai->nama ?? '-' }}</strong><br>
-            NIP. {{ $pegawai->nip ?? '-' }}
+
+        <td class="no-border" style="text-align: left; vertical-align: top; width: 50%; padding-left: 80px;">
+    {{ $keuangan->tempat_ttd ?? 'Bintan' }}, 
+    {{ \Carbon\Carbon::parse($keuangan->tanggal_ttd)->translatedFormat('d F Y') }}<br>
+    Telah menerima uang sebesar,<br>
+    Rp {{ number_format($total, 0, ',', '.') }}<br>
+    Yang menerima uang,
+    <div class="ttd-space"></div>
+    {{ $pegawai->nama ?? '-' }}<br>
+    NIP. {{ $pegawai->nip ?? '-' }}
+</td>
+    </tr>
+</table>
+
+<hr style="border: 0; border-top: 1px dashed #000;">
+
+<table class="no-border">
+    <tr>
+        <td colspan="2" class="text-center">
+            PERHITUNGAN SPPD RAMPUNG
         </td>
     </tr>
 </table>
 
-            <hr style="border:0;border-top:1px dashed #000;">
-
-<table width="100%" cellpadding="4" cellspacing="0" style="font-size:12px;">
-    <tr>
-        <td colspan="2" align="center">
-            <strong>PERHITUNGAN SPPD RAMPUNG</strong>
-            <hr style="border:0;border-top:1px dashed #000;">
-        </td>
-    </tr>
-
+<table class="no-border" width="100%">
     <tr>
         <!-- KIRI -->
         <td width="60%" valign="top">
-            <table width="100%" cellpadding="3" cellspacing="0">
+            <table class="no-border" width="100%">
                 <tr>
-                    <td width="45%">Ditetapkan sejumlah</td>
-                    <td width="5%">:</td>
-                    <td><strong>Rp {{ number_format($total, 0, ',', '.') }}</strong></td>
-                </tr>
-                <tr>
-                    <td>Yang telah dibayarkan semula</td>
-                    <td>:</td>
-                    <td>Rp. </td>
-                </tr>
-                <tr>
-                    <td>Sisa kurang / lebih</td>
-                    <td>:</td>
-                    <td><strong>NIHIL</strong></td>
-                </tr>
+    <td style="padding:0; line-height:1.2;">
+        Ditetapkan sejumlah<span style="display:inline-block; width:77px;"></span>:
+        <br>
+        Rp {{ number_format($total, 0, ',', '.') }}
+    </td>
+</tr>
+
+<tr>
+    <td style="padding:0; line-height:1.2;">
+        Yang telah dibayarkan semula<span style="display:inline-block; width:20px;"></span>:
+        <br>
+        Rp {{ number_format($total, 0, ',', '.') }}
+    </td>
+</tr>
+
+<tr>
+    <td style="padding:0; line-height:1.2;">
+        Sisa kurang / lebih<span style="display:inline-block; width:89px;"></span>: NIHIL
+    </td>
+</tr>
+
             </table>
         </td>
 
         <!-- KANAN -->
-        <td width="40%" valign="top" align="center">
-            Pejabat Pembuat Komitmen,<br><br><br><br>
-            <strong>Richardon Sinaga, S.Si., M.Pd</strong><br>
+         <td class="no-border" style="text-align: left; vertical-align: top; width: 50%; padding-left: 55px;">
+            Pejabat Pembuat Komitmen,<br>
+            <div class="ttd-space"></div>
+            Richardon Sinaga, S.Si., M.Pd<br>
             NIP. 197809292003121004
         </td>
     </tr>

@@ -46,31 +46,8 @@
                                 <span class="text-gray-400 italic text-sm">Tidak ada pegawai yang diusulkan</span>
                             @endforelse
                         </div>
-<<<<<<< HEAD
-
-                        {{-- Input --}}
-                       <input type="text"
-    wire:model.live="pegawaiSearch"
-    wire:focus="openDropdown"
-    @click.away="$wire.closeDropdown()"
-    class="w-full border rounded px-3 py-2"
-    placeholder="Ketik nama penerima surat">
-
-                        {{-- Dropdown --}}
-                        @if($showPegawaiDropdown && count($pegawaiResults))
-                            <div class="absolute z-10 w-full border rounded mt-1 bg-white max-h-56 overflow-y-auto shadow">
-                                @foreach($pegawaiResults as $pegawai)
-                                    <div class="px-3 py-2 hover:bg-gray-100 cursor-pointer"
-                                        wire:click="addPegawai({{ $pegawai['id'] }})">
-                                        {{ $pegawai['nama'] }}
-                                    </div>
-                                @endforeach
-                            </div>
-                        @endif
-=======
                         {{-- Input tersembunyi agar data tetap terkirim saat save --}}
                         <input type="hidden" wire:model="penerima_surat">
->>>>>>> a8759c416d59441eda4ba22c4638541b63eaa223
                     </div>
 
                      <div class="mb-3">
@@ -91,19 +68,10 @@
                     </div>
 
                     <div class="mb-3">
-<<<<<<< HEAD
-    <label class="block mb-1">Tanggal Upload *</label>
-    <input type="date"
-        wire:model="tanggal_upload"
-        readonly
-        class="border rounded px-3 py-2 w-full bg-gray-100 cursor-not-allowed">
-</div>
-=======
                         <label class="block mb-1">File PDF *</label>
                         <input type="file" wire:model="file_pdf" accept="application/pdf" class="border rounded px-3 py-2 w-full">
                         @error('file_pdf') <span class="text-red-600">{{ $message }}</span> @enderror
                     </div>
->>>>>>> a8759c416d59441eda4ba22c4638541b63eaa223
 
                     {{-- <button wire:click="save" class="bg-blue-600 text-white px-4 py-2 rounded">
                         Simpan
@@ -112,7 +80,7 @@
                     <!-- <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700">Tanggal Upload *</label>
                         <input type="date" 
-                            wire:model="tanggal_upload" {{-- Pastikan baris ini ada --}}
+                            {{-- wire:model="tanggal_upload" Pastikan baris ini ada --}}
                             class="mt-1 block w-full border-gray-300 rounded-md shadow-sm bg-gray-100" 
                             readonly>
                         <p class="text-xs text-gray-500 mt-1 italic">* Tanggal diset otomatis ke hari ini.</p>

@@ -4,8 +4,10 @@ namespace App\Livewire\Keuangans;
 
 use Livewire\Component;
 use App\Models\Keuangan;
-
 use App\Models\Pelaksanaan;
+use Illuminate\Support\Facades\Auth;
+
+
 
 class KeuanganShow extends Component
 {
@@ -15,15 +17,34 @@ class KeuanganShow extends Component
     public function mount(Keuangan $keuangan)
     {
         $this->keuangan = $keuangan->load([
-            'pelaksanaan.rencana',
-            'detailKeuangans'
+            'pelaksanaan.rencana.kepegawaians',
         ]);
 
-        // 🔑 INI KUNCI UTAMANYA
-        $this->buktiPengeluaran = Pelaksanaan::with('pelaksanaanJenis')
-            ->where('rencana_id', $keuangan->pelaksanaan->rencana_id)
-            ->get();
+        $this->buktiPengeluaran = Pelaksanaan::where(
+            'rencana_id',
+            $keuangan->pelaksanaan->rencana_id
+        )->get();
+
+        $this->keuangan->total_nominal = $this->buktiPengeluaran->sum('nominal');
     }
+
+    public function toggleStatus()
+{
+    if ($this->keuangan->status === 'lunas') {
+        $this->keuangan->update([
+            'status'   => 'belum_lunas',
+            'lunas_at' => null,
+        ]);
+    } else {
+        $this->keuangan->update([
+            'status'   => 'lunas',
+            'lunas_at' => now(), // ⬅️ otomatis waktu klik
+        ]);
+    }
+
+    $this->keuangan->refresh();
+}
+
 
     public function render()
     {

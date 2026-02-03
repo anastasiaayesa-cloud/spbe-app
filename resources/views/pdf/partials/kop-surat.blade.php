@@ -1,31 +1,34 @@
-<table width="100%" cellspacing="0" cellpadding="0">
-    <tr>
-        <!-- LOGO -->
-        <td width="90" style="vertical-align:middle; text-align:center;">
-            <img
-                src="{{ public_path('image/logo/lambang-logo-logo-depdiknas-wuri-handayani-10.png') }}"
-                width="80">
-        </td>
+<div style="width:100%; overflow:hidden; margin-bottom:8px;">
 
-        <!-- TEKS -->
-        <td style="text-align:center; vertical-align:middle;">
-            <div style="font-size:14px; font-weight:bold; line-height:1.3;">
-                KEMENTERIAN PENDIDIKAN, KEBUDAYAAN,<br>
-                RISET, DAN TEKNOLOGI
-            </div>
+    {{-- LOGO --}}
+    <div style="float:left; width:90px; text-align:center;">
+        <img
+            src="{{ public_path('image/logo/lambang-logo-logo-depdiknas-wuri-handayani-10.png') }}"
+            width="78"
+            style="display:block; margin:0 auto;">
+    </div>
 
-            <div style="font-size:13px; font-weight:bold; margin-top:4px; line-height:1.3;">
-                BALAI PENJAMINAN MUTU PENDIDIKAN<br>
-                PROVINSI KEPULAUAN RIAU
-            </div>
+    {{-- TEKS --}}
+    <div style="margin-left:90px; text-align:center;">
+        <div style="font-size:12pt; font-weight:bold; line-height:1.2;">
+            KEMENTERIAN PENDIDIKAN, KEBUDAYAAN,<br>
+            RISET, DAN TEKNOLOGI
+        </div>
 
-            <div style="font-size:11px; margin-top:4px; line-height:1.4;">
-                Jalan Tata Bumi Km 20 Ceruk Ijuk, Toapaya, Bintan, Kepulauan Riau 29153<br>
-                Telepon (0771) 4442196 Laman https://bpmpkepri.kemdikbud.go.id
-            </div>
-        </td>
-    </tr>
-</table>
-<hr style="border:0; border-top:3px solid #000; margin-top:8px;">
-<hr style="border:0; border-top:1px solid #000; margin-top:2px; margin-bottom:18px;">
+        <div style="font-size:12pt; font-weight:bold; margin-top:2px; line-height:1.2;">
+            BALAI PENJAMINAN MUTU PENDIDIKAN<br>
+            PROVINSI KEPULAUAN RIAU
+        </div>
 
+        <div style="font-size:10pt; margin-top:4px; line-height:1.3;">
+            Jalan Tata Bumi Km 20 Ceruk Ijuk, Toapaya, Bintan, Kepulauan Riau 29153<br>
+            Telepon (0771) 4442196 Laman https://bpmpkepri.kemdikbud.go.id
+        </div>
+    </div>
+
+    <div style="clear:both;"></div>
+</div>
+
+{{-- GARIS KOP --}}
+<hr style="border:0; border-top:3px solid #000; margin:0;">
+<hr style="border:0; border-top:1px solid #000; margin:3px 0 18px 0;">

@@ -107,6 +107,10 @@
                                     @endif
                                 </div>
 
+                        @error('pelaksanaan_jenis_id')
+                            <span class="text-red-600">{{ $message }}</span>
+                        @enderror
+                    </div>
 
 
                                 {{-- BUTTON --}}
