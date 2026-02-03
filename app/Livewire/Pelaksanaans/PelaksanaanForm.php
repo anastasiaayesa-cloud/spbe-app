@@ -13,14 +13,12 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests; // WAJIB ADA
 class PelaksanaanForm extends Component
 {
     use WithFileUploads;
-    public $pelaksanaan_id, $file_pdf, $existing_pdf, $tanggal_upload,$pelaksanaan_jenis_id,$pelaksanaanJenisList = [], $perencanaan_nama_id, $perencanaanNamas = [];
+    public $pelaksanaan_id, $file_pdf, $existing_pdf, $tanggal_upload, $pelaksanaan_jenis_id, $pelaksanaanJenisList = [];
 
     public function mount($pelaksanaan_id = null)
-{
-    // INI WAJIB ADA (ISI DROPDOWN)
-    $this->pelaksanaanJenisList = PelaksanaanJenis::orderBy('nama')->get();
-        // Dropdown nama kegiatan (INI WAJIB)
-    $this->perencanaanNamas = PerencanaanNama::orderBy('nama')->get();
+    {
+        // INI WAJIB ADA (ISI DROPDOWN)
+        $this->pelaksanaanJenisList = PelaksanaanJenis::orderBy('nama')->get();
 
     if ($pelaksanaan_id) {
         $this->authorize('pelaksanaan-edit');
@@ -33,8 +31,7 @@ class PelaksanaanForm extends Component
         $this->tanggal_upload = $pelaksanaan->tanggal_upload;
     }else{
         $this->authorize('pelaksanaan-create');
-    }
-}
+    }}
 
     public function rules()
     {
@@ -62,9 +59,6 @@ class PelaksanaanForm extends Component
         if ($this->file_pdf) {
             $pdfPath = $this->file_pdf->store('pelaksanaan', 'public');
         }
-        // else {
-        //     $pdfPath = $this->existing_pdf; // pakai file lama
-        // }
 
         // setelah lulus validasi, lakukan sintaks dibawah
         if ($this->pelaksanaan_id) {
@@ -87,6 +81,7 @@ class PelaksanaanForm extends Component
             session()->flash('success', 'Bukti berhasil diedit.');
             return redirect()->route('pelaksanaans.index');
         } else {
+            // dd($this->pelaksanaan_jenis_id);
             $pelaksanaan = Pelaksanaan::create([
                 'perencanaan_nama_id' => $this->perencanaan_nama_id,
                 'pelaksanaan_jenis_id' => $this->pelaksanaan_jenis_id,
