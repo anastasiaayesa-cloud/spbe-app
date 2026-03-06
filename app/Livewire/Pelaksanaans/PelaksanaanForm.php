@@ -8,24 +8,26 @@ use App\Models\PerencanaanNama;
 use App\Models\Pelaksanaan;
 use Illuminate\Support\Facades\Storage;
 use App\Models\PelaksanaanJenis;
+use App\Models\Perencanaan;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests; // WAJIB ADA
 
 class PelaksanaanForm extends Component
 {
     use WithFileUploads;
-    public $pelaksanaan_id, $file_pdf, $existing_pdf, $tanggal_upload, $pelaksanaan_jenis_id, $pelaksanaanJenisList = [];
+    public $pelaksanaan_id, $file_pdf, $existing_pdf, $tanggal_upload, $pelaksanaan_jenis_id, $pelaksanaanJenisList = [], $perencanaanNamas = [], $dokumenperencanaan_id, $perencanaan_id;
 
     public function mount($pelaksanaan_id = null)
     {
         // INI WAJIB ADA (ISI DROPDOWN)
         $this->pelaksanaanJenisList = PelaksanaanJenis::orderBy('nama')->get();
+        $this->perencanaanNamas = Perencanaan::orderBy('nama')->get();
 
     if ($pelaksanaan_id) {
         $this->authorize('pelaksanaan-edit');
 
         $this->pelaksanaan_id = $pelaksanaan_id;
         $pelaksanaan = Pelaksanaan::findOrFail($pelaksanaan_id);
-        $this->perencanaan_nama_id = $pelaksanaan->perencanaan_nama_id;
+        $this->perencanaan_id = $pelaksanaan->perencanaan_id;
         $this->existing_pdf = $pelaksanaan->file_pdf;
         $this->pelaksanaan_jenis_id = $pelaksanaan->pelaksanaan_jenis_id;
         $this->tanggal_upload = $pelaksanaan->tanggal_upload;
@@ -36,7 +38,7 @@ class PelaksanaanForm extends Component
     public function rules()
     {
         $rules = [
-            'perencanaan_nama_id' => 'required|exists:kegiatan_nama_id,id',
+            'perencanaan_id' => 'required',
             'pelaksanaan_jenis_id' => 'required|exists:pelaksanaan_jenis,id',
             'file_pdf' => 'required|mimes:pdf',
             'tanggal_upload' => 'required|date',
@@ -70,7 +72,7 @@ class PelaksanaanForm extends Component
             $pdfPath = $this->file_pdf->store('pelaksanaan', 'public');
 
             $pelaksanaan->update([
-                'perencanaan_nama_id' => $this->perencanaan_nama_id,
+                'perencanaan_id' => 'required',
                 'pelaksanaan_jenis_id' => $this->pelaksanaan_jenis_id,
                 'file_pdf' => $pdfPath,
                 'tanggal_upload' => $this->tanggal_upload,

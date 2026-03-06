@@ -29,7 +29,8 @@ class Perencanaan extends Model
 
     public function details()
     {
-        return $this->hasMany(PerencanaanDetail::class);
+        // Tambahkan 'perencanaan_id' secara eksplisit
+        return $this->hasMany(PerencanaanDetail::class, 'perencanaan_id');
     }
 
     public function rencanas()

@@ -97,6 +97,27 @@ class RoleManager extends Component
         $this->resetInput();
     }
 
+    // Tambahkan fungsi ini di app/Livewire/Admin/RoleManager.php
+
+    public function pilihPerGroup($groupName)
+    {
+        // Ambil semua nama permission yang ada di dalam group tersebut
+        $groupPermissions = \Spatie\Permission\Models\Permission::where('group', $groupName)
+                            ->pluck('name')
+                            ->toArray();
+
+        // Periksa apakah semua permission dalam group ini sudah terpilih
+        $isAllSelected = collect($groupPermissions)->every(fn($p) => in_array($p, $this->selectedPermissions));
+
+        if ($isAllSelected) {
+            // Jika sudah terpilih semua, maka hapus hanya permission milik group ini
+            $this->selectedPermissions = array_diff($this->selectedPermissions, $groupPermissions);
+        } else {
+            // Jika belum, tambahkan yang belum ada ke dalam array (tanpa duplikat)
+            $this->selectedPermissions = array_unique(array_merge($this->selectedPermissions, $groupPermissions));
+        }
+    }
+
     private function resetInput()
     {
         $this->roleName = '';

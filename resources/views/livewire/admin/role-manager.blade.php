@@ -34,24 +34,37 @@
                 
                 {{-- MATRIKS PERMISSION --}}
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    @foreach($groupedPermissions as $group => $perms)
-                        <div class="bg-white border rounded-lg overflow-hidden shadow-sm">
-                            <div class="bg-blue-50 px-3 py-2 border-b border-blue-100">
-                                <span class="font-bold text-blue-800 text-sm italic">{{ $group }}</span>
-                            </div>
-                            <div class="p-3 grid grid-cols-2 gap-2">
-                                @foreach($perms as $perm)
-                                    <label class="flex items-center space-x-2 cursor-pointer hover:bg-gray-50 p-1 rounded transition">
-                                        <input type="checkbox" wire:model="selectedPermissions" value="{{ $perm->name }}" 
-                                            class="text-blue-600 rounded border-gray-300 focus:ring-blue-500">
-                                        <span class="text-xs text-gray-600 capitalize">
-                                            {{ Str::afterLast($perm->name, '-') }}
-                                        </span>
-                                    </label>
-                                @endforeach
-                            </div>
+                @foreach($groupedPermissions as $group => $perms)
+                    <div class="bg-white border rounded-lg overflow-hidden shadow-sm">
+                        {{-- Header Modul dengan Fitur Pilih Per Group --}}
+                        <div class="bg-blue-50 px-3 py-2 border-b border-blue-100 flex justify-between items-center">
+                            <span class="font-bold text-blue-800 text-sm italic">{{ $group }}</span>
+                            
+                            {{-- Tombol Kecil Pilih Per Group --}}
+                            <button type="button" 
+                                wire:click="pilihPerGroup('{{ $group }}')"
+                                class="text-[10px] px-2 py-0.5 rounded border transition-colors
+                                {{ collect($perms->pluck('name'))->every(fn($p) => in_array($p, $selectedPermissions))
+                                    ? 'bg-blue-600 text-white border-blue-700' 
+                                    : 'bg-white text-blue-600 border-blue-200 hover:bg-blue-100' }}">
+                                {{ collect($perms->pluck('name'))->every(fn($p) => in_array($p, $selectedPermissions)) ? 'Batal' : 'Semua' }}
+                            </button>
                         </div>
-                    @endforeach
+
+                        {{-- Body Modul (Checkbox Satuan Tetap Berfungsi) --}}
+                        <div class="p-3 grid grid-cols-2 gap-2">
+                            @foreach($perms as $perm)
+                                <label class="flex items-center space-x-2 cursor-pointer hover:bg-gray-50 p-1 rounded transition">
+                                    <input type="checkbox" wire:model="selectedPermissions" value="{{ $perm->name }}" 
+                                        class="text-blue-600 rounded border-gray-300 focus:ring-blue-500">
+                                    <span class="text-xs text-gray-600 capitalize">
+                                        {{ Str::afterLast($perm->name, '-') }}
+                                    </span>
+                                </label>
+                            @endforeach
+                        </div>
+                    </div>
+                @endforeach
                 </div>
                 @error('selectedPermissions') <span class="text-xs text-red-500 mt-2 block">{{ $message }}</span> @enderror
             </div>
