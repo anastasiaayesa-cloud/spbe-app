@@ -57,7 +57,8 @@
 <div class="space-y-4 mb-5">
 
 @foreach ($lampirans as $index => $lampiran)
-<div class="border rounded p-3 bg-gray-50">
+<div wire:key="lampiran-{{ $index }}" class="border rounded p-3 bg-gray-50">
+
 
 <div class="flex items-center gap-2">
 
@@ -74,7 +75,7 @@
         @endif
 
         <input type="file"
-            wire:model="lampirans.{{ $index }}.file"
+            wire:model.defer="lampirans.{{ $index }}.file"
             accept="application/pdf,image/*"
             class="border rounded px-3 py-2 w-full text-sm">
 
@@ -87,7 +88,7 @@
     {{-- JENIS --}}
     <div class="w-1/4">
         <select
-            wire:model="lampirans.{{ $index }}.pelaksanaan_jenis_id"
+            wire:model.defer="lampirans.{{ $index }}.pelaksanaan_jenis_id"
             class="border rounded px-3 py-2 w-full text-sm">
             <option value="">-- Pilih Jenis Bukti --</option>
             @foreach ($pelaksanaanJenisList as $jenis)
@@ -108,7 +109,7 @@
                 class="border rounded px-3 py-2 w-full text-sm bg-gray-100 text-gray-600">
         @else
             <input type="number"
-                wire:model="lampirans.{{ $index }}.nominal"
+                wire:model.defer="lampirans.{{ $index }}.nominal"
                 placeholder="Nominal (Rp)"
                 min="0"
                 step="1000"

@@ -56,10 +56,7 @@
                                 <tr>
                                     {{-- TANGGAL --}}
                                     <td class="border px-3 py-2">
-                                        {{ Carbon::parse($rencana->tanggal_kegiatan)
-                                            ->translatedFormat('d F Y') }}
-                                    </td>
-
+                                    {{ \Carbon\Carbon::parse($rencana->tanggal_kegiatan)->translatedFormat('d F Y') }}
                                     {{-- NAMA --}}
                                     <td class="border px-3 py-2">
                                         {{ $rencana->nama_kegiatan }}
