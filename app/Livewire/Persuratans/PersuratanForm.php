@@ -172,8 +172,8 @@ public function removePegawai($pegawaiId)
             'persuratan_kategori_id' => 'required',
             'perihal'                => 'required',
             'file_pdf'               => $this->persuratan_id ? 'nullable|mimes:pdf|max:2048' : 'required|mimes:pdf|max:2048',
-            'jenis_anggaran'         => 'required',
-        ];
+            'jenis_anggaran' => 'required|in:BPMP,Luar BPMP,Anggaran Gabungan',        
+            ];
     }
 
     public function submit()
@@ -198,7 +198,7 @@ public function removePegawai($pegawaiId)
                 // 'tanggal_upload' => $this->tanggal_upload,
                 // 'kepada' => $this->kepada,
                 'perihal' => $this->perihal,
-                'jenis_aggaran' => $this->jenis_anggaran
+                'jenis_anggaran' => $this->jenis_anggaran
 
 
             ]);

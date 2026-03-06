@@ -43,5 +43,8 @@
     </div>
 
     @livewireScripts
+
+    {!! Debugbar::getJavascriptRenderer()->render() !!}
+
 </body>
 </html>

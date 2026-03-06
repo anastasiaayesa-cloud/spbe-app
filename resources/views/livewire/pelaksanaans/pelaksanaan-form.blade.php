@@ -53,87 +53,93 @@
                     @endif
 
 
-                    {{-- HIDDEN RENCANA --}}
-                    <input type="hidden" wire:model="rencana_id">
+                   {{-- MULTI UPLOAD --}}
+<div class="space-y-4 mb-5">
 
-                    {{-- MULTI UPLOAD --}}
-                    <div class="space-y-3 mb-5">
+@foreach ($lampirans as $index => $lampiran)
+<div class="border rounded p-3 bg-gray-50">
 
-                        @foreach ($lampirans as $index => $lampiran)
-                            <div class="flex items-center gap-2">
+<div class="flex items-center gap-2">
 
-                                {{-- FILE --}}
-                                <div class="w-1/3">
-                                    <input type="file"
-                                        wire:model="lampirans.{{ $index }}.file"
-                                        accept="application/pdf"
-                                        class="border rounded px-3 py-2 w-full text-sm">
-                                    @error("lampirans.$index.file")
-                                        <span class="text-red-600 text-xs">{{ $message }}</span>
-                                    @enderror
-                                </div>
+    {{-- FILE --}}
+    <div class="w-1/3">
 
-                                {{-- JENIS --}}
-                                <div class="w-1/4">
-                                    <select
-                                        wire:model="lampirans.{{ $index }}.pelaksanaan_jenis_id"
-                                        class="border rounded px-3 py-2 w-full text-sm">
-                                        <option value="">-- Pilih Jenis Bukti --</option>
-                                        @foreach ($pelaksanaanJenisList as $jenis)
-                                            <option value="{{ $jenis->id }}">
-                                                {{ $jenis->nama }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    @error("lampirans.$index.pelaksanaan_jenis_id")
-                                        <span class="text-red-600 text-xs">{{ $message }}</span>
-                                    @enderror
-                                </div>
+        {{-- preview file lama --}}
+        @if(isset($lampiran['file_existing']) && $lampiran['file_existing'])
+            <a href="{{ Storage::url($lampiran['file_existing']) }}"
+               target="_blank"
+               class="block text-xs text-blue-600 underline mb-1">
+               Lihat file lama
+            </a>
+        @endif
 
-                                {{-- NOMINAL --}}
-                                <div class="w-1/3">
-                                    @if ($lampiran['pelaksanaan_jenis_id'] == $laporanJenisId)
-                                        <input type="text"
-                                            value="0 (Laporan Kegiatan)"
-                                            disabled
-                                            class="border rounded px-3 py-2 w-full text-sm bg-gray-100 text-gray-600">
-                                    @else
-                                        <input type="number"
-                                            wire:model="lampirans.{{ $index }}.nominal"
-                                            placeholder="Nominal (Rp)"
-                                            min="0"
-                                            step="1000"
-                                            class="border rounded px-3 py-2 w-full text-sm">
-                                    @endif
-                                </div>
+        <input type="file"
+            wire:model="lampirans.{{ $index }}.file"
+            accept="application/pdf,image/*"
+            class="border rounded px-3 py-2 w-full text-sm">
 
-                        @error('pelaksanaan_jenis_id')
-                            <span class="text-red-600">{{ $message }}</span>
-                        @enderror
-                    </div>
+        @error("lampirans.$index.file")
+            <span class="text-red-600 text-xs">{{ $message }}</span>
+        @enderror
+    </div>
 
 
-                                {{-- BUTTON --}}
-                                <div class="w-auto">
-                                    @if ($index === 0)
-                                        <button type="button"
-                                            wire:click="addLampiran"
-                                            class="px-3 py-2 border rounded text-blue-600">
-                                            +
-                                        </button>
-                                    @else
-                                        <button type="button"
-                                            wire:click="removeLampiran({{ $index }})"
-                                            class="px-3 py-2 border rounded text-red-600">
-                                            ✕
-                                        </button>
-                                    @endif
-                                </div>
+    {{-- JENIS --}}
+    <div class="w-1/4">
+        <select
+            wire:model="lampirans.{{ $index }}.pelaksanaan_jenis_id"
+            class="border rounded px-3 py-2 w-full text-sm">
+            <option value="">-- Pilih Jenis Bukti --</option>
+            @foreach ($pelaksanaanJenisList as $jenis)
+                <option value="{{ $jenis->id }}">
+                    {{ $jenis->nama }}
+                </option>
+            @endforeach
+        </select>
+    </div>
 
-                            </div>
-                        @endforeach
 
-                    </div>
+    {{-- NOMINAL --}}
+    <div class="w-1/3">
+        @if ($lampiran['pelaksanaan_jenis_id'] == $laporanJenisId)
+            <input type="text"
+                value="0 (Laporan Kegiatan)"
+                disabled
+                class="border rounded px-3 py-2 w-full text-sm bg-gray-100 text-gray-600">
+        @else
+            <input type="number"
+                wire:model="lampirans.{{ $index }}.nominal"
+                placeholder="Nominal (Rp)"
+                min="0"
+                step="1000"
+                class="border rounded px-3 py-2 w-full text-sm">
+        @endif
+    </div>
+
+
+    {{-- BUTTON --}}
+    <div class="w-auto">
+        @if ($index === 0)
+            <button type="button"
+                wire:click="addLampiran"
+                class="px-3 py-2 border rounded text-blue-600">
+                +
+            </button>
+        @else
+            <button type="button"
+                wire:click="removeLampiran({{ $index }})"
+                class="px-3 py-2 border rounded text-red-600">
+                ✕
+            </button>
+        @endif
+    </div>
+
+</div>
+
+</div>
+@endforeach
+
+</div>
 
                     
                     {{-- ACTION --}}

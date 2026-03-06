@@ -91,7 +91,8 @@
                         <select wire:model="jenis_anggaran" class="border rounded px-3 py-2 w-full">
                             <option value="">-- Pilih Jenis Anggaran --</option>
                             <option value="BPMP">BPMP</option>
-                            <option value="Luar BPMP">Luar BPMP</option>                            
+                            <option value="Luar BPMP">Luar BPMP</option>
+                            <option value="Anggaran Gabungan">Anggaran Gabungan</option>                                                        
                         </select>
                         @error('jenis_anggaran') <span class="text-red-600">{{ $message }}</span> @enderror
                     </div>

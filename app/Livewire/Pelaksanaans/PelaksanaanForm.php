@@ -54,26 +54,58 @@ class PelaksanaanForm extends Component
         ]];
 
         // MODE EDIT
-        if ($pelaksanaan_id) {
-            $pelaksanaan = Pelaksanaan::findOrFail($pelaksanaan_id);
+       if ($pelaksanaan_id) {
 
-            $this->pelaksanaan_id = $pelaksanaan->id;
-            $this->rencana_id = $pelaksanaan->rencana_id;
-            $this->rencana = $pelaksanaan->rencana;
-            $this->tanggal_upload = $this->rencana->tanggal_kegiatan;
+    $pelaksanaan = Pelaksanaan::with('rencana')
+        ->findOrFail($pelaksanaan_id);
+
+    $this->pelaksanaan_id = $pelaksanaan->id;
+    $this->rencana_id = $pelaksanaan->rencana_id;
+    $this->rencana = $pelaksanaan->rencana;
+    $this->tanggal_upload = $this->rencana->tanggal_kegiatan;
+
+    // ⭐ ambil semua bukti untuk rencana + pegawai
+    $data = Pelaksanaan::where('rencana_id', $this->rencana_id)
+        ->when(auth()->user()->kepegawaian, function ($q) {
+            $q->where('kepegawaian_id', auth()->user()->kepegawaian->id);
+        })
+        ->get();
+
+    $this->lampirans = $data->map(function ($item) {
+        return [
+            'id' => $item->id, // ⭐ penting untuk update & delete
+            'file' => null,
+            'file_existing' => $item->file_pdf,
+            'pelaksanaan_jenis_id' => $item->pelaksanaan_jenis_id,
+            'nominal' => $item->nominal,
+            'keterangan' => $item->keterangan,
+        ];
+    })->toArray();
+}
+    }
+
+   protected function rules()
+{
+    $rules = [
+        'rencana_id' => 'required|exists:rencanas,id',
+    ];
+
+    foreach ($this->lampirans as $index => $lampiran) {
+
+        $rules["lampirans.$index.pelaksanaan_jenis_id"] = 'required|exists:pelaksanaan_jenis,id';
+        $rules["lampirans.$index.nominal"] = 'nullable|numeric|min:0';
+        $rules["lampirans.$index.keterangan"] = 'nullable|string|max:255';
+
+        // ⭐ FILE OPTIONAL SAAT EDIT
+        if (!isset($lampiran['file_existing'])) {
+            $rules["lampirans.$index.file"] = 'required|file|mimes:pdf,jpg,jpeg,png|max:5120';
+        } else {
+            $rules["lampirans.$index.file"] = 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120';
         }
     }
 
-    protected function rules()
-    {
-        return [
-            'rencana_id' => 'required|exists:rencanas,id',
-            'lampirans.*.file' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120',
-            'lampirans.*.pelaksanaan_jenis_id' => 'required|exists:pelaksanaan_jenis,id',
-            'lampirans.*.nominal' => 'nullable|numeric|min:0',
-            'lampirans.*.keterangan' => 'nullable|string|max:255',
-        ];
-    }
+    return $rules;
+}
 
     public function addLampiran()
     {
@@ -86,10 +118,14 @@ class PelaksanaanForm extends Component
     }
 
     public function removeLampiran($index)
-    {
-        unset($this->lampirans[$index]);
-        $this->lampirans = array_values($this->lampirans);
+{
+    if (isset($this->lampirans[$index]['id'])) {
+        Pelaksanaan::find($this->lampirans[$index]['id'])?->delete();
     }
+
+    unset($this->lampirans[$index]);
+    $this->lampirans = array_values($this->lampirans);
+}
 
     public function submit()
 {
@@ -104,37 +140,52 @@ class PelaksanaanForm extends Component
 
     foreach ($this->lampirans as $lampiran) {
 
-    $file = $lampiran['file'];
-    $extension = strtolower($file->getClientOriginalExtension());
+    // ⭐ HANDLE FILE
+    if (!empty($lampiran['file'])) {
 
-    $fileType = in_array($extension, ['jpg','jpeg','png'])
-        ? 'image'
-        : 'pdf';
+        $file = $lampiran['file'];
+        $extension = strtolower($file->getClientOriginalExtension());
 
-    $filePath = $file->store('pelaksanaan', 'public');
-        $nominal = $lampiran['pelaksanaan_jenis_id'] == $this->laporanJenisId
-            ? 0
-            : ($lampiran['nominal'] ?? 0);
+        $fileType = in_array($extension, ['jpg','jpeg','png']) ? 'image' : 'pdf';
+        $filePath = $file->store('pelaksanaan', 'public');
 
-        Pelaksanaan::create([
-    'rencana_id' => $this->rencana_id,
+    } else {
 
-    'kepegawaian_id' => $user->hasRole('admin')
-        ? null
-        : $user->kepegawaian->id,
-
-    'pelaksanaan_jenis_id' => $lampiran['pelaksanaan_jenis_id'],
-    'nominal' => $nominal,
-
-    'file_pdf' => $filePath,
-    'file_type' => $fileType,   // 👈 PENTING
-
-    'keterangan' => $lampiran['keterangan'],
-    'tanggal_upload' => $this->tanggal_upload,
-]);
-
+        $filePath = $lampiran['file_existing'] ?? null;
+        $fileType = 'pdf';
     }
 
+    $nominal = $lampiran['pelaksanaan_jenis_id'] == $this->laporanJenisId
+        ? 0
+        : ($lampiran['nominal'] ?? 0);
+
+    // ⭐ UPDATE ATAU CREATE
+    if (isset($lampiran['id'])) {
+
+        Pelaksanaan::find($lampiran['id'])->update([
+            'pelaksanaan_jenis_id' => $lampiran['pelaksanaan_jenis_id'],
+            'nominal' => $nominal,
+            'file_pdf' => $filePath,
+            'file_type' => $fileType,
+            'keterangan' => $lampiran['keterangan'],
+        ]);
+
+    } else {
+
+        Pelaksanaan::create([
+            'rencana_id' => $this->rencana_id,
+            'kepegawaian_id' => auth()->user()->hasRole('admin')
+                ? null
+                : auth()->user()->kepegawaian->id,
+            'pelaksanaan_jenis_id' => $lampiran['pelaksanaan_jenis_id'],
+            'nominal' => $nominal,
+            'file_pdf' => $filePath,
+            'file_type' => $fileType,
+            'keterangan' => $lampiran['keterangan'],
+            'tanggal_upload' => $this->tanggal_upload,
+        ]);
+    }
+}
     session()->flash('success', 'Bukti pelaksanaan berhasil disimpan.');
     return redirect()->route('pelaksanaans.index');
 }

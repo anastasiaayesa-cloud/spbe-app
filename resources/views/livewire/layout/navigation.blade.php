@@ -53,7 +53,7 @@ new class extends Component
                 </x-nav-link>
             @endrole
 
-            @role('kepegawaian|admin')
+            @role('kepegawaian')
                 <x-nav-link class="block px-3 py-2 rounded-lg"
                     :href="route('kepegawaians.index')"
                     :active="request()->routeIs('kepegawaians.*')"
@@ -85,7 +85,7 @@ new class extends Component
                 </x-nav-link>
             @endrole
 
-            @role('pegawai|admin')
+            @role('pegawai')
                 <x-nav-link class="block px-3 py-2 rounded-lg"
                     :href="route('pelaksanaans.index')"
                     :active="request()->routeIs('pelaksanaans.*')"
@@ -111,14 +111,14 @@ new class extends Component
             @endrole
 
             @role('admin')
-                <!-- 🔹 MENU KEUANGAN (DITAMBAHKAN) -->
+                
                 <x-nav-link class="block px-3 py-2 rounded-lg"
-                    :href="route('keuangans.index')"
-                    :active="request()->routeIs('keuangans.*')"
+                    :href="route('pelaksanaans.index')"
+                    :active="request()->routeIs('pelaksanaans.*')"
                     wire:navigate>
-                    Keuangan
+                    Jenis Bukti
                 </x-nav-link>
-
+            
                 <x-nav-link class="block px-3 py-2 rounded-lg"
                     :href="route('instansis.index')"
                     :active="request()->routeIs('instansis.*')"
@@ -138,6 +138,19 @@ new class extends Component
                     :active="request()->routeIs('admin.akses')"
                     wire:navigate>
                     Manajemen Hak Akses
+                </x-nav-link>
+                <x-nav-link class="block px-3 py-2 rounded-lg"
+                    :href="route('kepegawaians.index')"
+                    :active="request()->routeIs('kepegawaians.*')"
+                    wire:navigate>
+                    Pegawai
+                </x-nav-link>
+
+                <x-nav-link class="block px-3 py-2 rounded-lg"
+                    :href="route('keuangans.index')"
+                    :active="request()->routeIs('keuangans.*')"
+                    wire:navigate>
+                    Keuangan
                 </x-nav-link>
             @endrole
 

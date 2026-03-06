@@ -15,7 +15,7 @@ return new class extends Migration
             $table->string('file_pdf');   // simpan nama file PDF
             $table->date('tanggal_upload'); // tanggal upload
             $table->string('perihal');
-            $table->enum('jenis_anggaran', ['BPMP', 'Luar BPMP']);
+            $table->enum('jenis_anggaran', ['BPMP', 'Luar BPMP', 'Anggaran Gabungan']);
             $table->timestamps();
         });
     }
