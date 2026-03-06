@@ -21,20 +21,26 @@ class RencanasIndex extends Component
         $this->resetPage();
     }
 
-    public function render()
-    {
-       $rencanas = Rencana::with('kepegawaians')
-    ->when($this->search, function ($query) {
-        $query->where('nama_kegiatan', 'like', '%' . $this->search . '%')
-                          ->orWhere('lokasi_kegiatan', 'like', '%' . $this->search . '%')
-              ->orWhereHas('kepegawaians', function ($q) {
-                  $q->where('nama', 'like', '%' . $this->search . '%');
-              });
-    })
-    ->orderBy('id', 'desc')
-    ->paginate(5);
+public function render()
+{
+    $rencanas = Rencana::with('kepegawaians')
+        ->when($this->search, function ($query) {
 
-        return view('livewire.rencanas.rencanas-index', compact('rencanas'))
-            ->layout('layouts.app');
-    }
+            $query->where(function ($q) {
+
+                $q->where('nama_kegiatan', 'like', "%{$this->search}%")
+                  ->orWhere('lokasi_kegiatan', 'like', "%{$this->search}%")
+                  ->orWhereHas('kepegawaians', function ($q2) {
+                      $q2->where('nama', 'like', "%{$this->search}%");
+                  });
+
+            });
+
+        })
+        ->latest()
+        ->paginate(5);
+
+    return view('livewire.rencanas.rencanas-index', compact('rencanas'))
+        ->layout('layouts.app');
+}
 }
