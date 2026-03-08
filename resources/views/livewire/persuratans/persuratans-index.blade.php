@@ -2,7 +2,6 @@
     use Illuminate\Support\Facades\Storage;
 @endphp
 
-
 <x-slot name="header">
     <h2 class="font-semibold text-xl text-gray-800 leading-tight">
         {{ __('Manajemen Persuratan') }}
@@ -16,26 +15,13 @@
 
                 <div class="flex items-center justify-between mb-4">
 
-                    {{-- Tombol tambah persuratan (opsional) --}}
-                    <div>
-                        <a href="{{ route('persuratans.create') }}"
-                            class="inline-block px-4 py-2 rounded">Buat Surat</a>
-                    </div>
-
                     {{-- Search bar --}}
                     <div>
                         <input type="text" wire:model.live="search"
-                            placeholder="Cari surat..."
+                            placeholder="Cari kegiatan..."
                             class="border rounded px-3 py-2 w-64 focus:ring focus:ring-blue-200">
                     </div>
                 </div>
-
-                @if (session('success'))
-                    <div class="mb-4 text-green-700">{{ session('success') }}</div>
-                @endif
-                @if (session('error'))
-                    <div class="mb-4 text-red-700">{{ session('error') }}</div>
-                @endif
 
                 <div class="overflow-x-auto">
                 <table class="min-w-full border-collapse">

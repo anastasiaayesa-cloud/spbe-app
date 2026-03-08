@@ -4,36 +4,42 @@ namespace App\Livewire\Pelaksanaans;
 
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Models\Pelaksanaan;
+use App\Services\Pelaksanaan\PelaksanaanIndexService;
 
 class PelaksanaansIndex extends Component
 {
     use WithPagination;
 
-    public $search = '';
-
-    // biar gak error di Tailwind pagination
     protected $paginationTheme = 'tailwind';
 
-    // reset pagination ke halaman 1 tiap kali search berubah
-    public function updatingSearch()
+    protected $service;
+
+    public function boot(PelaksanaanIndexService $service)
     {
-        $this->resetPage();
+        $this->service = $service;
     }
 
     public function render()
     {
-        $pelaksanaans = Pelaksanaan::query()
-            ->select('pelaksanaans.*')
-            // ->when($this->search, function ($query) { //searching di search kolom
-            //     $query->where('items.nama', 'like', '%' . $this->search . '%')
-            //         ->orWhere('item_kategoris.nama', 'like', "%{$this->search}%");
-            // })
-            ->orderBy('id', 'desc')
-            ->paginate(5);
+        $user = auth()->user();
+
+        if ($user->hasRole('admin')) {
+
+            $rencanas = $this->service->getAdminRencana();
+
+        } else {
+
+            $kepegawaian = $user->kepegawaian;
+
+            if (!$kepegawaian) {
+                abort(403, 'User belum terhubung ke data pegawai');
+            }
+
+            $rencanas = $this->service->getPegawaiRencana($kepegawaian->id);
+        }
 
         return view('livewire.pelaksanaans.pelaksanaans-index', [
-            'pelaksanaans' => $pelaksanaans
+            'rencanas' => $rencanas
         ])->layout('layouts.app');
     }
 }

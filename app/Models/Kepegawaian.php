@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Spatie\Permission\Traits\HasRoles;
+// use Spatie\Permission\Traits\HasRoles;
 
 class Kepegawaian extends Model
 {
@@ -61,8 +61,14 @@ class Kepegawaian extends Model
         return $this->belongsToMany(Rencana::class, 'kepegawaian_rencana_pivot');
     }
 
+    public function detailKeuangans()
+{
+    return $this->hasMany(DetailKeuangan::class, 'kepegawaian_id');
+}
+
     public function user()
     {
-        return $this->belongsTo(\App\Models\User::class, 'user_id');
+        return $this->belongsTo(User::class);
     }
+
 }

@@ -80,7 +80,7 @@
                     <!-- <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700">Tanggal Upload *</label>
                         <input type="date" 
-                            wire:model="tanggal_upload" {{-- Pastikan baris ini ada --}}
+                            {{-- wire:model="tanggal_upload" Pastikan baris ini ada --}}
                             class="mt-1 block w-full border-gray-300 rounded-md shadow-sm bg-gray-100" 
                             readonly>
                         <p class="text-xs text-gray-500 mt-1 italic">* Tanggal diset otomatis ke hari ini.</p>
@@ -91,7 +91,8 @@
                         <select wire:model="jenis_anggaran" class="border rounded px-3 py-2 w-full">
                             <option value="">-- Pilih Jenis Anggaran --</option>
                             <option value="BPMP">BPMP</option>
-                            <option value="Luar BPMP">Luar BPMP</option>                            
+                            <option value="Luar BPMP">Luar BPMP</option>
+                            <option value="Anggaran Gabungan">Anggaran Gabungan</option>                                                        
                         </select>
                         @error('jenis_anggaran') <span class="text-red-600">{{ $message }}</span> @enderror
                     </div>

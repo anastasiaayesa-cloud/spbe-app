@@ -20,7 +20,6 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
-        'pegawai_id',
         'email',
         'password',
     ];
@@ -45,7 +44,8 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function pegawai() {
-        return $this->hasOne(Kepegawaian::class, 'user_id');
-    }
+    public function kepegawaian()
+{
+    return $this->hasOne(Kepegawaian::class);
+}
 }

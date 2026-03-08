@@ -22,6 +22,10 @@ class Persuratan extends Model
     {
         return $this->belongsTo(PersuratanKategori::class);
     }
+    public function rencana()
+    {
+        return $this->belongsTo(Rencana::class);
+    }
 
     public function kepegawaians()
     {

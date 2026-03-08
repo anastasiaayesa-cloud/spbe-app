@@ -1,7 +1,6 @@
 @php
-    use Illuminate\Support\Facades\Storage;
+    use Carbon\Carbon;
 @endphp
-
 
 <x-slot name="header">
     <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -14,74 +13,84 @@
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
             <div class="p-6 text-gray-900">
 
+                {{-- HEADER --}}
                 <div class="flex items-center justify-between mb-4">
-
-                    {{-- Tombol tambah perencaan (opsional) --}}
-                    <div>
-                        <a href="{{ route('pelaksanaans.create') }}"
-                            class="inline-block px-4 py-2 rounded">Upload Bukti Pelaksanaan</a>
+                    <div class="text-lg font-semibold">
+                        Daftar Kegiatan
                     </div>
 
-                    {{-- Search bar --}}
                     <div>
-                        <input type="text" wire:model.live="search"
+                        <input type="text"
+                            wire:model.live="search"
                             placeholder="Cari kegiatan..."
                             class="border rounded px-3 py-2 w-64 focus:ring focus:ring-blue-200">
                     </div>
                 </div>
 
+                {{-- FLASH --}}
                 @if (session('success'))
-                    <div class="mb-4 text-green-700">{{ session('success') }}</div>
-                @endif
-                @if (session('error'))
-                    <div class="mb-4 text-red-700">{{ session('error') }}</div>
+                    <div class="mb-4 text-green-700">
+                        {{ session('success') }}
+                    </div>
                 @endif
 
+                {{-- TABLE --}}
                 <div class="overflow-x-auto">
-                    <table class="min-w-full bg-white border">
-                        <thead>
+                    <table class="w-full border text-sm">
+                        <thead class="bg-gray-100">
                             <tr>
-                                <th class="px-4 py-2 border">#</th>
-                                <th class="px-4 py-2 border">Nama Kegiatan</th>
-                                <th class="px-4 py-2 border">Jenis Bukti</th>
-                                <th class="px-4 py-2 border">File</th>
-                                <th class="px-4 py-2 border">Tanggal upload</th>
-                                <th class="px-4 py-2 border">Aksi</th>
+                                <th class="border px-3 py-2 text-left">
+                                    Tanggal Kegiatan
+                                </th>
+                                <th class="border px-3 py-2 text-left">
+                                    Nama Kegiatan
+                                </th>
+                                <th class="border px-3 py-2 text-center">
+                                    Aksi
+                                </th>
                             </tr>
                         </thead>
+
                         <tbody>
-                            @forelse ($pelaksanaans as $pelaksanaan)
-                            <tr>
-                                <td class="px-4 py-2 border">{{ $pelaksanaan->id }}</td>
-                                {{-- Nama Kegiatan --}}
-                                <td class="px-4 py-2 border">
-                                    {{ $pelaksanaan->perencanaan?->perencanaanNama?->nama ?? '-' }}
-                                </td>
+                            @forelse ($rencanas as $rencana)
+                                <tr>
+                                    {{-- TANGGAL --}}
+                                    <td class="border px-3 py-2">
+                                    {{ \Carbon\Carbon::parse($rencana->tanggal_kegiatan)->translatedFormat('d F Y') }}
+                                    {{-- NAMA --}}
+                                    <td class="border px-3 py-2">
+                                        {{ $rencana->nama_kegiatan }}
+                                    </td>
 
-                                <td class="px-4 py-2 border">{{ $pelaksanaan->jenis->nama }}</td>
-                                    {{-- <td class="px-4 py-2 border">{{ $persuratan->file_pdf }}</td> --}}
-                                    <td class="px-4 py-2 border">
-                                    @if ($pelaksanaan->file_pdf)
-                                        <a href="{{ Storage::url($pelaksanaan->file_pdf) }}"
-                                        class="text-blue-600 underline"
-                                        target="_blank">
-                                            Download File
-                                        </a>
-                                    @endif
-                                </td>
-                                 <td class="px-4 py-2 border">{{ $pelaksanaan->tanggal_upload }}</td>
+                                    <td class="px-4 py-2 border text-center">
+    @if ($rencana->pelaksanaans->count() > 0)
+        @php
+            $pelaksanaan = $rencana->pelaksanaans->first();
+        @endphp
 
-                                <td class="px-4 py-2 border">
-                                    <a href="{{ route('pelaksanaans.edit', $pelaksanaan->id) }}"
-                                    class="text-blue-600 mr-2">
-                                        Edit
-                                    </a>
-                                </td>
+        <a href="{{ route('pelaksanaans.show.by-rencana', $rencana->id) }}"
+           class="text-blue-600 underline mr-2">
+            Lihat
+        </a>
+
+        <a href="{{ route('pelaksanaans.edit', $pelaksanaan->id) }}"
+           class="text-yellow-600">
+            Edit
+        </a>
+    @else
+        <a href="{{ route('pelaksanaans.create', ['rencana_id' => $rencana->id]) }}">
+    Upload Bukti
+</a>
+    @endif
+</td>
+
+
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5" class="px-4 py-2 border text-center">
-                                        Tidak ada Surat .
+                                    <td colspan="3"
+                                        class="text-center py-4 text-gray-500">
+                                        Tidak ada data rencana
                                     </td>
                                 </tr>
                             @endforelse
@@ -89,8 +98,9 @@
                     </table>
                 </div>
 
+                {{-- PAGINATION --}}
                 <div class="mt-4">
-                    {{ $pelaksanaans->links() }}
+                    {{ $rencanas->links() }}
                 </div>
 
             </div>

@@ -38,7 +38,7 @@ public $showPerencanaanDropdown = false;
         $rencana = Rencana::with(['perencanaans', 'kepegawaians'])
             ->findOrFail($rencana_id);
 
-        $this->nama_kegiatan = $rencana->nama_kegiatan;
+        $this->nama = $rencana->nama_kegiatan;
         $this->tanggal_kegiatan = $rencana->tanggal_kegiatan;
         $this->lokasi_kegiatan = $rencana->lokasi_kegiatan;
 
