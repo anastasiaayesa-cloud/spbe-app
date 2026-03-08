@@ -1,47 +1,14 @@
 <?php
 
-use App\Livewire\Perencanaans\PerencanaanForm;
-use App\Livewire\Perencanaans\PerencanaansIndex;
-use App\Livewire\Kepegawaians\KepegawaianForm;
-use App\Livewire\Kepegawaians\KepegawaiansIndex;
+use App\Livewire\Perencanaans\{PerencanaansIndex, DokumenPerencanaanIndex, DokumenPerencanaanForm, PenugasansIndex, PerencanaanDetail};
+use App\Livewire\Kepegawaians\{KepegawaianForm, KepegawaiansIndex};
 use App\Livewire\Kabupatens\KabupatensIndex;
-use App\Livewire\Perencanaans\DokumenPerencanaanIndex;
-use App\Livewire\Perencanaans\DokumenPerencanaanForm;
-use App\Livewire\Perencanaans\PenugasansIndex;
-use App\Livewire\Perencanaans\PerencanaanDetail;
-
-use App\Livewire\Persuratans\PersuratanForm;
-use App\Livewire\Persuratans\PersuratansIndex;
-use App\Livewire\Instansis\InstansiIndex;
-use App\Livewire\Instansis\InstansiForm;
-
-use App\Livewire\Pelaksanaans\PelaksanaansIndex;
-use App\Livewire\Pelaksanaans\PelaksanaanForm;
-use App\Livewire\Pelaksanaans\PelaksanaanShow;
-
-use App\Livewire\Rencanas\RencanasIndex;
-use App\Livewire\Rencanas\RencanasForm;
-
-use App\Livewire\Keuangans\KeuanganIndex;
-use App\Livewire\Keuangans\KeuanganForm;
-use App\Livewire\Keuangans\KeuanganShow;
-
-
-
-
-use App\Livewire\Admin\ManajemenAkses;
-
+use App\Livewire\Persuratans\{PersuratanForm, PersuratansIndex};
+use App\Livewire\Instansis\{InstansiIndex, InstansiForm};
+use App\Livewire\Pelaksanaans\{PelaksanaansIndex, PelaksanaanForm};
+use App\Livewire\Rencanas\{RencanasIndex, RencanasForm};
+use App\Livewire\Admin\{ManajemenAkses, RoleManager};
 use Illuminate\Support\Facades\Route;
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
 
 Route::view('/', 'welcome');
 
@@ -53,101 +20,82 @@ Route::view('profile', 'profile')
     ->middleware(['auth'])
     ->name('profile');
 
-Route::middleware(['auth', 'role:admin|perencanaan'])->group(function () {
-Route::get('/perencanaans', PerencanaansIndex::class)->name('perencanaans.index');
-Route::get('/dokumen-perencanaan', DokumenPerencanaanIndex::class)->name('dokumen-perencanaan.index');
-Route::get('/dokumen-perencanaan/create', DokumenPerencanaanForm::class)->name('dokumen-perencanaan.create');
-Route::get('/perencanaans/create', PerencanaanDetail::class)->name('perencanaans.create');
-Route::get('/perencanaans/{id}/edit', PerencanaanDetail::class)->name('perencanaans.edit');
+// Semua rute di bawah ini wajib Login
+Route::middleware(['auth'])->group(function () {
+
+    // --- GRUP PERENCANAAN ---
+    Route::middleware(['can:perencanaan-view'])->group(function () {
+        Route::get('/perencanaans', PerencanaansIndex::class)->name('perencanaans.index');
+        Route::middleware(['can:perencanaan-create'])->get('/perencanaans/create', PerencanaanDetail::class)->name('perencanaans.create');
+        Route::middleware(['can:perencanaan-edit'])->get('/perencanaans/{perencanaanId}/edit', PerencanaanDetail::class)->name('perencanaans.edit');
+        Route::middleware(['can:perencanaan-delete'])->get('/perencanaans/{perencanaanId}/delete', PerencanaanDetail::class)->name('perencanaans.delete');
+    });
+
+    // --- DOKUMEN PERENCANAAN ---
+    Route::middleware(['can:dokumen-perencanaan-view'])->group(function () {
+        Route::get('/dokumen-perencanaan', DokumenPerencanaanIndex::class)->name('dokumen-perencanaan.index');
+        Route::middleware(['can:dokumen-perencanaan-create'])->get('/dokumen-perencanaan/create', DokumenPerencanaanForm::class)->name('dokumen-perencanaan.create');
+        Route::middleware(['can:dokumen-perencanaan-edit'])->get('/dokumen-perencanaan/{dokumenperencanaan_id}/edit', DokumenPerencanaanForm::class)->name('dokumen-perencanaan.edit');
+        Route::middleware(['can:dokumen-perencanaan-delete'])->get('/dokumen-perencanaan/{dokumenperencanaan_id}/delete', DokumenPerencanaanForm::class)->name('dokumen-perencanaan.delete');
+    });
+
+    Route::get('/penugasan', PenugasansIndex::class)->name('penugasans.index');
+
+    // --- GRUP KEPEGAWAIAN  ---
+    Route::middleware(['can:pegawai-view'])->group(function () {
+        Route::get('/kepegawaians', KepegawaiansIndex::class)->name('kepegawaians.index');
+        Route::middleware(['can:pegawai-create'])->get('/kepegawaians/create', KepegawaianForm::class)->name('kepegawaians.create');
+        Route::middleware(['can:pegawai-edit'])->get('/kepegawaians/{kepegawaian_id}/edit', KepegawaianForm::class)->name('kepegawaians.edit');
+        Route::middleware(['can:pegawai-delete'])->get('/kepegawaians/{kepegawaian_id}/delete', KepegawaianForm::class)->name('kepegawaians.delete');
+    });
+
+    // --- KABUPATEN
+    Route::middleware(['can:kabupatens-view'])->group(function () {
+        Route::get('/kabupatens', KabupatensIndex::class)->name('kabupatens.index');
+        // Route::middleware(['can:kabupatens-create'])->get('/kabupatens/create', KabupatensForm::class)->name('kabupatens.create');
+        // Route::middleware(['can:kabupatens-edit'])->get('/kabupatens/{kabupatens_id}/edit', KabupatensForm::class)->name('kabupatens.edit');
+        // Route::middleware(['can:kabupatens-delete'])->get('/kabupatens/{kabupatens_id}/delete', KabupatensForm::class)->name('kabupatens.delete');
+    });
+
+    // --- GRUP PERSURATAN ---
+    Route::middleware(['can:persuratan-view'])->group(function () {
+        Route::get('/persuratans', PersuratansIndex::class)->name('persuratans.index');
+        Route::middleware(['can:persuratan-create'])->get('/persuratans/create', PersuratanForm::class)->name('persuratans.create');
+        Route::middleware(['can:persuratan-edit'])->get('/persuratans/{persuratan_id}/edit', PersuratanForm::class)->name('persuratans.edit');
+        Route::middleware(['can:persuratan-delete'])->get('/persuratans/{persuratan_id}/delete', PersuratanForm::class)->name('persuratans.delete');
+    });
+
+    // --- GRUP JENIS BUKTI (PELAKSANAAN) ---
+    Route::middleware(['can:jenis-bukti-view'])->group(function () {
+        Route::get('/pelaksanaans', PelaksanaansIndex::class)->name('pelaksanaans.index');
+        Route::middleware(['can:jenis-bukti-create'])->get('/pelaksanaans/create', PelaksanaanForm::class)->name('pelaksanaans.create');
+        Route::middleware(['can:jenis-bukti-edit'])->get('/pelaksanaans/{pelaksanaan_id}/edit', PelaksanaanForm::class)->name('pelaksanaans.edit');
+        Route::middleware(['can:jenis-bukti-delete'])->get('/pelaksanaans/{pelaksanaan_id}/delete', PelaksanaanForm::class)->name('pelaksanaans.delete');
+    });
+
+    // --- GRUP RENCANA KEGIATAN ---
+    Route::middleware(['can:rencana-kegiatan-view'])->group(function () {
+        Route::get('/rencanas', RencanasIndex::class)->name('rencanas.index');
+        Route::middleware(['can:rencana-kegiatan-create'])->get('/rencanas/create', RencanasForm::class)->name('rencanas.create');
+        Route::middleware(['can:rencana-kegiatan-edit'])->get('/rencanas/{rencanas_id}/edit', RencanasForm::class)->name('rencanas.edit');
+        Route::middleware(['can:rencana-kegiatan-delete'])->get('/rencanas/{rencanas_id}/delete', RencanasForm::class)->name('rencanas.delete');
+    });
+
+    // --- GRUP MASTER DATA (INSTANSI) ---
+    Route::middleware(['can:instansi-view'])->group(function () {
+        Route::get('/instansis', InstansiIndex::class)->name('instansis.index');
+        Route::middleware(['can:instansi-create'])->get('/instansis/create', InstansiForm::class)->name('instansis.create');
+        Route::middleware(['can:instansi-edit'])->get('/instansis/{instansi_id}/edit', InstansiForm::class)->name('instansis.edit');
+        Route::middleware(['can:instansi-delete'])->get('/instansis/{instansi_id}/delete', InstansiForm::class)->name('instansis.delete');
+    });
+
+    // --- GRUP SUPER ADMIN (ROLE & PERMISSION) ---
+    // Menggunakan can:manajemen-role-view atau bisa langsung role:super-admin
+    Route::middleware(['role:super-admin'])->group(function () {
+        Route::get('/admin/manajemen-akses', ManajemenAkses::class)->name('admin.akses');
+        Route::get('/admin/roles', RoleManager::class)->name('admin.roles');
+    });
+
 });
-
-Route::get('/penugasan', PenugasansIndex::class)->name('penugasans.index');
-
-Route::middleware(['auth', 'role:admin|kepegawaian'])->group(function () {
-Route::get('/kepegawaians/{kepegawaian_id}/edit', action: KepegawaianForm::class)->name(name: 'kepegawaians.edit');
-Route::get('/kepegawaians', KepegawaiansIndex::class)->name('kepegawaians.index');
-Route::get('/kepegawaians/create', KepegawaianForm::class)->name('kepegawaians.create');
-Route::get('/kabupatens', KabupatensIndex::class)->name('kabupatens.index');
-});
-
-Route::middleware(['auth', 'role:admin|kesekretariatan'])->group(function () {
-Route::get('/persuratans', PersuratansIndex::class)->name('persuratans.index');
-Route::get('/persuratans/create', PersuratanForm::class)->name('persuratans.create');
-Route::get('/persuratans/{persuratan_id}/edit', PersuratanForm::class)->name('persuratans.edit');
-});
-
-Route::middleware(['auth', 'role:admin|pegawai'])->group(function () {
-
-    Route::get('/pelaksanaans', PelaksanaansIndex::class)
-        ->name('pelaksanaans.index');
-
-    Route::get('/pelaksanaans/create', PelaksanaanForm::class)
-        ->name('pelaksanaans.create');
-
-    Route::get('/pelaksanaans/{pelaksanaan_id}/edit', PelaksanaanForm::class)
-        ->name('pelaksanaans.edit');
-
-    Route::get('/pelaksanaans/rencana/{rencana}', PelaksanaanShow::class)
-    ->name('pelaksanaans.show.by-rencana');
-
-});
-
-Route::middleware(['auth', 'role:admin|katim'])->group(function () {
-
-    Route::get('/rencanas', RencanasIndex::class)
-        ->name('rencanas.index');
-
-    Route::get('/rencanas/create', RencanasForm::class)
-        ->name('rencanas.create');
-
-    Route::get('/rencanas/{rencanas_id}/edit', RencanasForm::class)
-        ->name('rencanas.edit');
-
-});
-
-Route::get('/instansis', InstansiIndex::class)->name('instansis.index');
-Route::get('/instansis/create', InstansiForm::class)->name('instansis.create');
-Route::get('/instansis/{instansi_id}/edit', action: InstansiForm::class)->name(name: 'instansis.edit');
-Route::get('/admin/manajemen-akses', ManajemenAkses::class)->name(name: 'admin.akses');
-
-
-Route::get('/keuangans', KeuanganIndex::class)->name('keuangans.index');
-Route::get('/keuangans/create/{pelaksanaan}', KeuanganForm::class)->name('keuangans.create');
-Route::get('/keuangans/{keuangan}/pegawai/{pegawai}/cetak', function ($keuangan, $pegawai) {
-
-    $keuangan = \App\Models\Keuangan::with([
-        'pelaksanaan.rencana',
-    ])->findOrFail($keuangan);
-
-    $pegawai = $keuangan->pelaksanaan
-        ->rencana
-        ->kepegawaians
-        ->where('id', $pegawai)
-        ->firstOrFail();
-
-    // 🔥 INI KUNCINYA: AMBIL PELAKSANAAN PER PEGAWAI
-    $items = \App\Models\Pelaksanaan::where(
-        'rencana_id',
-        $keuangan->pelaksanaan->rencana_id
-    )
-    ->where('kepegawaian_id', $pegawai->id)
-    ->with('pelaksanaanJenis')
-    ->get();
-
-    return \Barryvdh\DomPDF\Facade\Pdf::loadView(
-        'pdf.keuangans.master',
-        compact('keuangan', 'pegawai', 'items')
-    )
-    ->setPaper('A4', 'portrait')
-    ->stream('keuangan-' . $pegawai->nama . '.pdf');
-
-})->name('keuangan.cetak');
-Route::get('/keuangans/{keuangan}', KeuanganShow::class)
-    ->name('keuangans.show');
-
-
-
-
-
 
 require __DIR__ . '/auth.php';

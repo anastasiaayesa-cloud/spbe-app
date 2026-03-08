@@ -2,20 +2,18 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class PerencanaanDetail extends Model
 {
-    use HasFactory;
-
+    // Pastikan fillable lengkap agar bisa disimpan/dibaca
     protected $fillable = [
         'perencanaan_id',
         'uraian_rincian',
         'volume',
         'volume_satuan',
         'harga_satuan',
-        'subtotal_biaya',
+        'subtotal_biaya'
     ];
 
     public function perencanaan()

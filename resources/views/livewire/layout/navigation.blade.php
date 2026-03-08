@@ -16,160 +16,218 @@ new class extends Component
     }
 }; ?>
 
-<aside x-data="{ open: true }" class="fixed top-0 left-0 z-40 w-64 h-screen bg-white border-r border-gray-200">
-    <div class="flex flex-col h-full px-4 py-6">
+<nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+            <div class="flex">
+                <div class="shrink-0 flex items-center">
+                    <a href="{{ route('dashboard') }}" wire:navigate>
+                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
+                    </a>
+                </div>
 
-        <!-- Logo -->
-        <div class="flex items-center gap-3 mb-8 px-2">
-            <a href="{{ route('dashboard') }}" wire:navigate class="flex items-center gap-2">
-                <x-application-logo class="h-8 w-auto text-gray-800" />
-                <span class="text-lg font-semibold tracking-wide">SPBE</span>
-            </a>
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">                    
+                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
+                        {{ __('Dashboard') }}
+                    </x-nav-link>
+
+                    {{-- Modul Dokumen Perencanaan --}}
+                    @can('dokumen-perencanaan-view')
+                        <x-nav-link :href="route('dokumen-perencanaan.index')" :active="request()->routeIs('dokumen-perencanaan.index')" wire:navigate>
+                            {{ __('Dokumen Perencanaan') }}
+                        </x-nav-link>
+                    @endcan
+                    
+                    {{-- Modul Perencanaan --}}
+                    @can('perencanaan-view')
+                        <x-nav-link :href="route('perencanaans.index')" :active="request()->routeIs('perencanaans.index')" wire:navigate>
+                            {{ __('Perencanaan') }}
+                        </x-nav-link>
+                    @endcan
+
+                    {{-- Modul Kepegawaian --}}
+                    @can('pegawai-view')
+                        <x-nav-link :href="route('kepegawaians.index')" :active="request()->routeIs('kepegawaians.index')" wire:navigate>
+                            {{ __('Pegawai') }}
+                        </x-nav-link>
+                    @endcan
+    
+                    {{-- Modul Persuratan --}}
+                    @can('persuratan-view')
+                        <x-nav-link :href="route('persuratans.index')" :active="request()->routeIs('persuratans.index')" wire:navigate>
+                            {{ __('Persuratan') }}
+                        </x-nav-link>
+                    @endcan
+
+                    {{-- Modul Jenis Bukti --}}
+                    @can('jenis-bukti-view')
+                        <x-nav-link :href="route('pelaksanaans.index')" :active="request()->routeIs('pelaksanaans.index')" wire:navigate>
+                            {{ __('Jenis Bukti') }}
+                        </x-nav-link>
+                    @endcan
+
+                    {{-- Modul Rencana Kegiatan --}}
+                    @can('rencana-kegiatan-view')
+                        <x-nav-link :href="route('rencanas.index')" :active="request()->routeIs('rencanas.index')" wire:navigate>
+                            {{ __('Rencana Kegiatan') }}
+                        </x-nav-link>
+                    @endcan
+
+                    {{-- Modul Master Data --}}
+                    @can('instansi-view')
+                        <x-nav-link :href="route('instansis.index')" :active="request()->routeIs('instansis.index')" wire:navigate>
+                            {{ __('Instansi') }}
+                        </x-nav-link>
+                    @endcan
+
+                    @can('kabupaten-view')
+                        <x-nav-link :href="route('kabupatens.index')" :active="request()->routeIs('kabupatens.index')" wire:navigate>
+                            {{ __('Kabupaten') }}
+                        </x-nav-link>
+                    @endcan
+
+                    {{-- Modul Manajemen Hak Akses & Role --}}
+                    {{-- Biasanya hanya super-admin yang bisa melihat ini --}}
+                    @can('manajemen-role-view')
+                        <x-nav-link :href="route('admin.akses')" :active="request()->routeIs('admin.akses')" wire:navigate>
+                            {{ __('Manajemen Hak Akses') }}
+                        </x-nav-link>
+
+                        <x-nav-link :href="route('admin.roles')" :active="request()->routeIs('admin.roles')" wire:navigate>
+                            {{ __('Manajemen Role') }}
+                        </x-nav-link>
+                    @endcan
+                </div>
+            </div>
+
+            <div class="hidden sm:flex sm:items-center sm:ms-6">
+                <x-dropdown align="right" width="48">
+                    <x-slot name="trigger">
+                        <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
+                            <div x-data="{{ json_encode(['name' => auth()->user()->name]) }}" x-text="name" x-on:profile-updated.window="name = $event.detail.name"></div>
+
+                            <div class="ms-1">
+                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                        </button>
+                    </x-slot>
+
+                    <x-slot name="content">
+                        <x-dropdown-link :href="route('profile')" wire:navigate>
+                            {{ __('Profile') }}
+                        </x-dropdown-link>
+
+                        <button wire:click="logout" class="w-full text-start">
+                            <x-dropdown-link>
+                                {{ __('Log Out') }}
+                            </x-dropdown-link>
+                        </button>
+                    </x-slot>
+                </x-dropdown>
+            </div>
+
+            <div class="-me-2 flex items-center sm:hidden">
+                <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
+                    <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                        <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
+        <div class="pt-2 pb-3 space-y-1">
+        <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
+                        {{ __('Dashboard') }}
+                    </x-nav-link>
+
+                    {{-- Modul Perencanaan --}}
+                    @can('perencanaan-view')
+                        <x-nav-link :href="route('dokumen-perencanaan.index')" :active="request()->routeIs('dokumen-perencanaan.index')" wire:navigate>
+                            {{ __('Dokumen Perencanaan') }}
+                        </x-nav-link>
+        
+                        <x-nav-link :href="route('perencanaans.index')" :active="request()->routeIs('perencanaans.index')" wire:navigate>
+                            {{ __('Perencanaan') }}
+                        </x-nav-link>
+                    @endcan
+
+                    {{-- Modul Kepegawaian --}}
+                    @can('pegawai-view')
+                        <x-nav-link :href="route('kepegawaians.index')" :active="request()->routeIs('kepegawaians.index')" wire:navigate>
+                            {{ __('Pegawai') }}
+                        </x-nav-link>
+                    @endcan
+    
+                    {{-- Modul Persuratan --}}
+                    @can('persuratan-view')
+                        <x-nav-link :href="route('persuratans.index')" :active="request()->routeIs('persuratans.index')" wire:navigate>
+                            {{ __('Persuratan') }}
+                        </x-nav-link>
+                    @endcan
+
+                    {{-- Modul Jenis Bukti --}}
+                    @can('jenis-bukti-view')
+                        <x-nav-link :href="route('pelaksanaans.index')" :active="request()->routeIs('pelaksanaans.index')" wire:navigate>
+                            {{ __('Jenis Bukti') }}
+                        </x-nav-link>
+                    @endcan
+
+                    {{-- Modul Rencana Kegiatan --}}
+                    @can('rencana-kegiatan-view')
+                        <x-nav-link :href="route('rencanas.index')" :active="request()->routeIs('rencanas.index')" wire:navigate>
+                            {{ __('Rencana Kegiatan') }}
+                        </x-nav-link>
+                    @endcan
+
+                    {{-- Modul Master Data --}}
+                    @can('instansi-view')
+                        <x-nav-link :href="route('instansis.index')" :active="request()->routeIs('instansis.index')" wire:navigate>
+                            {{ __('Instansi') }}
+                        </x-nav-link>
+                    @endcan
+
+                    @can('kabupaten-view')
+                        <x-nav-link :href="route('kabupatens.index')" :active="request()->routeIs('kabupatens.index')" wire:navigate>
+                            {{ __('Kabupaten') }}
+                        </x-nav-link>
+                    @endcan
+
+                    {{-- Modul Manajemen Hak Akses & Role --}}
+                    {{-- Biasanya hanya super-admin yang bisa melihat ini --}}
+                    @can('manajemen-role-view')
+                        <x-nav-link :href="route('admin.akses')" :active="request()->routeIs('admin.akses')" wire:navigate>
+                            {{ __('Manajemen Hak Akses') }}
+                        </x-nav-link>
+
+                        <x-nav-link :href="route('admin.roles')" :active="request()->routeIs('admin.roles')" wire:navigate>
+                            {{ __('Manajemen Role') }}
+                        </x-nav-link>
+                    @endcan
         </div>
 
-        <!-- Navigation -->
-        <nav class="flex-1 space-y-1 text-sm">
+        <div class="pt-4 pb-1 border-t border-gray-200">
+            <div class="px-4">
+                <div class="font-medium text-base text-gray-800" x-data="{{ json_encode(['name' => auth()->user()->name]) }}" x-text="name" x-on:profile-updated.window="name = $event.detail.name"></div>
+                <div class="font-medium text-sm text-gray-500">{{ auth()->user()->email }}</div>
+            </div>
 
-            <x-nav-link class="block px-3 py-2 rounded-lg"
-                :href="route('dashboard')"
-                :active="request()->routeIs('dashboard')"
-                wire:navigate>
-                Dashboard
-            </x-nav-link>
+            <div class="mt-3 space-y-1">
+                <x-responsive-nav-link :href="route('profile')" wire:navigate>
+                    {{ __('Profile') }}
+                </x-responsive-nav-link>
 
-            @role('perencanaan|admin')
-                <x-nav-link class="block px-3 py-2 rounded-lg"
-                    :href="route('dokumen-perencanaan.index')"
-                    :active="request()->routeIs('dokumen-perencanaan.*')"
-                    wire:navigate>
-                    Dokumen Perencanaan
-                </x-nav-link>
-
-                <x-nav-link class="block px-3 py-2 rounded-lg"
-                    :href="route('perencanaans.index')"
-                    :active="request()->routeIs('perencanaans.*')"
-                    wire:navigate>
-                    Perencanaan Pegawai
-                </x-nav-link>
-            @endrole
-
-            @role('kepegawaian')
-                <x-nav-link class="block px-3 py-2 rounded-lg"
-                    :href="route('kepegawaians.index')"
-                    :active="request()->routeIs('kepegawaians.*')"
-                    wire:navigate>
-                    Pegawai
-                </x-nav-link>
-
-                <x-nav-link class="block px-3 py-2 rounded-lg"
-                    :href="route('keuangans.index')"
-                    :active="request()->routeIs('keuangans.*')"
-                    wire:navigate>
-                    Keuangan
-                </x-nav-link>
-
-                <x-nav-link class="block px-3 py-2 rounded-lg"
-                    :href="route('pelaksanaans.index')"
-                    :active="request()->routeIs('pelaksanaans.*')"
-                    wire:navigate>
-                    Jenis Bukti
-                </x-nav-link>
-            @endrole
-
-            @role('kesekretariatan|admin')
-                <x-nav-link class="block px-3 py-2 rounded-lg"
-                    :href="route('persuratans.index')"
-                    :active="request()->routeIs('persuratans.*')"
-                    wire:navigate>
-                    Persuratan
-                </x-nav-link>
-            @endrole
-
-            @role('pegawai')
-                <x-nav-link class="block px-3 py-2 rounded-lg"
-                    :href="route('pelaksanaans.index')"
-                    :active="request()->routeIs('pelaksanaans.*')"
-                    wire:navigate>
-                    Jenis Bukti
-                </x-nav-link>
-
-                <x-nav-link class="block px-3 py-2 rounded-lg"
-                    :href="route('keuangans.index')"
-                    :active="request()->routeIs('keuangans.*')"
-                    wire:navigate>
-                    Keuangan
-                </x-nav-link>
-            @endrole
-
-            @role('katim|admin')
-                <x-nav-link class="block px-3 py-2 rounded-lg"
-                    :href="route('rencanas.index')"
-                    :active="request()->routeIs('rencanas.*')"
-                    wire:navigate>
-                    Rencana Kegiatan Instansi
-                </x-nav-link>
-            @endrole
-
-            @role('admin')
-                
-                <x-nav-link class="block px-3 py-2 rounded-lg"
-                    :href="route('pelaksanaans.index')"
-                    :active="request()->routeIs('pelaksanaans.*')"
-                    wire:navigate>
-                    Jenis Bukti
-                </x-nav-link>
-            
-                <x-nav-link class="block px-3 py-2 rounded-lg"
-                    :href="route('instansis.index')"
-                    :active="request()->routeIs('instansis.*')"
-                    wire:navigate>
-                    Instansi
-                </x-nav-link>
-
-                <x-nav-link class="block px-3 py-2 rounded-lg"
-                    :href="route('kabupatens.index')"
-                    :active="request()->routeIs('kabupatens.*')"
-                    wire:navigate>
-                    Kabupaten
-                </x-nav-link>
-
-                <x-nav-link class="block px-3 py-2 rounded-lg"
-                    :href="route('admin.akses')"
-                    :active="request()->routeIs('admin.akses')"
-                    wire:navigate>
-                    Manajemen Hak Akses
-                </x-nav-link>
-                <x-nav-link class="block px-3 py-2 rounded-lg"
-                    :href="route('kepegawaians.index')"
-                    :active="request()->routeIs('kepegawaians.*')"
-                    wire:navigate>
-                    Pegawai
-                </x-nav-link>
-
-                <x-nav-link class="block px-3 py-2 rounded-lg"
-                    :href="route('keuangans.index')"
-                    :active="request()->routeIs('keuangans.*')"
-                    wire:navigate>
-                    Keuangan
-                </x-nav-link>
-            @endrole
-
-        </nav>
-
-        <!-- User -->
-        <div class="pt-4 mt-4 border-t space-y-1">
-            <x-nav-link class="block px-3 py-2 rounded-lg"
-                :href="route('profile')"
-                wire:navigate>
-                Profile
-            </x-nav-link>
-
-            <button wire:click="logout"
-                class="w-full text-left px-3 py-2 rounded-lg text-red-600 hover:bg-red-50 transition">
-                Log Out
-            </button>
+                <button wire:click="logout" class="w-full text-start">
+                    <x-responsive-nav-link>
+                        {{ __('Log Out') }}
+                    </x-responsive-nav-link>
+                </button>
+            </div>
         </div>
 
     </div>
-</aside>
-
+</nav>

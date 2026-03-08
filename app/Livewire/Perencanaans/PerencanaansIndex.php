@@ -5,10 +5,14 @@ namespace App\Livewire\Perencanaans;
 use App\Models\Perencanaan;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Livewire\WithFileUploads;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\PerencanaanImport;
 
 class PerencanaansIndex extends Component
 {
     use WithPagination;
+    use WithFileUploads;
 
     public $search = '';
 
@@ -18,10 +22,23 @@ class PerencanaansIndex extends Component
     // biar gak error di Tailwind pagination
     protected $paginationTheme = 'tailwind';
 
+    public $file_excel;
+
     // reset pagination ke halaman 1 tiap kali search berubah
     public function updatingSearch()
     {
         $this->resetPage();
+    }
+
+    public function importExcel()
+    {
+        $this->validate([
+            'file_excel' => 'required|mimes:xlsx,xls',
+        ]);
+
+        Excel::import(new PerencanaanImport, $this->file_excel->getRealPath());
+
+        session()->flash('message', 'Data berhasil diimport!');
     }
 
     // 2. Fungsi untuk toggle buka/tutup baris

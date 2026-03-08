@@ -84,6 +84,8 @@ class PersuratanForm extends Component
         }
         // EDIT MODE
         if ($persuratan_id) {
+            $this->authorize('persuratan-edit');
+
             $this->persuratan_id = $persuratan_id;
 
             $persuratan = Persuratan::with('kepegawaians')->findOrFail($persuratan_id);
@@ -101,6 +103,8 @@ class PersuratanForm extends Component
                 ->kepegawaians
                 ->pluck('id')
                 ->toArray();
+        }else{
+            $this->authorize('persuratan-create');
         }
     }
 
@@ -209,7 +213,7 @@ public function removePegawai($pegawaiId)
         } else {
             $persuratan = Persuratan::create([
                 'nama_surat'             => $this->nama_surat,
-                'penerima_surat'         => $this->penerima_surat,
+                // 'penerima_surat'         => $this->penerima_surat,
                 'file_pdf'               => $pdfPath,
                 'perihal'                => $this->perihal,
                 'jenis_anggaran'         => $this->jenis_anggaran,

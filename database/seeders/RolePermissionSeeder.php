@@ -2,95 +2,64 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use App\Models\User;
+use Illuminate\Support\Str;
 
 class RolePermissionSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run()
-{
-    // Reset cache Spatie (Penting agar permission baru terbaca)
-    app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+    {
+        // 1. Reset cache Spatie
+        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
-    // 1. Definisikan Permission
-    $permissions = [
-        'mengelola user',       // Admin
-        'akses perencanaan',    // Perencanaan
-        'tambah perencanaan',
-        'akses kepegawaian',    // Kepegawaian
-        'tambah pegawai',
-        'akses persuratan',     // Kesektariatan
-        'tambah persuratan',
-        'akses usulan kegiatan',
-        'akses bukti',          // Pegawai
-        'tambah bukti',
-        'melihat rencana',
-        'mengusulkan pegawai',
-    ];
+        // 2. Definisikan Menu sesuai screenshot Anda
+        $menus = [
+            'Dokumen Perencanaan',
+            'Perencanaan',
+            'Pegawai',
+            'Persuratan',
+            'Jenis Bukti',
+            'Rencana Kegiatan',
+            'Instansi',
+            'Kabupaten',
+            'Manajemen Hak Akses',
+            'Manajemen Role'
+        ];
 
-    foreach ($permissions as $permission) {
-        Permission::create(['name' => $permission]);
+        // 3. Definisikan Aksi Standar (CRUD)
+        $actions = ['view', 'create', 'edit', 'delete'];
+
+        // 4. Loop untuk membuat Permission secara otomatis
+        foreach ($menus as $menu) {
+            $slug = Str::slug($menu); // Contoh: "Jenis Bukti" menjadi "jenis-bukti"
+            
+            foreach ($actions as $action) {
+                Permission::firstOrCreate([
+                    'name'       => "{$slug}-{$action}",
+                    'group'      => $menu, // Kolom group untuk memudahkan UI Livewire
+                    'guard_name' => 'web'
+                ]);
+            }
+        }
+
+        // 5. Membuat Role Default
+        $roleSuperAdmin = Role::firstOrCreate(['name' => 'super-admin']);
+
+        // 6. Assign All Permissions ke Super Admin
+        $allPermissions = Permission::all();
+        $roleSuperAdmin->syncPermissions($allPermissions);
+
+        // 7. Buat User Contoh jika belum ada
+        $admin = User::firstOrCreate(
+            ['email' => 'admin@spbe.go.id'],
+            [
+                'name' => 'Super Admin SPBE',
+                'password' => bcrypt('password123'),
+            ]
+        );
+        $admin->assignRole($roleSuperAdmin);
     }
-
-    // 2. Buat Role
-    $roleAdmin = Role::create(['name' => 'admin']);
-    $rolePerencanaan = Role::create(['name' => 'perencanaan']);
-    $roleKepegawaian = Role::create(['name' => 'kepegawaian']);
-    $roleKesekretariatan = Role::create(['name' => 'kesekretariatan']);
-    $rolePegawai = Role::create(['name' => 'pegawai']);
-    $roleKatim = Role::create(['name' => 'katim']);
-
-    // 3. Assign Permission ke Role
-    $roleAdmin->givePermissionTo(Permission::all());
-    $rolePerencanaan->givePermissionTo(['akses perencanaan', 'tambah perencanaan']);
-    $roleKepegawaian->givePermissionTo(['akses kepegawaian', 'tambah pegawai']);
-    $roleKesekretariatan->givePermissionTo(['akses persuratan', 'tambah persuratan', 'akses usulan kegiatan']);
-    $rolePegawai->givePermissionTo(['akses bukti', 'tambah bukti']);
-    $roleKatim->givePermissionTo(['melihat rencana', 'mengusulkan pegawai']);
-
-
-
-    // 4. Buat User (Gunakan updateOrCreate agar tidak error jika dijalankan ulang)
-    $admin = User::updateOrCreate(
-        ['email' => 'admin@spbe.go.id'],
-        ['name' => 'Admin SPBE', 'password' => bcrypt('password123')]
-    );
-    $admin->assignRole($roleAdmin);
-
-    $perencanaan = User::updateOrCreate(
-        ['email' => 'perencanaan@spbe.go.id'],
-        ['name' => 'Staf Perencanaan', 'password' => bcrypt('password123')]
-    );
-    $perencanaan->assignRole($rolePerencanaan);
-
-    $kepegawaian = User::updateOrCreate(
-        ['email' => 'kepegawaian@spbe.go.id'],
-        ['name' => 'Staf Kepegawaian', 'password' => bcrypt('password123')]
-    );
-    $kepegawaian->assignRole($roleKepegawaian);
-
-    $kesekretariatan = User::updateOrCreate(
-        ['email' => 'kesekretariatan@spbe.go.id'],
-        ['name' => 'Staf kesekretariatan', 'password' => bcrypt('password123')]
-    );
-    $kesekretariatan->assignRole($roleKesekretariatan);
-
-    $pegawai = User::updateOrCreate(
-        ['email' => 'pegawai@spbe.go.id'],
-        ['name' => 'Pegawai', 'password' => bcrypt('password123')]
-    );
-    $pegawai->assignRole($rolePegawai);
-
-    $katim = User::updateOrCreate(
-        ['email' => 'katim@spbe.go.id'],
-        ['name' => 'katim', 'password' => bcrypt('password123')]
-    );
-    $katim->assignRole($roleKatim);
-}
 }
