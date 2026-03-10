@@ -44,8 +44,8 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function kepegawaian()
+  public function kepegawaian()
 {
-    return $this->hasOne(Kepegawaian::class);
+    return $this->hasOne(Kepegawaian::class, 'user_id');
 }
 }

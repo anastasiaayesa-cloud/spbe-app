@@ -23,7 +23,7 @@ class PelaksanaansIndex extends Component
     {
         $user = auth()->user();
 
-        if ($user->hasRole('admin')) {
+        if ($user->hasRole('super-admin')) {
 
             $rencanas = $this->service->getAdminRencana();
 

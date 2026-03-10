@@ -29,25 +29,22 @@ public $showPerencanaanDropdown = false;
     public $pegawaiSelected = [];
     public $showPegawaiDropdown = false;
 
-    public function mount($rencana_id = null)
+   public function mount($rencana_id = null)
 {
     if ($rencana_id) {
         $this->rencana_id = $rencana_id;
-        
 
-        $rencana = Rencana::with(['perencanaans', 'kepegawaians'])
+        $rencana = Rencana::with(['perencanaans','kepegawaians'])
             ->findOrFail($rencana_id);
 
-        $this->nama = $rencana->nama_kegiatan;
+        $this->nama_kegiatan = $rencana->nama_kegiatan;
         $this->tanggal_kegiatan = $rencana->tanggal_kegiatan;
         $this->lokasi_kegiatan = $rencana->lokasi_kegiatan;
 
-        // ✅ dropdown perencanaan (custom)
         $this->perencanaanSelected = $rencana->perencanaans
             ->pluck('id')
             ->toArray();
 
-        // ✅ dropdown pegawai (custom)
         $this->pegawaiSelected = $rencana->kepegawaians
             ->pluck('id')
             ->toArray();

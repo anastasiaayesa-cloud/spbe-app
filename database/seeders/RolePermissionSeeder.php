@@ -25,6 +25,7 @@ class RolePermissionSeeder extends Seeder
             'Rencana Kegiatan',
             'Instansi',
             'Kabupaten',
+            'Keuangan',
             'Manajemen Hak Akses',
             'Manajemen Role'
         ];
@@ -32,16 +33,21 @@ class RolePermissionSeeder extends Seeder
         // 3. Definisikan Aksi Standar (CRUD)
         $actions = ['view', 'create', 'edit', 'delete'];
 
-        // 4. Loop untuk membuat Permission secara otomatis
         foreach ($menus as $menu) {
-            $slug = Str::slug($menu); // Contoh: "Jenis Bukti" menjadi "jenis-bukti"
+            $slug = Str::slug($menu); 
             
             foreach ($actions as $action) {
-                Permission::firstOrCreate([
-                    'name'       => "{$slug}-{$action}",
-                    'group'      => $menu, // Kolom group untuk memudahkan UI Livewire
-                    'guard_name' => 'web'
-                ]);
+                // Cari berdasarkan NAME dan GUARD_NAME saja (kunci unik Spatie)
+                // Jika tidak ada, baru buat baru dengan tambahan kolom 'group'
+                Permission::firstOrCreate(
+                    [
+                        'name'       => "{$slug}-{$action}",
+                        'guard_name' => 'web'
+                    ],
+                    [
+                        'group'      => $menu
+                    ]
+                );
             }
         }
 

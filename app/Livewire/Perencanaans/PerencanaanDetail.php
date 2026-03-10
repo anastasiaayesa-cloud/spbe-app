@@ -6,6 +6,7 @@ use Livewire\Component;
 use App\Models\Perencanaan;
 use App\Models\PerencanaanDetail as DetailModel;
 use App\Models\DokumenPerencanaan;
+use Illuminate\Support\Facades\DB;
 // ... (import lainnya)
 
 class PerencanaanDetail extends Component

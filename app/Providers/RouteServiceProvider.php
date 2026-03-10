@@ -11,7 +11,11 @@ use Illuminate\Support\Facades\Route;
 class RouteServiceProvider extends ServiceProvider
 {
     /**
+<<<<<<< HEAD
      * The path to your application's "home" route.
+=======
+     * The path to the "home" route for your application.
+>>>>>>> 7fb9d8872912a74c30be58596b49456b0d36c965
      *
      * Typically, users are redirected here after authentication.
      *

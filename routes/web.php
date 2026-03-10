@@ -5,9 +5,10 @@ use App\Livewire\Kepegawaians\{KepegawaianForm, KepegawaiansIndex};
 use App\Livewire\Kabupatens\KabupatensIndex;
 use App\Livewire\Persuratans\{PersuratanForm, PersuratansIndex};
 use App\Livewire\Instansis\{InstansiIndex, InstansiForm};
-use App\Livewire\Pelaksanaans\{PelaksanaansIndex, PelaksanaanForm};
+use App\Livewire\Pelaksanaans\{PelaksanaansIndex, PelaksanaanForm, PelaksanaanShow};
 use App\Livewire\Rencanas\{RencanasIndex, RencanasForm};
 use App\Livewire\Admin\{ManajemenAkses, RoleManager};
+use App\Livewire\Keuangans\{KeuanganIndex, KeuanganForm, KeuanganShow};
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome');
@@ -65,19 +66,34 @@ Route::middleware(['auth'])->group(function () {
         Route::middleware(['can:persuratan-delete'])->get('/persuratans/{persuratan_id}/delete', PersuratanForm::class)->name('persuratans.delete');
     });
 
-    // --- GRUP JENIS BUKTI (PELAKSANAAN) ---
     Route::middleware(['can:jenis-bukti-view'])->group(function () {
-        Route::get('/pelaksanaans', PelaksanaansIndex::class)->name('pelaksanaans.index');
-        Route::middleware(['can:jenis-bukti-create'])->get('/pelaksanaans/create', PelaksanaanForm::class)->name('pelaksanaans.create');
-        Route::middleware(['can:jenis-bukti-edit'])->get('/pelaksanaans/{pelaksanaan_id}/edit', PelaksanaanForm::class)->name('pelaksanaans.edit');
-        Route::middleware(['can:jenis-bukti-delete'])->get('/pelaksanaans/{pelaksanaan_id}/delete', PelaksanaanForm::class)->name('pelaksanaans.delete');
-    });
+
+    Route::get('/pelaksanaans', PelaksanaansIndex::class)
+        ->name('pelaksanaans.index');
+
+    Route::middleware(['can:jenis-bukti-create'])
+        ->get('/pelaksanaans/create', PelaksanaanForm::class)
+        ->name('pelaksanaans.create');
+
+    // SHOW BERDASARKAN RENCANA (harus sebelum edit)
+    Route::get(
+        '/pelaksanaans/rencana/{rencana}',
+        PelaksanaanShow::class
+    )->name('pelaksanaans.show.by-rencana');
+
+    Route::middleware(['can:jenis-bukti-edit'])
+        ->get('/pelaksanaans/{pelaksanaan_id}/edit', PelaksanaanForm::class)
+        ->name('pelaksanaans.edit');
+
+});
 
     // --- GRUP RENCANA KEGIATAN ---
     Route::middleware(['can:rencana-kegiatan-view'])->group(function () {
         Route::get('/rencanas', RencanasIndex::class)->name('rencanas.index');
         Route::middleware(['can:rencana-kegiatan-create'])->get('/rencanas/create', RencanasForm::class)->name('rencanas.create');
-        Route::middleware(['can:rencana-kegiatan-edit'])->get('/rencanas/{rencanas_id}/edit', RencanasForm::class)->name('rencanas.edit');
+        Route::middleware(['can:rencana-kegiatan-edit'])
+        ->get('/rencanas/{rencana_id}/edit', RencanasForm::class)
+        ->name('rencanas.edit');
         Route::middleware(['can:rencana-kegiatan-delete'])->get('/rencanas/{rencanas_id}/delete', RencanasForm::class)->name('rencanas.delete');
     });
 
@@ -95,6 +111,21 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/admin/manajemen-akses', ManajemenAkses::class)->name('admin.akses');
         Route::get('/admin/roles', RoleManager::class)->name('admin.roles');
     });
+
+    // --- GRUP KEUANGAN ---
+Route::middleware(['can:keuangan-view'])->group(function () {
+
+    Route::get('/keuangans', KeuanganIndex::class)
+        ->name('keuangans.index');
+
+    Route::middleware(['can:keuangan-create'])
+        ->get('/keuangans/{pelaksanaan}/create', KeuanganForm::class)
+        ->name('keuangans.create');
+
+    Route::middleware(['can:keuangan-view'])
+        ->get('/keuangans/{keuangan}', KeuanganShow::class)
+        ->name('keuangans.show');
+});
 
 });
 

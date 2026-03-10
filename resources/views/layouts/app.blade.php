@@ -17,34 +17,28 @@
 </head>
 
 <body class="font-sans antialiased bg-gray-100">
-    <div class="min-h-screen flex">
 
-        <!-- SIDEBAR -->
+    <div class="min-h-screen">
+
+        <!-- NAVBAR -->
         <livewire:layout.navigation />
 
-        <!-- CONTENT -->
-        <div class="flex-1 lg:ml-64">
+        <!-- Page Heading -->
+        @if (isset($header))
+            <header class="bg-white shadow">
+                <div class="py-6 px-4 sm:px-6 lg:px-8">
+                    {{ $header }}
+                </div>
+            </header>
+        @endif
 
-            <!-- Page Heading -->
-            @if (isset($header))
-                <header class="bg-white shadow">
-                    <div class="py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endif
+        <!-- Page Content -->
+        <main class="p-6">
+            {{ $slot }}
+        </main>
 
-            <!-- Page Content -->
-            <main class="p-6">
-                {{ $slot }}
-            </main>
-
-        </div>
     </div>
 
     @livewireScripts
-
-    {!! Debugbar::getJavascriptRenderer()->render() !!}
-
 </body>
 </html>
