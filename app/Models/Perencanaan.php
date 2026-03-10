@@ -10,16 +10,42 @@ class Perencanaan extends Model
     use HasFactory;
 
     protected $fillable = [
-        'komponen',
-        'uraian_komponen',
-        'sub_komponen',
-        'uraian_sub_komponen',
-        'nama_aktivitas',
-        'rencana_mulai',
-        'rencana_selesai',
-        'realisasi_mulai',
-        'realisasi_selesai',
-        'keterangan',
-        'terlaksana_id',
+        'dokumen_perencanaan_id',
+        'kode',
+        'nama',
+        'volume',
+        'jumlah_biaya',
     ];
+
+    // public function status()
+    // {
+    //     return $this->belongsTo(Status::class);
+    // }
+
+    public function dokumen_perencanaan()
+    {
+        return $this->belongsTo(DokumenPerencanaan::class);
+    }
+
+    public function details()
+    {
+        // Tambahkan 'perencanaan_id' secara eksplisit
+        return $this->hasMany(PerencanaanDetail::class, 'perencanaan_id');
+    }
+
+    public function rencanas()
+    {
+        return $this->belongsToMany(
+            Rencana::class,
+            'perencanaan_rencana'
+        );
+    }
+
+
+
+//     public function perencanaanNama()
+// {
+//     return $this->belongsTo(PerencanaanNama::class);
+// }
+
 }
