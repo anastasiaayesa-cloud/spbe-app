@@ -14,7 +14,6 @@ class PelaksanaanShow extends Component
 {
     $user = Auth::user();
 
-    // ADMIN bebas akses
     if ($user->hasAnyRole(['admin','super-admin'])) {
 
         $this->rencana = $rencana->load([
@@ -25,16 +24,16 @@ class PelaksanaanShow extends Component
         return;
     }
 
-    // USER biasa harus punya kepegawaian
     $kepegawaian = $user->kepegawaian;
 
     if (!$kepegawaian) {
-        abort(403, 'Akun ini belum terhubung dengan kepegawaian');
+        abort(403,'Akun ini belum terhubung dengan kepegawaian');
     }
 
     $this->rencana = $rencana->load([
-        'kepegawaians' => fn($q) => $q->where('kepegawaians.id', $kepegawaian->id),
-        'pelaksanaans' => fn($q) => $q->where('kepegawaian_id', $kepegawaian->id),
+        'kepegawaians',
+        'pelaksanaans' => fn($q) =>
+            $q->where('kepegawaian_id',$kepegawaian->id),
         'pelaksanaans.pelaksanaanJenis'
     ]);
 }

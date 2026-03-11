@@ -88,21 +88,19 @@
     {{-- JENIS --}}
     <div class="w-1/4">
         <select
-            wire:model.defer="lampirans.{{ $index }}.pelaksanaan_jenis_id"
-            class="border rounded px-3 py-2 w-full text-sm">
-            <option value="">-- Pilih Jenis Bukti --</option>
-            @foreach ($pelaksanaanJenisList as $jenis)
-                <option value="{{ $jenis->id }}">
-                    {{ $jenis->nama }}
-                </option>
-            @endforeach
-        </select>
+wire:model.defer="lampirans.{{ $index }}.pelaksanaan_jenis_id"
+    class="border rounded px-3 py-2 w-full text-sm">
+    <option value="">-- Pilih Jenis Bukti --</option>
+    @foreach ($pelaksanaanJenisList as $jenis)
+        <option value="{{ $jenis->id }}">{{ $jenis->nama }}</option>
+    @endforeach
+</select>
     </div>
 
 
     {{-- NOMINAL --}}
     <div class="w-1/3">
-        @if ($lampiran['pelaksanaan_jenis_id'] == $laporanJenisId)
+@if ($lampiran['pelaksanaan_jenis_id'] == $laporanJenisId)
             <input type="text"
                 value="0 (Laporan Kegiatan)"
                 disabled
@@ -144,12 +142,21 @@
 
                     
                     {{-- ACTION --}}
-                    <div class="flex items-center space-x-2">
+      <div class="flex items-center space-x-2">
                         <button
-                            type="submit"
-                            class="px-4 py-2 bg-blue-600 text-white rounded">
-                            {{ $pelaksanaan_id ? 'Simpan Perubahan' : 'Simpan' }}
-                        </button>
+    type="submit"
+    wire:loading.attr="disabled"
+    class="px-4 py-2 bg-blue-600 text-white rounded">
+
+    <span wire:loading.remove>
+        {{ $pelaksanaan_id ? 'Simpan Perubahan' : 'Simpan' }}
+    </span>
+
+    <span wire:loading>
+        Menyimpan...
+    </span>
+
+</button>
 
                         <a href="{{ route('pelaksanaans.index') }}"
                             class="px-4 py-2 border rounded">

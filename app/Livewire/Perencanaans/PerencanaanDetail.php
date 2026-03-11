@@ -127,6 +127,11 @@ class PerencanaanDetail extends Component
         return redirect()->route('perencanaans.index')->with('success', 'Data Berhasil Disimpan');
     }
 
+    public function cancel()
+{
+    return redirect()->route('perencanaans.index');
+}
+
     public function render()
     {
         return view('livewire.perencanaans.perencanaan-detail')

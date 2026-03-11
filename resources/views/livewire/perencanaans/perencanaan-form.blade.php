@@ -58,12 +58,17 @@
                         @error('jumlah_biaya') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                     </div>
 
-                    <div class="flex items-center space-x-2">
-                        <button type="submit" class=" px-4 py-2 rounded">
-                            {{ $perencanaan_id ? 'Simpan Perubahan' : 'Simpan' }}
-                        </button>
-                        <a href="{{ route('perencanaans.index') }}" class="px-4 py-2 border rounded">Batal</a>
-                    </div>
+                    <div class="flex gap-2 mt-4">
+    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">
+        {{ $perencanaan_id ? 'Simpan Perubahan' : 'Simpan' }}
+    </button>
+
+    <button type="button"
+        onclick="window.location='{{ route('perencanaans.index') }}'"
+        class="bg-gray-500 text-white px-4 py-2 rounded">
+        Batal
+    </button>
+</div>
                 </form>
             </div>
 

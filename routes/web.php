@@ -112,7 +112,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/admin/roles', RoleManager::class)->name('admin.roles');
     });
 
-    // --- GRUP KEUANGAN ---
+// --- GRUP KEUANGAN ---
 Route::middleware(['can:keuangan-view'])->group(function () {
 
     Route::get('/keuangans', KeuanganIndex::class)
@@ -122,9 +122,44 @@ Route::middleware(['can:keuangan-view'])->group(function () {
         ->get('/keuangans/{pelaksanaan}/create', KeuanganForm::class)
         ->name('keuangans.create');
 
+
+    // ================= CETAK PDF =================
+    Route::get('/keuangans/{keuangan}/pegawai/{pegawai}/cetak', function ($keuangan, $pegawai) {
+
+        $keuangan = \App\Models\Keuangan::with([
+            'pelaksanaan.rencana',
+        ])->findOrFail($keuangan);
+
+        $pegawai = $keuangan->pelaksanaan
+            ->rencana
+            ->kepegawaians
+            ->where('id', $pegawai)
+            ->firstOrFail();
+
+        // 🔥 Ambil pelaksanaan per pegawai
+        $items = \App\Models\Pelaksanaan::where(
+            'rencana_id',
+            $keuangan->pelaksanaan->rencana_id
+        )
+        ->where('kepegawaian_id', $pegawai->id)
+        ->with('pelaksanaanJenis')
+        ->get();
+
+        return \Barryvdh\DomPDF\Facade\Pdf::loadView(
+            'pdf.keuangans.master',
+            compact('keuangan', 'pegawai', 'items')
+        )
+        ->setPaper('A4', 'portrait')
+        ->stream('keuangan-' . $pegawai->nama . '.pdf');
+
+    })->name('keuangan.cetak');
+
+
+    // ================= DETAIL KEUANGAN =================
     Route::middleware(['can:keuangan-view'])
         ->get('/keuangans/{keuangan}', KeuanganShow::class)
         ->name('keuangans.show');
+
 });
 
 });

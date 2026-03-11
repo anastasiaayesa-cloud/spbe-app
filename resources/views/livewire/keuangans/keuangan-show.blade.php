@@ -32,7 +32,7 @@
     <td class="font-semibold">Status</td>
     <td>:
     <div class="inline-flex items-center gap-2">
-        @role('admin')
+        @role('super-admin')
             <button
                 type="button"
                 wire:click="toggleStatus"

@@ -28,31 +28,23 @@ class PersuratanForm extends Component
 {
     $this->persuratanKategoriList = PersuratanKategori::orderBy('nama_kategori')->get();
 
-    // ==== RENCANA ====
     $this->rencana_id = $rencana_id ?? request('rencana_id');
 
     if ($this->rencana_id) {
         $rencana = Rencana::with('kepegawaians')->findOrFail($this->rencana_id);
+
         $this->pegawaiAllowed = $rencana->kepegawaians;
+
+        // INI YANG MEMBUAT NAMA LANGSUNG MUNCUL
+        $this->pegawaiSelected = $rencana->kepegawaians->pluck('id')->toArray();
     }
 
-    if ($this->rencana_id) {
-    $rencana = Rencana::with('kepegawaians')->findOrFail($this->rencana_id);
-
-    $this->pegawaiAllowed = $rencana->kepegawaians;
-
-    // 🔥 AUTO ISI TANGGAL DARI RENCANA
-    $this->tanggal_upload = $rencana->tanggal_kegiatan;
-}
-
-    // ==== EDIT MODE ====
     if ($persuratan_id) {
         $this->persuratan_id = $persuratan_id;
 
         $persuratan = Persuratan::with('kepegawaians')->findOrFail($persuratan_id);
 
         $this->nama_surat = $persuratan->nama_surat;
-        $this->tanggal_upload = $persuratan->tanggal_upload;
         $this->persuratan_kategori_id = $persuratan->persuratan_kategori_id;
         $this->perihal = $persuratan->perihal;
         $this->jenis_anggaran = $persuratan->jenis_anggaran;

@@ -59,12 +59,25 @@
         </div>
     </div>
 
-    <div class="mt-4 flex justify-between">
-        <button type="button" wire:click="addDetail" class="bg-green-500 text-white px-4 py-2 rounded text-sm">
-            + Tambah Baris Rincian
-        </button>
-        <button type="button" wire:click="save" class="bg-blue-600 text-white px-6 py-2 rounded font-bold">
+    <div class="mt-4 flex justify-between items-center">
+
+    <button type="button" wire:click="addDetail"
+        class="bg-green-500 text-white px-4 py-2 rounded text-sm">
+        + Tambah Baris Rincian
+    </button>
+
+    <div class="flex gap-2">
+        <button type="button" wire:click="save"
+            class="bg-blue-600 text-white px-6 py-2 rounded font-bold">
             Simpan Perencanaan
         </button>
+
+        <button type="button"
+            onclick="window.location='{{ route('perencanaans.index') }}'"
+            class="bg-gray-500 text-white px-4 py-2 rounded">
+            Batal
+        </button>
     </div>
+
+</div>
 </div>

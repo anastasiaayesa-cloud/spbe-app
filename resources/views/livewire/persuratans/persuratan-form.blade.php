@@ -28,27 +28,22 @@
                     </div>
 
                     <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Penerima Surat</label>
-                        
-                        <div class="flex flex-wrap gap-2 p-2 border border-gray-200 rounded-md bg-gray-50">
-                            @php
-                                // Memecah string nama yang digabung di mount menjadi array
-                                $daftarPenerima = explode(', ', $penerima_surat);
-                            @endphp
+    <label class="block text-sm font-medium text-gray-700 mb-2">Penerima Surat</label>
 
-                            @forelse($daftarPenerima as $nama)
-                                @if($nama)
-                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 border border-blue-200">
-                                        {{ $nama }}
-                                    </span>
-                                @endif
-                            @empty
-                                <span class="text-gray-400 italic text-sm">Tidak ada pegawai yang diusulkan</span>
-                            @endforelse
-                        </div>
-                        {{-- Input tersembunyi agar data tetap terkirim saat save --}}
-                        <input type="hidden" wire:model="penerima_surat">
-                    </div>
+    <div class="flex flex-wrap gap-2 p-2 border border-gray-200 rounded-md bg-gray-50">
+
+        @forelse($this->pegawaiSelectedData as $pegawai)
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 border border-blue-200">
+                {{ $pegawai->nama }}
+            </span>
+        @empty
+            <span class="text-gray-400 italic text-sm">
+                Tidak ada pegawai yang diusulkan
+            </span>
+        @endforelse
+
+    </div>
+</div>
 
                      <div class="mb-3">
                         <label class="block mb-1">Kategori Surat</label>

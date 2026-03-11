@@ -71,6 +71,11 @@ class PerencanaanForm extends Component
         }
     }
 
+    public function cancel()
+{
+    return redirect()->route('perencanaans.index');
+}
+
     public function render()
     {
         return view('livewire.perencanaans.perencanaan-form')
